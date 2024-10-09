@@ -1,0 +1,87 @@
+env:
+  env_name: LongOpenLockRandPointFlowEnv-v1
+  max_action: [4.0, 2.0, 2.0]
+  step_penalty: 1
+  final_reward: 10
+  max_steps: 100
+  sensor_offset_x_range_len: 2.0
+  sensor_offset_z_range_len: 2.0
+  key_x_max_offset: 10
+  key_y_max_offset: 0
+  key_z_max_offset: 0
+  normalize: False
+  marker_random_noise: 0.5
+  marker_lose_tracking_probability: 0.01
+  marker_interval_range: [1.95, 2.15]
+  marker_rotation_range: 0.1
+  marker_translation_range: [1, 1]
+  marker_pos_shift_range: [0.1, 0.1]
+  params:
+    sim_time_step: 0.2
+    sim_d_hat: 0.1e-3
+    sim_kappa: 1e2
+    sim_kappa_affine: 1e5
+    sim_kappa_con: 1e10
+    sim_eps_d: 0
+    sim_eps_v: 1e-3
+    sim_solver_newton_max_iters: 5
+    sim_solver_cg_max_iters: 50
+    sim_solver_cg_error_tolerance: 0
+    sim_solver_cg_error_frequency: 10
+
+    ccd_slackness: 0.7
+    ccd_thickness: 1e-6
+    ccd_tet_inversion_thres: 0.0
+    ee_classify_thres: 1e-3
+    ee_mollifier_thres: 1e-3
+    allow_self_collision: False
+    line_search_max_iters: 10
+    ccd_max_iters: 100
+    tac_sensor_meta_file: "gelsight_mini_e430/meta_file"
+    tac_elastic_modulus_l: [ 3.0e5, 3.0e5 ]  # note if 3e5 is correctly recognized as float
+    tac_poisson_ratio_l: [ 0.3, 0.3 ]
+    tac_density_l: 1e3
+    tac_elastic_modulus_r: [ 3.0e5, 3.0e5 ]
+    tac_poisson_ratio_r: [ 0.3, 0.3 ]
+    tac_density_r: 1e3
+    tac_friction: [ 50.0, 125.0 ]
+    # task specific parameters
+    key_lock_path_file: "configs/key_and_lock/key_lock.txt"
+    indentation_depth: [ 0.5, 1.25 ]
+    key_friction: [ 0.2, 1.0 ]
+    lock_friction: [ 0.0, 1.0 ]
+policy:
+  policy_name: TD3PolicyForLongOpenLockPointFlowEnv
+  buffer_size: 200000
+  train_freq: 2
+  gradient_steps: -1
+  learning_starts: 2000
+  target_policy_noise: 0.5
+  target_noise_clip: 1
+  action_noise: 0.5
+  batch_size: 128
+  learning_rate: 0.0003
+  policy_delay: 2
+  policy_kwargs:
+    net_arch:
+      pi: [256, 256]
+      qf: [256, 256]
+    pointnet_in_dim: 4
+    pointnet_out_dim: 32
+    pointnet_batchnorm: False
+    pointnet_layernorm: True
+    zero_init_output: True
+    use_relative_motion: True
+
+train:
+  algorithm_name: TD3
+  total_timesteps: 100000
+  log_interval: 10
+  checkpoint_every: 2000
+  eval_freq: 2000
+  n_eval: 50
+  parallel: 1
+  seed: 0
+  device: "cuda"
+  gpu: 0
+  name: "long_open_lock"

@@ -1,0 +1,4 @@
+key_lock/key1.STL, key_lock/lock_core_sim1.STL
+key_lock/key2.STL, key_lock/lock_core_sim2.STL
+key_lock/key3.STL, key_lock/lock_core_sim3.STL
+key_lock/key4.STL, key_lock/lock_core_sim4.STL

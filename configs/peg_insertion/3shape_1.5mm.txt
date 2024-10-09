@@ -1,0 +1,3 @@
+peg_in_hole/cuboid_peg.STL, peg_in_hole/cuboid_hole_1.5mm.STL
+peg_in_hole/trapezoid_peg.STL, peg_in_hole/trapezoid_hole_1.5mm.STL
+peg_in_hole/concave1_peg.STL, peg_in_hole/concave1_hole_1.5mm.STL

@@ -19,18 +19,6 @@ class CriticFeatureExtractor(BaseFeaturesExtractor):
     def forward(self, observations) -> torch.Tensor:
         return observations["gt_offset"]
 
-
-class CriticFeatureExtractorForLongOpenLock(BaseFeaturesExtractor):
-    """critic feature extractor for lock env. the input for critic network is the information of key1 and key2."""
-    def __init__(self, observation_space: gym.spaces.Dict):
-        super(CriticFeatureExtractorForLongOpenLock, self).__init__(observation_space, features_dim=1)
-        self._features_dim = 6
-
-    def forward(self, observations) -> torch.Tensor:
-        return torch.cat([observations["key1"], observations["key2"]], dim=-1)
-
-
-
 class FeatureExtractorForPointFlowEnv(BaseFeaturesExtractor):
     """
     feature extractor for point flow env. the input for actor network is the point flow.
@@ -45,7 +33,7 @@ class FeatureExtractorForPointFlowEnv(BaseFeaturesExtractor):
     def forward(self, observations) -> torch.Tensor:
         original_obs = observations["marker_flow"]
         if original_obs.ndim == 4:
-            original_obs = torch.unsqueeze(original_obs, 0)  # 在第0维新加一个维度
+            original_obs = torch.unsqueeze(original_obs, 0)
         # (batch_num, 2 (left_and_right), 2 (no-contact and contact), 128 (marker_num), 2 (u, v))
         fea = torch.cat([original_obs[:, :, 0, ...], original_obs[:, :, 1, ...]], dim=-1)
         return fea

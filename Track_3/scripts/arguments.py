@@ -9,12 +9,12 @@ from stable_baselines3.common.noise import VectorizedActionNoise, NormalActionNo
 from Track_1.envs.long_open_lock import LongOpenLockParams
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-Track_1_path = os.path.join(script_path, "..")
+Track_3_path = os.path.join(script_path, "..")
 sys.path.append(script_path)
-sys.path.insert(0, Track_1_path)
+sys.path.insert(0, Track_3_path)
 
-from Track_1.envs.common_params import CommonParams
-from Track_1.envs.peg_insertion import ContinuousInsertionParams
+from Track_3.envs.common_params import CommonParams
+from Track_3.envs.peg_insertion import ContinuousInsertionParams
 
 
 def get_parser():
@@ -138,13 +138,13 @@ def handle_policy_args(original_cfg, log_dir, action_dim=3):
         if "encoder_weight" in original_cfg["policy"]["policy_kwargs"]:
             if not original_cfg["policy"]["policy_kwargs"]["encoder_weight"].startswith("/"):
                 original_cfg["policy"]["policy_kwargs"]["encoder_weight"] = os.path.join(
-                    Track_1_path, original_cfg["policy"]["policy_kwargs"]["encoder_weight"]
+                    Track_3_path, original_cfg["policy"]["policy_kwargs"]["encoder_weight"]
                 )
 
         if "decoder_weight" in original_cfg["policy"]["policy_kwargs"]:
             if not original_cfg["policy"]["policy_kwargs"]["decoder_weight"].startswith("/"):
                 original_cfg["policy"]["policy_kwargs"]["decoder_weight"] = os.path.join(
-                    Track_1_path, original_cfg["policy"]["policy_kwargs"]["decoder_weight"]
+                    Track_3_path, original_cfg["policy"]["policy_kwargs"]["decoder_weight"]
                 )
 
     return original_cfg

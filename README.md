@@ -6,6 +6,7 @@
 
 ## **Table of Contents**
 
+- [Update](#update)
 - [Installation](#installation)
 - [Track list](#Track_list)
   - [Track 1](#Track-1)
@@ -15,6 +16,9 @@
 - [Real Robot Evaluation](#real-robot-evaluation)
 - [Contact](#contact)
 - [Citation](#citation)
+
+## Update
+**2024/10/22** Track 3 is online and 
 
 ---
 ## Installation
@@ -41,7 +45,7 @@ conda activate mani_vitac
 ```
 
 Then install [SapienIPC](https://github.com/Rabbit-Hu/sapienipc-exp), following the [README](https://github.com/Rabbit-Hu/sapienipc-exp/blob/main/README.md) file in that repo.
-
+When installing SAPIEN, please ensure that the installed version is from https://github.com/haosulab/SAPIEN/releases/tag/3.0.0b1 to avoid potential compatibility issues.
 ---
 ## Track_list
 
@@ -51,6 +55,8 @@ For track 1, you can modify the network structure in the [solutions](Track_1%2Fs
 
 Please note: you are not allowed to modify the contents of [peg_insertion_sim_evaluation.py](Track_1%2Fscripts%2Fpeg_insertion_sim_evaluation.py)
 and [open_lock_sim_evaluation.py](Track_1%2Fscripts%2Fopen_lock_sim_evaluation.py). We will check the MD5 hash of them.
+
+
 
 #### Training Example
 
@@ -77,8 +83,40 @@ Submit the evaluation logs by emailing them to [maniskill.vitac@gmail.com](manis
 
 ### Track 2
 Coming soon.
+
+
 ### Track 3
-Coming soon.
+
+For track 3, you can modify the network structure in the [solutions](Track_1%2Fsolutions) and save your model in the [policies.py](Track_1%2Fsolutions%2Fpolicies.py). 
+
+Please note: you are not allowed to modify the contents of [peg_insertion_sim_evaluation.py](Track_1%2Fscripts%2Fpeg_insertion_sim_evaluation.py)
+and [open_lock_sim_evaluation.py](Track_1%2Fscripts%2Fopen_lock_sim_evaluation.py). We will check the MD5 hash of them.
+
+This section focuses on optimizing the sensor's structure based on GelSight Mini. You can use modeling software to create a model of the silicone part and then import it into our simulation environment for verification.
+For more specific methods, please refer to our documentation.
+
+#### Training Example
+
+To train our example policy, run
+
+```bash
+# example policy for peg insertion
+python Track_1/scripts/universal_training_script.py --cfg configs/parameters/peg_insertion.yaml
+# example policy for open lock
+python Track_1/scripts/universal_training_script.py --cfg configs/parameters/long_open_lock.yaml
+```
+
+#### Submission 
+For policy evaluation in simulation, run
+
+```bash
+# evaluation of peg insertion and lock opening
+python Track_1/scripts/peg_insertion_sim_evaluation.py --team_name [your_teamname] --model_name [your_model_name] --policy_file_path [your_best_model_path]
+python Track_1/scripts/open_lock_sim_evaluation.py --team_name [your_teamname] --model_name [your_model_name] --policy_file_path [your_best_model_path]
+```
+Submit the evaluation logs by emailing them to [maniskill.vitac@gmail.com](maniskill.vitac@gmail.com)
+
+
 
 ---
 ## Leaderboard

@@ -2,19 +2,18 @@ import copy
 import hashlib
 import os
 import sys
-import time
 import numpy as np
 import ruamel.yaml as yaml
 import torch
 from stable_baselines3.common.save_util import load_from_zip_file
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-repo_path = os.path.join(script_path, "../..")
+Track_1_path = os.path.join(script_path, "..")
 sys.path.append(script_path)
-sys.path.insert(0, repo_path)
+sys.path.insert(0, Track_1_path)
 
 
-from Track_1.scripts.arguments import parse_params, handle_policy_args
+from Track_1.scripts.arguments import parse_params
 from Track_1.envs.peg_insertion import ContinuousInsertionSimGymRandomizedPointFLowEnv
 from path import Path
 from stable_baselines3.common.utils import set_random_seed
@@ -22,7 +21,7 @@ from utils.common import get_time, get_average_params
 from loguru import logger
 
 
-EVAL_CFG_FILE = os.path.join(repo_path, "configs/evaluation/peg_insertion_evaluation.yaml")
+EVAL_CFG_FILE = os.path.join(Track_1_path, "configs/evaluation/peg_insertion_evaluation.yaml")
 PEG_NUM = 3
 REPEAT_NUM = 2
 
@@ -41,7 +40,7 @@ def get_self_md5():
 def evaluate_policy(model, key):
     exp_start_time = get_time()
     exp_name = f"peg_insertion_{exp_start_time}"
-    log_dir = Path(os.path.join(repo_path, f"eval_log/{exp_name}"))
+    log_dir = Path(os.path.join(Track_1_path, f"eval_log/{exp_name}"))
     log_dir.makedirs_p()
 
     logger.remove()

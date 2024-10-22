@@ -8,7 +8,7 @@ from stable_baselines3.common.torch_layers import create_mlp
 from stable_baselines3.td3.policies import Actor
 from torch import nn
 
-from Track_1.solutions.networks import PointNetFeatureExtractor
+from Track_3.solutions.networks import PointNetFeatureExtractor
 
 class PointNetActor(Actor):
     def __init__(
@@ -21,7 +21,6 @@ class PointNetActor(Actor):
         normalize_images: bool = True,
         batchnorm=False,
         layernorm=True,
-        use_relative_motion=True,
         zero_init_output=False,
         **kwargs,
     ):
@@ -32,19 +31,15 @@ class PointNetActor(Actor):
             normalize_images=normalize_images,
             **kwargs,
         )
-        self.use_relative_motion = use_relative_motion
+
         action_dim = get_action_dim(self.action_space)
 
         self.point_net_feature_extractor = PointNetFeatureExtractor(
             dim=pointnet_in_dim, out_dim=pointnet_out_dim, batchnorm=batchnorm
         )
 
-        mlp_in_channels = 2 * pointnet_out_dim
-        if self.use_relative_motion:
-            mlp_in_channels += 4
-
         self.mlp_policy = nn.Sequential(
-            nn.Linear(mlp_in_channels, 256),
+            nn.Linear(pointnet_out_dim * 2, 256),
             nn.LayerNorm(256) if layernorm else nn.Identity(),
             nn.ReLU(),
             nn.Linear(256, 256),
@@ -63,6 +58,7 @@ class PointNetActor(Actor):
                 nn.init.zeros_(last_linear.bias)
                 last_linear.weight.data.copy_(0.01 * last_linear.weight.data)
 
+        # self.mu = nn.Sequential(*actor_net)
 
     def forward(self, obs: torch.Tensor) -> torch.Tensor:
         with torch.set_grad_enabled(False):
@@ -84,99 +80,10 @@ class PointNetActor(Actor):
         r_point_flow_fea = point_flow_fea[batch_num:, ...]
 
         point_flow_fea = torch.cat([l_point_flow_fea, r_point_flow_fea], dim=-1)
-        feature = [point_flow_fea, ]
 
-        if self.use_relative_motion:
-            relative_motion = obs["relative_offset"]
-            if relative_motion.ndim == 1:
-                relative_motion = torch.unsqueeze(relative_motion, dim=0)
-            feature.append(relative_motion)
-
-        feature = torch.cat(feature, dim=-1)
-        pred = self.mlp_policy(feature)
+        pred = self.mlp_policy(point_flow_fea)
 
         return pred
-
-
-class LongOpenLockPointNetActor(Actor):
-    def __init__(
-        self,
-        observation_space: gym.spaces.Space,
-        action_space: gym.spaces.Space,
-        features_extractor: nn.Module,
-        pointnet_in_dim: int,
-        pointnet_out_dim: int,
-        normalize_images: bool = True,
-        batchnorm=False,
-        layernorm=False,
-        use_relative_motion=True,
-        zero_init_output=False,
-            **kwargs,
-    ):
-        super().__init__(
-            observation_space,
-            action_space,
-            features_extractor=features_extractor,
-            normalize_images=normalize_images,
-            **kwargs,
-        )
-        self.use_relative_motion = use_relative_motion
-        action_dim = get_action_dim(self.action_space)
-        self.point_net_feature_extractor = PointNetFeatureExtractor(
-            dim=pointnet_in_dim, out_dim=pointnet_out_dim, batchnorm=batchnorm
-        )
-
-        mlp_in_channels = 2 * pointnet_out_dim
-        if self.use_relative_motion:
-            mlp_in_channels += 4
-
-        self.mlp_policy = nn.Sequential(
-            nn.Linear(mlp_in_channels, 256),
-            nn.LayerNorm(256) if layernorm else nn.Identity(),
-            nn.ReLU(),
-            nn.Linear(256, 256),
-            nn.LayerNorm(256) if layernorm else nn.Identity(),
-            nn.ReLU(),
-            nn.Linear(256, action_dim),
-            nn.Tanh(),
-        )
-        if zero_init_output:
-            last_linear = None
-            for m in self.mlp_policy.children():
-                if isinstance(m, nn.Linear):
-                    last_linear = m
-            if last_linear is not None:
-                nn.init.zeros_(last_linear.bias)
-                last_linear.weight.data.copy_(0.01 * last_linear.weight.data)
-
-    def forward(self, obs: dict) -> torch.Tensor:
-        # (batch_num, 2 (left_and_right), 128 (marker_num), 4 (u0, v0; u1, v1))
-
-        marker_pos = obs["marker_flow"]
-        if marker_pos.ndim == 4:
-            marker_pos = torch.unsqueeze(marker_pos, dim=0)
-
-        l_marker_pos = torch.cat([marker_pos[:, 0, 0, ...], marker_pos[:, 0, 1, ...]], dim=-1)
-        r_marker_pos = torch.cat([marker_pos[:, 1, 0, ...], marker_pos[:, 1, 1, ...]], dim=-1)
-
-        l_point_flow_fea = self.point_net_feature_extractor(l_marker_pos)
-        r_point_flow_fea = self.point_net_feature_extractor(r_marker_pos)  # (batch_num, pointnet_feature_dim)
-        point_flow_fea = torch.cat([l_point_flow_fea, r_point_flow_fea], dim=-1)
-
-        feature = [point_flow_fea, ]
-
-        if self.use_relative_motion:
-            relative_motion = obs["relative_offset"]
-            if relative_motion.ndim == 1:
-                relative_motion = torch.unsqueeze(relative_motion, dim=0)
-            # repeat_num = l_point_flow_fea.shape[-1] // 4
-            # xz = xz.repeat(1, repeat_num)
-            feature.append(relative_motion)
-
-        feature = torch.cat(feature, dim=-1)
-        pred = self.mlp_policy(feature)
-        return pred
-
 
 class CustomCritic(BaseModel):
     """

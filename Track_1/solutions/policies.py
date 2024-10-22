@@ -17,6 +17,7 @@ class TD3PolicyForPointFlowEnv(TD3Policy):
             pointnet_batchnorm,
             pointnet_layernorm,
             zero_init_output,
+            use_relative_motion: bool,
             **kwargs,
     ):
         self.pointnet_in_dim = pointnet_in_dim
@@ -24,6 +25,7 @@ class TD3PolicyForPointFlowEnv(TD3Policy):
         self.pointnet_layernorm = pointnet_layernorm
         self.pointnet_batchnorm = pointnet_batchnorm
         self.zero_init_output = zero_init_output
+        self.use_relative_motion = use_relative_motion
         super(TD3PolicyForPointFlowEnv, self).__init__(*args, **kwargs)
 
     def make_actor(self, features_extractor: Optional[BaseFeaturesExtractor] = None) -> Actor:
@@ -37,6 +39,7 @@ class TD3PolicyForPointFlowEnv(TD3Policy):
             batchnorm=self.pointnet_batchnorm,
             layernorm=self.pointnet_layernorm,
             zero_init_output=self.zero_init_output,
+            use_relative_motion=self.use_relative_motion,
             **actor_kwargs,
         ).to(self.device)
 

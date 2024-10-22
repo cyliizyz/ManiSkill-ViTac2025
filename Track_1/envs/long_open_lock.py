@@ -9,9 +9,9 @@ from sapienipc.ipc_utils.user_utils import ipc_update_render_all
 from Track_1.envs.common_params import CommonParams
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-repo_path = os.path.join(script_path, "../..")
+Track_1_path = os.path.join(script_path, "../..")
 sys.path.append(script_path)
-sys.path.append(repo_path)
+sys.path.append(Track_1_path)
 
 import time
 from typing import Tuple
@@ -100,7 +100,7 @@ class LongOpenLockSimEnv(gym.Env):
             self.params_ub = copy.deepcopy(params_upper_bound)
         self.params: LongOpenLockParams = randomize_params(self.params_lb, self.params_ub)
 
-        key_lock_path_file = Path(repo_path) / self.params.key_lock_path_file
+        key_lock_path_file = Path(Track_1_path) / self.params.key_lock_path_file
         self.key_lock_path_list = []
         with open(key_lock_path_file, "r") as f:
             for l in f.readlines():
@@ -112,8 +112,10 @@ class LongOpenLockSimEnv(gym.Env):
         self.viewer = None
         if not no_render:
             self.scene = sapien.Scene()
-            self.scene.set_ambient_light([0.5, 0.5, 0.5])
-            self.scene.add_directional_light([0, -1, -1], [0.5, 0.5, 0.5], True)
+            # 设置环境光为纯白色
+            self.scene.set_ambient_light([1.0, 1.0, 1.0])
+            # 添加白色方向光
+            self.scene.add_directional_light([0, -1, -1], [1.0, 1.0, 1.0], True)
         else:
             self.scene = sapien.Scene()
 
@@ -122,7 +124,7 @@ class LongOpenLockSimEnv(gym.Env):
             cam_entity = sapien.Entity()
             cam = sapien.render.RenderCameraComponent(512, 512)
             cam_entity.add_component(cam)
-            cam_entity.name = "camera"
+            cam_entity.name = "_cam"
             self.scene.add_entity(cam_entity)
 
         ######## Create system ########
@@ -262,7 +264,7 @@ class LongOpenLockSimEnv(gym.Env):
             self.index = key_idx
             key_path, lock_path = self.key_lock_path_list[self.index]
 
-        asset_dir = Path(repo_path) / "assets"
+        asset_dir = Path(Track_1_path) / "assets"
         key_path = asset_dir / key_path
         lock_path = asset_dir / lock_path
 
@@ -300,7 +302,7 @@ class LongOpenLockSimEnv(gym.Env):
 
         with suppress_stdout_stderr():
             self.key_entity, key_abd = build_sapien_entity_ABD(key_path, "cuda:0", density=500.0,
-                                                               color=[1.0, 0.0, 0.0, 0.9],
+                                                               color=[1.0, 0.0, 0.0, 0.95],
                                                                friction=self.params.key_friction,
                                                                no_render=self.no_render)
         self.key_abd = key_abd
@@ -309,7 +311,7 @@ class LongOpenLockSimEnv(gym.Env):
 
         with suppress_stdout_stderr():
             self.lock_entity, lock_abd = build_sapien_entity_ABD(lock_path, "cuda:0", density=500.0,
-                                                                 color=[0.0, 0.0, 1.0, 0.6],
+                                                                 color=[0.0, 0.0, 1.0, 1],
                                                                  friction=self.params.lock_friction,
                                                                  no_render=self.no_render)
         self.hold_abd = lock_abd

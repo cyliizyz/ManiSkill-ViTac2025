@@ -7,17 +7,18 @@ import sys
 from sapienipc.ipc_utils.user_utils import ipc_update_render_all
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-Track_1_path = os.path.abspath(os.path.join(script_path, ".."))
+Track_3_path = os.path.abspath(os.path.join(script_path, ".."))
 sys.path.append(script_path)
-sys.path.append(Track_1_path)
+sys.path.append(Track_3_path)
 import time
-from typing import Tuple, Union
+from typing import List, Tuple, Union
 
 import fcl
 import gymnasium as gym
 import matplotlib.pyplot as plt
 import numpy as np
 import sapien
+import torch
 import transforms3d as t3d
 import warp as wp
 from gymnasium import spaces
@@ -25,11 +26,11 @@ from path import Path
 from sapien.utils.viewer import Viewer
 from sapienipc.ipc_system import IPCSystem, IPCSystemConfig
 
-from Track_1.envs.common_params import CommonParams
-from Track_1.envs.tactile_sensor_sapienipc import (TactileSensorSapienIPC,
+from Track_3.envs.common_params import CommonParams
+from Track_3.envs.tactile_sensor_sapienipc import (TactileSensorSapienIPC,
                                                    VisionTactileSensorSapienIPC)
 from utils.common import randomize_params, suppress_stdout_stderr
-from utils.geometry import quat_product
+from utils.geometry import quat_product, transform_mesh
 from utils.gym_env_utils import convert_observation_to_space
 from utils.sapienipc_utils import build_sapien_entity_ABD
 
@@ -89,8 +90,6 @@ class ContinuousInsertionSimEnv(gym.Env):
         """
         super(ContinuousInsertionSimEnv, self).__init__()
 
-        self.init_sensor_offset = None
-        self.current_sensor_offset = None
         self.no_render = no_render
         self.step_penalty = step_penalty
         self.final_reward = final_reward
@@ -98,7 +97,7 @@ class ContinuousInsertionSimEnv(gym.Env):
         self.max_action = max_action
         self.max_steps = max_steps
         self.z_step_size = z_step_size
-        peg_hole_path_file = Path(Track_1_path) / peg_hole_path_file
+        peg_hole_path_file = Path(Track_3_path) / peg_hole_path_file
         self.peg_hole_path_list = []
         with open(peg_hole_path_file, "r") as f:
             for l in f.readlines():
@@ -137,7 +136,7 @@ class ContinuousInsertionSimEnv(gym.Env):
         if not no_render:
             self.scene = sapien.Scene()
             self.scene.set_ambient_light([1.0, 1.0, 1.0])
-            self.scene.add_directional_light([0, -1, -1], [1.0, 1.0, 1.0], True)
+            self.scene.add_directional_light([0, 0, 0], [1.0, 1.0, 1.0], True)
         else:
             self.scene = sapien.Scene()
 
@@ -152,9 +151,9 @@ class ContinuousInsertionSimEnv(gym.Env):
         ######## Create system ########
         ipc_system_config = IPCSystemConfig()
         # memory config
-        ipc_system_config.max_scenes = 1
-        ipc_system_config.max_surface_primitives_per_scene = 1 << 14
-        ipc_system_config.max_blocks = 4000000
+        ipc_system_config.max_scenes = 3
+        ipc_system_config.max_surface_primitives_per_scene = 1 << 12
+        ipc_system_config.max_blocks = 10000000
         # scene config
         ipc_system_config.time_step = self.params.sim_time_step
         ipc_system_config.gravity = wp.vec3(0, 0, 0)
@@ -197,7 +196,7 @@ class ContinuousInsertionSimEnv(gym.Env):
     def __get_sensor_default_observation__(self):
 
         meta_file = self.params.tac_sensor_meta_file
-        meta_file = Path(Track_1_path) / "assets" / meta_file
+        meta_file = Path(Track_3_path) / "assets" / meta_file
         with open(meta_file, 'r') as f:
             config = json.load(f)
 
@@ -206,7 +205,6 @@ class ContinuousInsertionSimEnv(gym.Env):
         initial_surface_pts = np.zeros((np.sum(on_surface_np), 3)).astype(float)
 
         obs = {
-            "relative_offset": np.zeros((4,), dtype=np.float32),
             "gt_offset": np.zeros((3,), dtype=np.float32),
             "surface_pts": np.stack([np.stack([initial_surface_pts] * 2)] * 2),
         }
@@ -229,7 +227,7 @@ class ContinuousInsertionSimEnv(gym.Env):
             assert peg_idx < len(self.peg_hole_path_list)
             peg_path, hole_path = self.peg_hole_path_list[peg_idx]
 
-        asset_dir = Path(Track_1_path) / "assets"
+        asset_dir = Path(Track_3_path) / "assets"
         peg_path = asset_dir / peg_path
         hole_path = asset_dir / hole_path
         print("this is:", peg_path)
@@ -331,7 +329,6 @@ class ContinuousInsertionSimEnv(gym.Env):
             y_offset,
             hole_height + 0.1e-3,
         )
-        init_theta_offset = theta_offset
         peg_offset_quat = t3d.quaternions.axangle2quat((0, 0, 1), theta_offset, True)
         self.peg_entity.set_pose(sapien.Pose(p=init_pos, q=peg_offset_quat))
         self.scene.add_entity(self.peg_entity)
@@ -361,16 +358,13 @@ class ContinuousInsertionSimEnv(gym.Env):
         init_rot_r = quat_product(peg_offset_quat, (0.5, -0.5, 0.5, 0.5))
         with suppress_stdout_stderr():
             self.add_tactile_sensors(init_pos_l, init_rot_l, init_pos_r, init_rot_r)
-        init_sensor_center_coord = tuple((x + y) / 2 for x, y in zip(init_pos_l, init_pos_r))
-        print(init_sensor_center_coord)
-        self.init_sensor_offset = np.array(init_sensor_center_coord + (init_theta_offset,)) * 1000
-        self.current_sensor_offset = self.init_sensor_offset.copy()
 
         if GUI:
             self.viewer = Viewer()
             self.viewer.set_scene(self.scene)
             self.viewer.set_camera_pose(
-                sapien.Pose([-0.0477654, 0.0621954, 0.086787], [0.846142, 0.151231, 0.32333, -0.395766]))
+                sapien.Pose([-0.0677654, 0.0621954, 0.086787], [0.846142, 0.151231, 0.32333, -0.395766]))
+
             self.viewer.window.set_camera_parameters(0.001, 10.0, np.pi / 2)
             pause = True
             while pause:
@@ -413,7 +407,7 @@ class ContinuousInsertionSimEnv(gym.Env):
 
         if isinstance(self.tactile_sensor_1, VisionTactileSensorSapienIPC):
             self.tactile_sensor_1.set_reference_surface_vertices_camera()
-            # self.tactile_sensor_2.set_reference_surface_vertices_camera()
+            self.tactile_sensor_2.set_reference_surface_vertices_camera()
         self.no_contact_surface_mesh = copy.deepcopy(self._get_sensor_surface_vertices())
 
         z_distance = 0.1e-3 + self.z_step_size * 1e-3
@@ -500,18 +494,11 @@ class ContinuousInsertionSimEnv(gym.Env):
         current_theta = self.current_offset_of_current_episode[2] * np.pi / 180
         action_x = action[0] * math.cos(current_theta) - action[1] * math.sin(current_theta)
         action_y = action[0] * math.sin(current_theta) + action[1] * math.cos(current_theta)
-        action_z = -self.z_step_size
-
         action_theta = action[2]
-        action_theta_degree = action[2] * np.pi / 180
 
         self.current_offset_of_current_episode[0] += action_x
         self.current_offset_of_current_episode[1] += action_y
         self.current_offset_of_current_episode[2] += action_theta
-        self.current_sensor_offset[0] += action_x
-        self.current_sensor_offset[1] += action_y
-        self.current_sensor_offset[2] += action_z
-        self.current_sensor_offset[3] += action_theta_degree
 
         action_sim = np.array([action_x, action_y, action_theta])
         sensor_grasp_center = (self.tactile_sensor_1.current_pos + self.tactile_sensor_2.current_pos) / 2
@@ -562,6 +549,7 @@ class ContinuousInsertionSimEnv(gym.Env):
                     self.scene.update_render()
                     ipc_update_render_all(self.scene)
                     self.viewer.render()
+
         z = -self.z_step_size / 1000
         z_substeps = max(1, round(abs(z) / 5e-3 / self.params.sim_time_step))
         v_z = z / self.params.sim_time_step / z_substeps
@@ -584,6 +572,48 @@ class ContinuousInsertionSimEnv(gym.Env):
                 self.scene.update_render()
                 ipc_update_render_all(self.scene)
                 self.viewer.render()
+
+    def _success_double_check(self, z_distance):
+        z = -z_distance / 1000
+        z_substeps = max(1, round(abs(z) / 5e-3 / self.params.sim_time_step))
+        v_z = z / self.params.sim_time_step / z_substeps
+        for _ in range(z_substeps):
+            self.tactile_sensor_1.set_active_v(
+                [0, 0, v_z],
+            )
+            self.tactile_sensor_2.set_active_v(
+                [0, 0, v_z],
+            )
+            # with suppress_stdout_stderr():
+            self.hold_abd.set_kinematic_target(
+                np.concatenate([np.eye(3), np.zeros((1, 3))], axis=0))  # hole stays static
+            self.ipc_system.step()
+            self.tactile_sensor_1.step()
+            self.tactile_sensor_2.step()
+            if GUI:
+                self.scene.update_render()
+                ipc_update_render_all(self.scene)
+                self.viewer.render()
+        peg_bottom_position = self._get_peg_relative_z()
+        if np.sum(peg_bottom_position < -1e-3) < peg_bottom_position.shape[0]:
+            double_check_ok = False
+            for _ in range(z_substeps):
+                self.tactile_sensor_1.set_active_v(
+                    [0, 0, -v_z],
+                )
+                self.tactile_sensor_2.set_active_v(
+                    [0, 0, -v_z],
+                )
+                # with suppress_stdout_stderr():
+                self.hold_abd.set_kinematic_target(
+                    np.concatenate([np.eye(3), np.zeros((1, 3))], axis=0))  # hole stays static
+                self.ipc_system.step()
+                self.tactile_sensor_1.step()
+                self.tactile_sensor_2.step()
+            return double_check_ok
+        else:
+            double_check_ok = True
+            return double_check_ok
 
     def step(self, action):
         """
@@ -645,8 +675,6 @@ class ContinuousInsertionSimEnv(gym.Env):
         return info
 
     def get_obs(self, info=None):
-        sensor_offset = self.current_sensor_offset - self.init_sensor_offset
-
         if info:
             if info["error_too_large"] or info["too_many_steps"]:
                 obs_dict = {
@@ -657,13 +685,10 @@ class ContinuousInsertionSimEnv(gym.Env):
                         ]
                     ).astype(np.float32),
                     "gt_offset": np.array(self.current_offset_of_current_episode, dtype=np.float32),
-                    "relative_offset": np.array(sensor_offset, dtype=np.float32)
-
                 }
                 return obs_dict
 
         observation_left_surface_pts, observation_right_surface_pts = self._get_sensor_surface_vertices()
-
         obs_dict = {
             "surface_pts": np.stack(
                 [
@@ -672,7 +697,6 @@ class ContinuousInsertionSimEnv(gym.Env):
                 ]
             ).astype(np.float32),
             "gt_offset": np.array(self.current_offset_of_current_episode, dtype=np.float32),
-            "relative_offset": np.array(sensor_offset, dtype=np.float32)
         }
 
         return obs_dict
@@ -742,13 +766,10 @@ class ContinuousInsertionSimGymRandomizedPointFLowEnv(ContinuousInsertionSimEnv)
         self.marker_lose_tracking_probability = marker_lose_tracking_probability
         self.normalize = normalize
         self.marker_flow_size = 128
-        self.init_sensor_offset = None
-        self.current_sensor_offset = None
 
         super(ContinuousInsertionSimGymRandomizedPointFLowEnv, self).__init__(**kwargs)
 
         self.default_observation = {
-            "relative_offset": np.zeros((4,), dtype=np.float32),
             "gt_offset": np.zeros((3,), dtype=np.float32),
             "marker_flow": np.zeros((2, 2, self.marker_flow_size, 2), dtype=np.float32),
         }
@@ -822,6 +843,12 @@ if __name__ == "__main__":
     timestep = 0.05
 
     params = ContinuousInsertionParams(
+        # sim_time_step=timestep,
+        # tac_sensor_meta_file="gelsight_mini_e430/meta_file",
+        # indentation_depth=1.0,
+        # gripper_z_offset=-5.,
+        # elastic_modulus_r=3e5,
+        # elastic_modulus_l=3e5,
         sim_time_step=0.1,
         sim_d_hat=0.1e-3,
         sim_kappa=1e2,
@@ -900,30 +927,36 @@ if __name__ == "__main__":
         ax.invert_yaxis()
 
         # Save the figure with a filename based on the loop parameter i
-        filename = os.path.join(save_dir, f"sp-from-sapienipc-{name}-marker_flow_{i}.png")
+        # filename = os.path.join(save_dir, f"sp-from-sapienipc-{name}-marker_flow_{i}.png")
+        filename = os.path.join(save_dir, f"{i}.png")
         plt.savefig(filename)
         plt.close()
 
 
-    offset_list = [[4, 0, 0], [-4, 0, 0], [0, 4, 0], [0, -4, 0]]
-    for offset in offset_list:
-        # offset = [4,0,0]
-        o, _ = env.reset(offset)
-        for k, v in o.items():
-            print(k, v.shape)
+    # offset_list = [[4, 0, 0], [-4, 0, 0], [0, 4, 0], [0, -4, 0]]
+    # for offset in offset_list:
+    offset = [0, 0, 0]
+    o, _ = env.reset(offset)
+    for k, v in o.items():
+        print(k, v.shape)
 
+    info = env.get_info()
+    print("timestep: ", timestep)
+    print(
+        f"step: {info['steps']} gt_offset: {o['gt_offset']} success: {info['is_success']}"
+        f" peg_z: {info['peg_relative_z']}, obs check: {info['observation_check']}")
 
-        for i in range(10):
-            action = [-0.2, 0, 0]
-            o, r, d, _, info = env.step(action)
-            print(
-                f"step: {info['steps']} reward: {r:.2f} gt_offset: {o['gt_offset']} success: {info['is_success']}  relative_offset: {o['relative_offset']}"
-                f" peg_z: {info['peg_relative_z']}, obs check: {info['observation_check']}")
-            # visualize_marker_point_flow(o, i, str(offset), save_dir="saved_images")
-        if env.viewer is not None:
-            while True:
-                if env.viewer.window.key_down("c"):
-                    break
-                env.scene.update_render()
-                ipc_update_render_all(env.scene)
-                env.viewer.render()
+    for i in range(50):
+        action = [0, 0, 0]
+        o, r, d, _, info = env.step(action)
+        print(
+            f"step: {info['steps']} reward: {r:.2f} gt_offset: {o['gt_offset']} success: {info['is_success']}"
+            f" peg_z: {info['peg_relative_z']}, obs check: {info['observation_check']}")
+        visualize_marker_point_flow(o, i, str(offset), save_dir="saved_images")
+    if env.viewer is not None:
+        while True:
+            if env.viewer.window.key_down("c"):
+                break
+            env.scene.update_render()
+            ipc_update_render_all(env.scene)
+            env.viewer.render()

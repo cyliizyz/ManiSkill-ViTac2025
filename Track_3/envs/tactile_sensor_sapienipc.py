@@ -5,9 +5,9 @@ import sys
 from typing import Tuple
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-Track_1_path = os.path.join(script_path, "..")
+Track_3_path = os.path.join(script_path, "..")
 sys.path.append(script_path)
-sys.path.append(Track_1_path)
+sys.path.append(Track_3_path)
 
 import cv2
 import numpy as np
@@ -48,7 +48,7 @@ class TactileSensorSapienIPC:
         self.current_rot = init_rot
         self.name = name
 
-        meta_file = Path(Track_1_path) / "assets" / meta_file
+        meta_file = Path(Track_3_path) / "assets" / meta_file
         with open(meta_file, 'r') as f:
             config = json.load(f)
 
@@ -220,9 +220,12 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         self.marker_flow_size = marker_flow_size
         # camera frame to gel center
         # NOTE: camera frame follows opencv coordinate system
+
         self.camera2gel = np.eye(4)
         self.camera2gel[:3, :3] = t3d.euler.euler2mat(0., 0., -np.pi, axes='sxyz')
         self.camera2gel[:3, 3] = (0.0, 0.0, -0.02)
+        # -0.02 is the distance from the center of the silicone to the optical center of the camera.
+
         self.gel2camera = np.linalg.inv(self.camera2gel)
         self.camera_params = camera_params
         self.camera_intrinsic = np.array([[camera_params[0], 0, camera_params[2]],

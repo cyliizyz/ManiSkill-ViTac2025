@@ -3,17 +3,16 @@ import sys
 import time
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-Track_1_path = os.path.join(script_path, "..")
-sys.path.insert(0, Track_1_path)
+Track_3_path = os.path.join(script_path, "..")
+sys.path.insert(0, Track_3_path)
 
 import gymnasium as gym
 import ruamel.yaml as yaml
 import torch
 from path import Path
 
-from Track_1.solutions.policies import (
-    TD3PolicyForPointFlowEnv, TD3PolicyForLongOpenLockPointFlowEnv
-)
+from Track_3.solutions.policies import TD3PolicyForPointFlowEnv
+
 from stable_baselines3 import TD3
 from stable_baselines3.common.callbacks import (CallbackList,
                                                 CheckpointCallback,
@@ -30,8 +29,6 @@ algorithm_aliases = {
     "TD3": TD3,
 }
 TD3.policy_aliases["TD3PolicyForPointFlowEnv"] = TD3PolicyForPointFlowEnv
-TD3.policy_aliases["TD3PolicyForLongOpenLockPointFlowEnv"] = TD3PolicyForLongOpenLockPointFlowEnv
-
 
 
 def make_env(env_name, seed=0, i=0, **env_args):

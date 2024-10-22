@@ -9,7 +9,7 @@ from sapienipc.ipc_utils.user_utils import ipc_update_render_all
 from Track_1.envs.common_params import CommonParams
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-Track_1_path = os.path.join(script_path, "../..")
+Track_1_path = os.path.join(script_path, "..")
 sys.path.append(script_path)
 sys.path.append(Track_1_path)
 

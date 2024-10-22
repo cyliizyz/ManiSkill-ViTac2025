@@ -4,6 +4,7 @@ import time
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 Track_3_path = os.path.join(script_path, "..")
+sys.path.append(script_path)
 sys.path.insert(0, Track_3_path)
 
 import gymnasium as gym
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     exp_start_time = get_time()
     exp_name = f"{cfg['train']['name']}_{exp_start_time}"
     cfg["train"]["emp"] = {}
-    log_dir = os.path.join(repo_path, f"training_log/{exp_name}")
+    log_dir = os.path.join(Track_3_path, f"training_log/{exp_name}")
     Path(log_dir).makedirs_p()
 
     with open(os.path.join(log_dir, "cfg.yaml"), "w") as f:

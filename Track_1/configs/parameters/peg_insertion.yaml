@@ -38,6 +38,7 @@ env:
     allow_self_collision: False
     line_search_max_iters: 10
     ccd_max_iters: 100
+    tac_sensor_meta_file: "gelsight_mini_e430/meta_file"
     tac_elastic_modulus_l: [ 3.0e5, 3.0e5 ]  # note if 3e5 is correctly recognized as float
     tac_poisson_ratio_l: [ 0.3, 0.3 ]
     tac_density_l: 1e3

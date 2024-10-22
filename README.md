@@ -18,7 +18,7 @@
 - [Citation](#citation)
 
 ## Update
-**2024/10/22** Track 3 is online and 
+**2024/10/22** Track 3 is online !
 
 ---
 ## Installation
@@ -84,6 +84,7 @@ Submit the evaluation logs by emailing them to [maniskill.vitac@gmail.com](manis
 ### Track 2
 Coming soon.
 
+---
 
 ### Track 3
 

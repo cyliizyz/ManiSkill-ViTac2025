@@ -45,7 +45,8 @@ conda activate mani_vitac
 ```
 
 Then install [SapienIPC](https://github.com/Rabbit-Hu/sapienipc-exp), following the [README](https://github.com/Rabbit-Hu/sapienipc-exp/blob/main/README.md) file in that repo.
-When installing SAPIEN, please ensure that the installed version is from https://github.com/haosulab/SAPIEN/releases/tag/3.0.0b1 to avoid potential compatibility issues.
+When installing SAPIEN, please ensure that the installed version is from [SAPIEN](https://github.com/haosulab/SAPIEN/releases/tag/3.0.0b1) to avoid potential compatibility issues.
+
 ---
 ## Track_list
 

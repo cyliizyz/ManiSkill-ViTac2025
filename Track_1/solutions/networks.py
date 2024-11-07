@@ -62,11 +62,7 @@ class PointNetFeatureExtractor(nn.Module):
             marker_pos = torch.unsqueeze(marker_pos, dim=0)
 
         marker_pos = torch.transpose(marker_pos, 1, 2)
-
-        local_feature = self.pointnet_local_fea(
-
-
-        )  # (batch_num, self.pointnet_local_feature_num, point_num)
+        local_feature = self.pointnet_local_fea(marker_pos) # (batch_num, self.pointnet_local_feature_num, point_num)
         # shape: (batch, step * 2, num_points)
         global_feature = self.pointnet_global_fea(local_feature).view(
             -1, self.pointnet_global_feature_num)  # (batch_num, self.pointnet_global_feature_num)

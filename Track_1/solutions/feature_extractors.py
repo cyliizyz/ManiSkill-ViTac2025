@@ -45,7 +45,7 @@ class FeatureExtractorForPointFlowEnv(BaseFeaturesExtractor):
     def forward(self, observations) -> torch.Tensor:
         original_obs = observations["marker_flow"]
         if original_obs.ndim == 4:
-            original_obs = torch.unsqueeze(original_obs, 0)  # 在第0维新加一个维度
+            original_obs = torch.unsqueeze(original_obs, 0)
         # (batch_num, 2 (left_and_right), 2 (no-contact and contact), 128 (marker_num), 2 (u, v))
         fea = torch.cat([original_obs[:, :, 0, ...], original_obs[:, :, 1, ...]], dim=-1)
         return fea

@@ -2,56 +2,64 @@ env:
   env_name: ContinuousInsertionRandomizedMarkerEnv-v1
   step_penalty: 1
   final_reward: 10
-  max_action: [2.0, 2.0, 4.0]
-  max_steps: 8
-  z_step_size: 0.125
-  peg_hole_path_file: "configs/peg_insertion/3shape_1.5mm.txt"
-  peg_x_max_offset: 5.0
-  peg_y_max_offset: 5.0
-  peg_theta_max_offset: 10.0
+
   marker_interval_range: [1.95, 2.15]
-  marker_rotation_range: 0.1
-  marker_translation_range: [1, 1]
+  marker_lose_tracking_probability: 0.01
   marker_pos_shift_range: [0.1, 0.1]
   marker_random_noise: 0.5
-  marker_lose_tracking_probability: 0.01
+  marker_rotation_range: 0.1
+  marker_translation_range: [1, 1]
+  
+  max_action: [2.0, 2.0, 4.0]
+  max_steps: 8
   normalize: False
-
+  z_step_size: 0.125
+  peg_hole_path_file: "configs/peg_insertion/3shape_1.5mm.txt"
+  peg_theta_max_offset: 10.0
+  peg_x_max_offset: 5.0
+  peg_y_max_offset: 5.0
+  
   params:
     sim_time_step: 0.1
-    sim_d_hat: 0.1e-3
-    sim_kappa: 1e2
-    sim_kappa_affine: 1e5
-    sim_kappa_con: 1e10
+    sim_d_hat: 0.0001
     sim_eps_d: 0
-    sim_eps_v: 1e-2
+    sim_eps_v: 0.01
+    sim_kappa: 100.0
+    sim_kappa_affine: 100000.0
+    sim_kappa_con: 10000000000.0
+
     sim_solver_newton_max_iters: 5
     sim_solver_cg_max_iters: 50
-    sim_solver_cg_error_tolerance: 0
     sim_solver_cg_error_frequency: 10
+    sim_solver_cg_error_tolerance: 0
+    
+    allow_self_collision: False
 
+    ccd_max_iters: 100
     ccd_slackness: 0.7
     ccd_thickness: 1e-6
     ccd_tet_inversion_thres: 0.0
-    ee_classify_thres: 1e-3
-    ee_mollifier_thres: 1e-3
-    allow_self_collision: False
+    
+    ee_classify_thres: 0.001
+    ee_mollifier_thres: 0.001
     line_search_max_iters: 10
-    ccd_max_iters: 100
+    
     tac_sensor_meta_file: "gelsight_mini_e430/meta_file"
-    tac_elastic_modulus_l: [ 3.0e5, 3.0e5 ]  # note if 3e5 is correctly recognized as float
+    tac_density_l: 1000.0
+    tac_density_r: 1000.0
+    tac_elastic_modulus_l: [300000.0, 300000.0]
+    tac_elastic_modulus_r: [300000.0, 300000.0]
+    tac_friction: [50.0, 125.0]
     tac_poisson_ratio_l: [ 0.3, 0.3 ]
-    tac_density_l: 1e3
-    tac_elastic_modulus_r: [ 3.0e5, 3.0e5 ]
     tac_poisson_ratio_r: [ 0.3, 0.3 ]
-    tac_density_r: 1e3
-    tac_friction: [ 50.0, 125.0 ]
+
     # task specific parameters
     gripper_x_offset: [ -1, 1 ]
     gripper_z_offset: [ -10, -6 ]
     indentation_depth: [ 0.5, 1.25 ]
     peg_friction: [ 4.0, 15.0 ]
     hole_friction: [ 0.0, 1.0 ]
+
 
 policy:
   policy_name: TD3PolicyForPointFlowEnv
@@ -79,7 +87,7 @@ policy:
 
 train:
   algorithm_name: TD3
-  total_timesteps: 500000
+  total_timesteps: 200000
   log_interval: 10
   checkpoint_every: 2000
   eval_freq: 2000

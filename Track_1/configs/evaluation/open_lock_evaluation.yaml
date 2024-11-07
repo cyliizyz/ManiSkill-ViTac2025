@@ -4,7 +4,7 @@ env:
   max_action: [4.0, 2.0, 2.0]
   step_penalty: 1
   final_reward: 10
-  max_steps: 100
+  max_steps: 80
   sensor_offset_x_range_len: 2.0
   sensor_offset_z_range_len: 2.0
 

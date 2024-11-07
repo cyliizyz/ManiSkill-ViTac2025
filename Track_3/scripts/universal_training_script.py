@@ -4,6 +4,8 @@ import time
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 Track_3_path = os.path.join(script_path, "..")
+Repo_path = os.path.abspath(os.path.join(script_path, "../.."))
+sys.path.append(Repo_path)
 sys.path.append(script_path)
 sys.path.insert(0, Track_3_path)
 

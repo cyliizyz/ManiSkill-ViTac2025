@@ -128,7 +128,7 @@ class LongOpenLockPointNetActor(Actor):
 
         mlp_in_channels = 2 * pointnet_out_dim
         if self.use_relative_motion:
-            mlp_in_channels += 4
+            mlp_in_channels += 3
 
         self.mlp_policy = nn.Sequential(
             nn.Linear(mlp_in_channels, 256),
@@ -166,7 +166,7 @@ class LongOpenLockPointNetActor(Actor):
         feature = [point_flow_fea, ]
 
         if self.use_relative_motion:
-            relative_motion = obs["relative_offset"]
+            relative_motion = obs["relative_motion"]
             if relative_motion.ndim == 1:
                 relative_motion = torch.unsqueeze(relative_motion, dim=0)
             # repeat_num = l_point_flow_fea.shape[-1] // 4
@@ -176,6 +176,7 @@ class LongOpenLockPointNetActor(Actor):
         feature = torch.cat(feature, dim=-1)
         pred = self.mlp_policy(feature)
         return pred
+
 
 
 class CustomCritic(BaseModel):

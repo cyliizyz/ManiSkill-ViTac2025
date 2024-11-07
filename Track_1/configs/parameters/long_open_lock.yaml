@@ -3,7 +3,7 @@ env:
   max_action: [4.0, 2.0, 2.0]
   step_penalty: 1
   final_reward: 10
-  max_steps: 100
+  max_steps: 80
   sensor_offset_x_range_len: 2.0
   sensor_offset_z_range_len: 2.0
   key_x_max_offset: 10
@@ -75,7 +75,7 @@ policy:
 
 train:
   algorithm_name: TD3
-  total_timesteps: 100000
+  total_timesteps: 300000
   log_interval: 10
   checkpoint_every: 2000
   eval_freq: 2000

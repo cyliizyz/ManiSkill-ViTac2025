@@ -112,9 +112,7 @@ class LongOpenLockSimEnv(gym.Env):
         self.viewer = None
         if not no_render:
             self.scene = sapien.Scene()
-            # 设置环境光为纯白色
             self.scene.set_ambient_light([1.0, 1.0, 1.0])
-            # 添加白色方向光
             self.scene.add_directional_light([0, -1, -1], [1.0, 1.0, 1.0], True)
         else:
             self.scene = sapien.Scene()
@@ -124,7 +122,7 @@ class LongOpenLockSimEnv(gym.Env):
             cam_entity = sapien.Entity()
             cam = sapien.render.RenderCameraComponent(512, 512)
             cam_entity.add_component(cam)
-            cam_entity.name = "_cam"
+            cam_entity.name = "camera"
             self.scene.add_entity(cam_entity)
 
         ######## Create system ########
@@ -491,7 +489,7 @@ class LongOpenLockSimEnv(gym.Env):
         key_pts = self.key_abd.get_positions().cpu().numpy().copy()
         lock_pts = self.hold_abd.get_positions().cpu().numpy().copy()
         if self.index == 0:
-            key1_idx = np.array([16, 17, 18, 19])  # large
+            key1_idx = np.array([16, 17, 18, 19])
             key2_idx = np.array([24, 25, 26, 27])
             key_side_index = np.array([1, 3, 30, 31])
             lock1_idx = np.array([2, 3, 6, 7])
@@ -774,7 +772,7 @@ if __name__ == "__main__":
         final_reward=10,
         max_action=np.array([2, 2, 2]),
         max_steps=10,
-        key_x_max_offset=0,
+        key_x_max_offset=10,
         key_y_max_offset=0,
         key_z_max_offset=0,
         sensor_offset_x_range_len=2.0,
@@ -789,7 +787,7 @@ if __name__ == "__main__":
 
     np.set_printoptions(precision=4)
 
-    offset = [0, 0, 0]
+    offset = [10, 0, 0]
 
     o, _ = env.reset(offset)
     for k, v in o.items():
@@ -801,7 +799,7 @@ if __name__ == "__main__":
         obs, rew, done, _, info = env.step(np.array([0.5, 0.0, 0.0]))
         visualize_marker_point_flow(obs, i, "test")
         print(
-            f"step: {env.current_episode_elapsed_steps:2d} rew: {rew:.2f} done: {done} success: {info['is_success']}"
+            f"step: {env.current_episode_elapsed_steps:2d} rew: {rew:.2f} done: {done} success: {info['is_success']} re: {info['relative_motion']}"
         )
 
     for i in range(4):

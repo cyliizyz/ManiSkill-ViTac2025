@@ -146,7 +146,7 @@ class ContinuousInsertionSimEnv(gym.Env):
             cam_entity = sapien.Entity()
             cam = sapien.render.RenderCameraComponent(512, 512)
             cam_entity.add_component(cam)
-            cam_entity.name = "_cam"
+            cam_entity.name = "camera"
             self.scene.add_entity(cam_entity)
 
         ######## Create system ########

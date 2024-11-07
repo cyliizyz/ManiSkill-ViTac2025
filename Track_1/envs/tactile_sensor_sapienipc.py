@@ -239,7 +239,7 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         cam.set_perspective_parameters(0.0001, 0.1, camera_params[0], camera_params[1], camera_params[2],
                                        camera_params[3], 0)
         self.cam_entity.add_component(cam)
-        self.cam_entity.name = self.name + "_camera"
+        self.cam_entity.name = self.name + "_cam"
         self.scene.add_entity(self.cam_entity)
         self.patch_array_dict = generate_patch_array()
 

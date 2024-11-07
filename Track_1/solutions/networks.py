@@ -10,7 +10,7 @@ class PointNetFeaNew(nn.Module):
         super(PointNetFeaNew, self).__init__()
         self.layer_num = len(net_layers)  # 输出通道数
         self.conv0 = nn.Conv1d(point_dim, net_layers[0], 1)
-        self.bn0 = nn.BatchNorm1d(net_layers[0]) if batchnorm else nn.Identity() # nn.Identity()恒等变换
+        self.bn0 = nn.BatchNorm1d(net_layers[0]) if batchnorm else nn.Identity()
         for i in range(0, self.layer_num - 1):
             self.__setattr__(f"conv{i + 1}", nn.Conv1d(net_layers[i], net_layers[i + 1], 1))
             self.__setattr__(f"bn{i + 1}", nn.BatchNorm1d(net_layers[i + 1]) if batchnorm else nn.Identity())
@@ -63,7 +63,10 @@ class PointNetFeatureExtractor(nn.Module):
 
         marker_pos = torch.transpose(marker_pos, 1, 2)
 
-        local_feature = self.pointnet_local_fea(marker_pos)  # (batch_num, self.pointnet_local_feature_num, point_num)
+        local_feature = self.pointnet_local_fea(
+
+
+        )  # (batch_num, self.pointnet_local_feature_num, point_num)
         # shape: (batch, step * 2, num_points)
         global_feature = self.pointnet_global_fea(local_feature).view(
             -1, self.pointnet_global_feature_num)  # (batch_num, self.pointnet_global_feature_num)

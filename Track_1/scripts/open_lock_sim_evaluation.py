@@ -9,6 +9,8 @@ from stable_baselines3.common.save_util import load_from_zip_file
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 Track_1_path = os.path.abspath(os.path.join(script_path, ".."))
+Repo_path = os.path.abspath(os.path.join(script_path, "../.."))
+sys.path.append(Repo_path)
 sys.path.append(script_path)
 sys.path.insert(0, Track_1_path)
 
@@ -40,7 +42,7 @@ def get_self_md5():
 def evaluate_policy(model, key):
     exp_start_time = get_time()
     exp_name = f"open_lock_{exp_start_time}"
-    log_dir = Path(os.path.join(Track_1_path, f"Track_1/eval_log/{exp_name}"))
+    log_dir = Path(os.path.join(Track_1_path, f"eval_log/{exp_name}"))
     log_dir.makedirs_p()
 
     logger.remove()

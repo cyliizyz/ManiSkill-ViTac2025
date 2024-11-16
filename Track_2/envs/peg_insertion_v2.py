@@ -38,7 +38,6 @@ from utils.common import randomize_params, suppress_stdout_stderr, get_time
 from utils.geometry import quat_product
 from utils.gym_env_utils import convert_observation_to_space
 from utils.sapienipc_utils import build_sapien_entity_ABD
-from utils.mem_monitor import monitor_process_memory_once, monitor_process_gpu_memory
 
 wp.init()
 wp_device = wp.get_preferred_device()

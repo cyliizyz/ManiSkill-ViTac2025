@@ -87,7 +87,7 @@ class PointNetActor(Actor):
         feature = [point_flow_fea, ]
 
         if self.use_relative_motion:
-            relative_motion = obs["relative_offset"]
+            relative_motion = obs["relative_motion"]
             if relative_motion.ndim == 1:
                 relative_motion = torch.unsqueeze(relative_motion, dim=0)
             feature.append(relative_motion)

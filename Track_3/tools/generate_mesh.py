@@ -32,13 +32,26 @@ def generate_tetrahedral_mesh(gel_name, visualize=False):
 
         tetgen = pymesh.tetgen()
         tetgen.points = stl_mesh.vertices / SCALE
+
+
         ###########################################################################################
         # You can generate the mesh by adjusting these parameters.
         tetgen.triangles = stl_mesh.faces
-        tetgen.max_tet_volume = 0.00000001
-        tetgen.max_radius_edge_ratio = 1.8
-        tetgen.verbosity = 1
+        tetgen.split_boundary = True  # Whether to split input boundary, default is True
+        tetgen.max_radius_edge_ratio = 1.8  # Default is 2.0
+        tetgen.min_dihedral_angle = 0.0  # Default is 0.0
+        tetgen.coarsening = False  # Coarsen input tet mesh, default is False
+        tetgen.max_tet_volume = 0.00000001  # Default is unbounded
+        tetgen.optimization_level = 2  # Ranges from 0 to 10, default is 2
+        tetgen.max_num_steiner_points = None  # Default is unbounded
+        tetgen.coplanar_tolerance = 1e-8  # Used for coplanar point detection, default is 1e-8
+        tetgen.exact_arithmetic = True  # Use exact predicates, default is True
+        tetgen.merge_coplanar = True  # Merge coplanar faces and nearby vertices, default is True
+        tetgen.weighted_delaunay = False  # Perform weighted Delaunay tetrahedralization, default is False
+        tetgen.keep_convex_hull = False  # Keep all tets within convex hull, default is False
+        tetgen.verbosity = 1  # Verbosity level from 0 to 4, where 1 is normal output
         ############################################################################################
+
 
         # Run tetgen to generate tetrahedral mesh
         tetgen.run()

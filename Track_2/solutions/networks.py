@@ -1,42 +1,16 @@
+'''
+Author: DrTrippleJ drjamesown@gmail.com
+Date: 2024-11-16 14:41:45
+LastEditors: DrTrippleJ drjamesown@gmail.com
+LastEditTime: 2024-11-16 15:28:46
+FilePath: /ManiSkill-2025-pre/Track_2_formal/solutions/networks.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 from typing import List
 
 import torch
 import torch.nn.functional as F
 from torch import nn
-
-
-class PointNetFea(nn.Module):
-    def __init__(self, point_dim, output_dim, batchnorm=False):
-        super(PointNetFea, self).__init__()
-        self.conv0 = nn.Conv1d(point_dim, 64, 1)
-        self.conv1 = nn.Conv1d(64, 128, 1)
-        self.conv2 = nn.Conv1d(128, 256, 1)
-        self.conv3 = nn.Conv1d(256, 512, 1)
-        if batchnorm:
-            self.bn0 = nn.BatchNorm1d(64)
-            self.bn1 = nn.BatchNorm1d(128)
-            self.bn2 = nn.BatchNorm1d(256)
-            self.bn3 = nn.BatchNorm1d(512)
-        else:
-            self.bn0 = nn.Identity()
-            self.bn1 = nn.Identity()
-            self.bn2 = nn.Identity()
-            self.bn3 = nn.Identity()
-
-        self.mlp1 = nn.Linear(512, 256)
-        self.mlp2 = nn.Linear(256, output_dim)
-
-    def forward(self, x):
-        x = F.relu(self.bn0(self.conv0(x)))
-        x = F.relu(self.bn1(self.conv1(x)))
-        x = F.relu(self.bn2(self.conv2(x)))
-        x = self.bn3(self.conv3(x))
-        x = torch.max(x, 2, keepdim=True)[0]
-        x = x.view(-1, 512)
-        x = F.relu(self.mlp1(x))
-        x = self.mlp2(x)
-
-        return x
 
 
 class PointNetFeaNew(nn.Module):
@@ -96,12 +70,11 @@ class PointNetFeatureExtractor(nn.Module):
             marker_pos = torch.unsqueeze(marker_pos, dim=0)
 
         marker_pos = torch.transpose(marker_pos, 1, 2)
-
-
-        local_feature = self.pointnet_local_fea(marker_pos)  # (batch_num, self.pointnet_local_feature_num, point_num)
+        local_feature = self.pointnet_local_fea(marker_pos) # (batch_num, self.pointnet_local_feature_num, point_num)
         # shape: (batch, step * 2, num_points)
         global_feature = self.pointnet_global_fea(local_feature).view(
             -1, self.pointnet_global_feature_num)  # (batch_num, self.pointnet_global_feature_num)
 
         pred = self.mlp_output(global_feature)
+        # pred shape: (batch_num, out_dim)
         return pred

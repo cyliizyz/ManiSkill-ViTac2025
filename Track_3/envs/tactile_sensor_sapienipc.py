@@ -20,7 +20,6 @@ from sapienipc.ipc_utils.ipc_mesh import IPCTetMesh
 from sklearn.neighbors import NearestNeighbors
 
 from utils.geometry import (estimate_rigid_transform, in_hull, quat_product, transform_pts)
-from utils.common import generate_patch_array
 
 
 class TactileSensorSapienIPC:
@@ -35,7 +34,6 @@ class TactileSensorSapienIPC:
             poisson_ratio=0.3,
             density: float = 1000,
             friction: float = 0.5,
-            torch_device: str = "cuda:0",
             name: str = "tactile_sensor",
             no_render: bool = False
     ):
@@ -49,7 +47,8 @@ class TactileSensorSapienIPC:
         self.name = name
 
         meta_file = Path(Track_3_path) / "assets" / meta_file
-        with open(meta_file, 'r') as f:
+        meta_path = Path(Track_3_path) / "assets" / "meta_file"
+        with open(meta_path, 'r') as f:
             config = json.load(f)
 
         meta_dir = meta_file.dirname()
@@ -244,7 +243,6 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         self.cam_entity.add_component(cam)
         self.cam_entity.name = self.name + "_cam"
         self.scene.add_entity(self.cam_entity)
-        self.patch_array_dict = generate_patch_array()
 
     def transform_to_camera_frame(self, input_vertices):
         current_pose_transform = np.eye(4)
@@ -277,14 +275,14 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
 
     def _gen_marker_grid(self):
         marker_interval = (self.marker_interval_range[1] - self.marker_interval_range[0]) * np.random.rand(1)[0] + \
-                          self.marker_interval_range[0]  # 2.0625
+                          self.marker_interval_range[0]
         marker_rotation_angle = 2 * self.marker_rotation_range * np.random.rand(1) - self.marker_rotation_range
         marker_translation_x = 2 * self.marker_translation_range[0] * np.random.rand(1)[0] - \
                                self.marker_translation_range[0]
         marker_translation_y = 2 * self.marker_translation_range[1] * np.random.rand(1)[0] - \
                                self.marker_translation_range[1]
 
-        marker_x_start = -math.ceil(  # 16.5
+        marker_x_start = -math.ceil(
             (8 + marker_translation_x) / marker_interval) * marker_interval + marker_translation_x
         marker_x_end = math.ceil((8 - marker_translation_x) / marker_interval) * marker_interval + marker_translation_x
         marker_y_start = -math.ceil(

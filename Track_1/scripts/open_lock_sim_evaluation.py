@@ -6,6 +6,7 @@ import numpy as np
 import ruamel.yaml as yaml
 import torch
 from stable_baselines3.common.save_util import load_from_zip_file
+import git
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 Track_1_path = os.path.abspath(os.path.join(script_path, ".."))
@@ -39,6 +40,46 @@ def get_self_md5():
     return md5_hash.hexdigest()
 
 
+def get_git_info():
+    try:
+        repo = git.Repo(search_parent_directories=True)
+        initial_commit = list(repo.iter_commits())[-1]
+        diff_index = initial_commit.diff(None)
+        
+        changed_since_clone = {
+            'modified': [],
+            'added': [],
+            'deleted': [],
+            'renamed': []
+        }
+        
+        for diff_item in diff_index:
+            if diff_item.change_type == 'M':
+                changed_since_clone['modified'].append(diff_item.a_path)
+            elif diff_item.change_type == 'A':
+                changed_since_clone['added'].append(diff_item.a_path)
+            elif diff_item.change_type == 'D':
+                changed_since_clone['deleted'].append(diff_item.a_path)
+            elif diff_item.change_type == 'R':
+                changed_since_clone['renamed'].append((diff_item.a_path, diff_item.b_path))
+
+        return {
+            'branch': repo.active_branch.name,
+            'commit': repo.head.commit.hexsha,
+            'commit_message': repo.head.commit.message.strip(),
+            'is_dirty': repo.is_dirty(),
+            'untracked_files': repo.untracked_files,
+            'modified_files': [item.a_path for item in repo.index.diff(None)],
+            'changes_since_clone': changed_since_clone,
+            'initial_commit': initial_commit.hexsha,
+            'initial_commit_message': initial_commit.message.strip()
+        }
+    except Exception as e:
+        return {
+            'error': f"Failed to get git info: {str(e)}"
+        }
+
+
 def evaluate_policy(model, key):
     exp_start_time = get_time()
     exp_name = f"open_lock_{exp_start_time}"
@@ -51,6 +92,12 @@ def evaluate_policy(model, key):
 
     logger.info(f"#KEY: {key}")
     logger.info(f"this is MD5: {get_self_md5()}")
+    
+    # Add git information logging
+    git_info = get_git_info()
+    logger.info("Git Repository Information:")
+    for key, value in git_info.items():
+        logger.info(f"  {key}: {value}")
 
     with open(EVAL_CFG_FILE, "r") as f:
         cfg = yaml.YAML(typ='safe', pure=True).load(f)

@@ -1,9 +1,9 @@
 env:
   env_name: LongOpenLockRandPointFlowEnv-v1
-  max_action: [4.0, 2.0, 2.0]
+  max_action: [4.0, 2.0]
   step_penalty: 1
   final_reward: 10
-  max_steps: 80
+  max_steps: 50
   sensor_offset_x_range_len: 2.0
   sensor_offset_z_range_len: 2.0
   key_x_max_offset: 10
@@ -80,7 +80,7 @@ train:
   checkpoint_every: 2000
   eval_freq: 2000
   n_eval: 50
-  parallel: 1
+  parallel: 2
   seed: 0
   device: "cuda"
   gpu: 0

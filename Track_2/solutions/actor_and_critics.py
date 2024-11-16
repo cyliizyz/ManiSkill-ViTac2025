@@ -8,7 +8,7 @@ from stable_baselines3.common.torch_layers import create_mlp
 from stable_baselines3.td3.policies import Actor
 from torch import nn
 
-from Track_3.solutions.networks import PointNetFeatureExtractor
+from solutions.networks import PointNetFeatureExtractor
 
 class PointNetActor(Actor):
     def __init__(
@@ -58,6 +58,8 @@ class PointNetActor(Actor):
                 nn.init.zeros_(last_linear.bias)
                 last_linear.weight.data.copy_(0.01 * last_linear.weight.data)
 
+        # self.mu = nn.Sequential(*actor_net)
+
     def forward(self, obs: torch.Tensor) -> torch.Tensor:
         with torch.set_grad_enabled(False):
             marker_pos = self.extract_features(obs, self.features_extractor)
@@ -66,19 +68,13 @@ class PointNetActor(Actor):
             marker_pos = torch.unsqueeze(marker_pos, dim=0)
 
         batch_num = marker_pos.shape[0]
-
         l_marker_pos = marker_pos[:, 0, ...]
         r_marker_pos = marker_pos[:, 1, ...]
-
         marker_pos_input = torch.cat([l_marker_pos, r_marker_pos], dim=0)
-
         point_flow_fea = self.point_net_feature_extractor(marker_pos_input)
-
         l_point_flow_fea = point_flow_fea[:batch_num, ...]
         r_point_flow_fea = point_flow_fea[batch_num:, ...]
-
         point_flow_fea = torch.cat([l_point_flow_fea, r_point_flow_fea], dim=-1)
-
         pred = self.mlp_policy(point_flow_fea)
 
         return pred
@@ -130,3 +126,4 @@ class CustomCritic(BaseModel):
         with torch.no_grad():
             features = self.extract_features(obs, self.features_extractor)
         return self.q_networks[0](torch.cat([features, actions], dim=1))
+

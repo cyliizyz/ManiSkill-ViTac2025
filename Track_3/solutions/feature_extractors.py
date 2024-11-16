@@ -2,12 +2,6 @@ import gymnasium as gym
 import torch
 from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 
-"""
-Feature Extractors for different environments
-by default, the feature extractors are for actor network
-unless it starts with "CriticFeatureExtractor"
-"""
-
 
 class CriticFeatureExtractor(BaseFeaturesExtractor):
     """general critic feature extractor for peg-in-hole env. the input for critic network is the gt_offset."""
@@ -18,6 +12,7 @@ class CriticFeatureExtractor(BaseFeaturesExtractor):
 
     def forward(self, observations) -> torch.Tensor:
         return observations["gt_offset"]
+
 
 class FeatureExtractorForPointFlowEnv(BaseFeaturesExtractor):
     """

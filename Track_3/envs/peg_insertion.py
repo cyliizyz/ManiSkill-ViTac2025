@@ -197,7 +197,8 @@ class ContinuousInsertionSimEnv(gym.Env):
 
         meta_file = self.params.tac_sensor_meta_file
         meta_file = Path(Track_3_path) / "assets" / meta_file
-        with open(meta_file, 'r') as f:
+        mata_path = Path(Track_3_path) / "assets" / "meta_file"
+        with open(mata_path, 'r') as f:
             config = json.load(f)
 
         meta_dir = Path(meta_file).dirname()
@@ -234,7 +235,7 @@ class ContinuousInsertionSimEnv(gym.Env):
         # add peg
         with suppress_stdout_stderr():
 
-            self.peg_entity, peg_abd = build_sapien_entity_ABD(peg_path, "cuda:0", density=500.0,
+            self.peg_entity, peg_abd = build_sapien_entity_ABD(peg_path, density=500.0,
                                                                color=[1.0, 0.0, 0.0, 0.95],
                                                                friction=self.params.peg_friction,
                                                                no_render=self.no_render)  # red
@@ -255,7 +256,7 @@ class ContinuousInsertionSimEnv(gym.Env):
 
         # add hole
         with suppress_stdout_stderr():
-            self.hole_entity, hole_abd = build_sapien_entity_ABD(hole_path, "cuda:0", density=500.0,
+            self.hole_entity, hole_abd = build_sapien_entity_ABD(hole_path, density=500.0,
                                                                  color=[0.0, 0.0, 1.0, 0.95],
                                                                  friction=self.params.hole_friction,
                                                                  no_render=self.no_render)  # blue

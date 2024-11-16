@@ -8,7 +8,7 @@ from torch import nn
 class PointNetFeaNew(nn.Module):
     def __init__(self, point_dim, net_layers: List, batchnorm=False):
         super(PointNetFeaNew, self).__init__()
-        self.layer_num = len(net_layers)  # 输出通道数
+        self.layer_num = len(net_layers)
         self.conv0 = nn.Conv1d(point_dim, net_layers[0], 1)
         self.bn0 = nn.BatchNorm1d(net_layers[0]) if batchnorm else nn.Identity()
         for i in range(0, self.layer_num - 1):

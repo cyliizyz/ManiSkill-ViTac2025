@@ -1,5 +1,5 @@
 env:
-  env_name: ContinuousInsertionRandomizedMarkerEnv-v1
+  env_name: PegInsertionRandomizedMarkerEnv-v1
   step_penalty: 1
   final_reward: 10
 
@@ -9,16 +9,16 @@ env:
   marker_random_noise: 0.5
   marker_rotation_range: 0.1
   marker_translation_range: [1, 1]
-
+  
   max_action: [2.0, 2.0, 4.0]
   max_steps: 8
-  normalize: false
+  normalize: False
   z_step_size: 0.125
-  peg_hole_path_file: configs/peg_insertion/3shape_1.5mm.txt
+  peg_hole_path_file: "configs/peg_insertion/3shape_1.5mm.txt"
   peg_theta_max_offset: 10.0
   peg_x_max_offset: 5.0
   peg_y_max_offset: 5.0
-    
+  
   params:
     sim_time_step: 0.1
     sim_d_hat: 0.0001
@@ -33,26 +33,25 @@ env:
     sim_solver_cg_error_frequency: 10
     sim_solver_cg_error_tolerance: 0
     
-    allow_self_collision: false
+    allow_self_collision: False
 
     ccd_max_iters: 100
     ccd_slackness: 0.7
-    ccd_thickness: 1e-06
+    ccd_thickness: 1e-6
     ccd_tet_inversion_thres: 0.0
     
     ee_classify_thres: 0.001
     ee_mollifier_thres: 0.001
     line_search_max_iters: 10
-
-    tac_sensor_meta_file: gelsight_mini_e430/meta_file
+    
+    tac_sensor_meta_file: "gelsight_mini_e430/meta_file"
     tac_density_l: 1000.0
     tac_density_r: 1000.0
     tac_elastic_modulus_l: [300000.0, 300000.0]
     tac_elastic_modulus_r: [300000.0, 300000.0]
     tac_friction: [50.0, 125.0]
-    tac_poisson_ratio_l: [0.3, 0.3]
-    tac_poisson_ratio_r: [0.3, 0.3]
-    
+    tac_poisson_ratio_l: [ 0.3, 0.3 ]
+    tac_poisson_ratio_r: [ 0.3, 0.3 ]
 
     # task specific parameters
     gripper_x_offset: [ -1, 1 ]

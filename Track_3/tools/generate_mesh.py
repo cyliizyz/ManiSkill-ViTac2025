@@ -43,7 +43,6 @@ def generate_tetrahedral_mesh(gel_name, visualize=False):
         tetgen.coarsening = False  # Coarsen input tet mesh, default is False
         tetgen.max_tet_volume = 0.00000001  # Default is unbounded
         tetgen.optimization_level = 2  # Ranges from 0 to 10, default is 2
-        tetgen.max_num_steiner_points = None  # Default is unbounded
         tetgen.coplanar_tolerance = 1e-8  # Used for coplanar point detection, default is 1e-8
         tetgen.exact_arithmetic = True  # Use exact predicates, default is True
         tetgen.merge_coplanar = True  # Merge coplanar faces and nearby vertices, default is True

@@ -16,7 +16,7 @@ sys.path.append(script_path)
 sys.path.insert(0, Track_3_path)
 
 from Track_3.envs.common_params import CommonParams
-from Track_3.envs.peg_insertion import ContinuousInsertionParams
+from Track_3.envs.peg_insertion import PegInsertionParams
 
 
 def get_parser():
@@ -104,8 +104,8 @@ def solve_argument_conflict(cmd_arg, dict_arg):
 
 
 def parse_params(environment_name, params):
-    if "Continuous" in environment_name:
-        params_lowerbound: CommonParams = ContinuousInsertionParams()
+    if "Peg" in environment_name:
+        params_lowerbound: CommonParams = PegInsertionParams()
     elif "LongOpenLock" in environment_name:
         params_lowerbound = LongOpenLockParams()
 

@@ -20,7 +20,7 @@ class CommonParams(Params):
 
             # tactile sensor parameters
             ################################################################################
-            tac_sensor_meta_file: str = "gel_1/meta_file",  # your tac_sensor_mate path
+            tac_sensor_meta_file: str = "gelsight_mini_e430/meta_file",  # your tac_sensor_mate path
             ##########################################################################3#####
 
             tac_elastic_modulus_l: float = 1e6,

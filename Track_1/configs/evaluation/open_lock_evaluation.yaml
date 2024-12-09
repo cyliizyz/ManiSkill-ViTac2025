@@ -1,16 +1,13 @@
 env:
   env_name: LongOpenLockRandPointFlowEnv-v1
 
-  max_action: [4.0, 2.0]
+  max_action: [2.0, 1.0]
   step_penalty: 1
   final_reward: 10
   max_steps: 50
   sensor_offset_x_range_len: 2.0
   sensor_offset_z_range_len: 2.0
 
-  key_x_max_offset: 10
-  key_y_max_offset: 0
-  key_z_max_offset: 0
   normalize: False
   marker_random_noise: 0.1
   marker_lose_tracking_probability: 0

@@ -5,9 +5,11 @@ import sys
 from typing import Tuple
 
 script_path = os.path.dirname(os.path.realpath(__file__))
-Track_1_path = os.path.join(script_path, "..")
+track_path = os.path.abspath(os.path.join(script_path, ".."))
+repo_path = os.path.abspath(os.path.join(track_path, ".."))
 sys.path.append(script_path)
-sys.path.append(Track_1_path)
+sys.path.append(track_path)
+sys.path.append(repo_path)
 
 import cv2
 import numpy as np
@@ -18,23 +20,30 @@ from sapienipc.ipc_component import IPCFEMComponent
 from sapienipc.ipc_system import IPCSystem
 from sapienipc.ipc_utils.ipc_mesh import IPCTetMesh
 from sklearn.neighbors import NearestNeighbors
-from utils.geometry import estimate_rigid_transform, in_hull, quat_product, transform_pts
+
+from utils.geometry import (
+    estimate_rigid_transform,
+    in_hull,
+    quat_product,
+    transform_pts,
+)
 
 
 class TactileSensorSapienIPC:
     def __init__(
-            self,
-            scene: sapien.Scene,
-            ipc_system: IPCSystem,
-            meta_file,
-            init_pos,
-            init_rot,
-            elastic_modulus=1e5,
-            poisson_ratio=0.3,
-            density: float = 1000,
-            friction: float = 0.5,
-            name: str = "tactile_sensor",
-            no_render: bool = False
+        self,
+        scene: sapien.Scene,
+        ipc_system: IPCSystem,
+        meta_file,
+        init_pos,
+        init_rot,
+        elastic_modulus=1e5,
+        poisson_ratio=0.3,
+        density: float = 1000,
+        friction: float = 0.5,
+        name: str = "tactile_sensor",
+        no_render: bool = False,
+        logger=None,
     ):
         self.ipc_system = ipc_system
         self.scene = scene
@@ -44,9 +53,10 @@ class TactileSensorSapienIPC:
         self.current_pos = init_pos
         self.current_rot = init_rot
         self.name = name
+        self.logger = logger
 
-        meta_file = Path(Track_1_path) / "assets" / meta_file
-        with open(meta_file, 'r') as f:
+        meta_file = Path(track_path) / "assets" / meta_file
+        with open(meta_file, "r") as f:
             config = json.load(f)
 
         meta_dir = meta_file.dirname()
@@ -55,7 +65,9 @@ class TactileSensorSapienIPC:
         # create IPC component
         self.fem_component = IPCFEMComponent()
         self.fem_component.set_tet_mesh(tet_mesh)
-        self.fem_component.set_material(density=density, young=elastic_modulus, poisson=poisson_ratio)
+        self.fem_component.set_material(
+            density=density, young=elastic_modulus, poisson=poisson_ratio
+        )
         self.fem_component.set_friction(friction)
 
         if not no_render:
@@ -102,7 +114,9 @@ class TactileSensorSapienIPC:
             self.boundary_idx[4 * boundary_num // 6],
             self.boundary_idx[5 * boundary_num // 6],
         ]
-        self.init_boundary_pts = self.get_vertices_world()[self.transform_calculation_ids, :]
+        self.init_boundary_pts = self.get_vertices_world()[
+            self.transform_calculation_ids, :
+        ]
         self.vel_set = False
         self.init_surface_vertices = self.get_surface_vertices_world()
 
@@ -127,7 +141,10 @@ class TactileSensorSapienIPC:
         v = np.array(v)
         assert v.shape == (3,)
         v = v[None, :]
-        x_next = self.fem_component.get_positions().cpu().numpy()[self.boundary_idx] + v * self.time_step
+        x_next = (
+            self.fem_component.get_positions().cpu().numpy()[self.boundary_idx]
+            + v * self.time_step
+        )
         self.fem_component.set_kinematic_target(self.boundary_idx, x_next)
 
         self.vel_set = True
@@ -148,10 +165,16 @@ class TactileSensorSapienIPC:
         axis_dir = axis_dir / np.linalg.norm(axis_dir)
         axis_point = np.array(axis_point)
 
-        point_coordinates = self.fem_component.get_positions().cpu().numpy()[self.boundary_idx, :3]
-        rotation_mat = t3d.axangles.axangle2mat(axis_dir, omega * self.time_step, is_normalized=True)
+        point_coordinates = (
+            self.fem_component.get_positions().cpu().numpy()[self.boundary_idx, :3]
+        )
+        rotation_mat = t3d.axangles.axangle2mat(
+            axis_dir, omega * self.time_step, is_normalized=True
+        )
         # point_coordinates_after_translation = point_coordinates + v * dt
-        point_coordinates_after_rotation = (point_coordinates - axis_point) @ rotation_mat.transpose() + axis_point
+        point_coordinates_after_rotation = (
+            point_coordinates - axis_point
+        ) @ rotation_mat.transpose() + axis_point
         x_next = point_coordinates_after_rotation + v[None, :] * self.time_step
         self.fem_component.set_kinematic_target(self.boundary_idx, x_next)
         self.vel_set = True
@@ -183,17 +206,25 @@ class TactileSensorSapienIPC:
 
 
 class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
-    def __init__(self,
-                 marker_interval_range: Tuple[float, float] = (2.0625, 2.0625),
-                 marker_rotation_range: float = 0.,
-                 marker_translation_range: Tuple[float, float] = (0., 0.),
-                 marker_pos_shift_range: Tuple[float, float] = (0., 0.),
-                 marker_random_noise: float = 0.,
-                 marker_lose_tracking_probability: float = 0.,
-                 normalize: bool = False,
-                 marker_flow_size: int = 128,
-                 camera_params: Tuple[float, float, float, float, float] = (340, 325, 160, 125, 0.0),
-                 **kwargs):
+    def __init__(
+        self,
+        marker_interval_range: Tuple[float, float] = (2.0625, 2.0625),
+        marker_rotation_range: float = 0.0,
+        marker_translation_range: Tuple[float, float] = (0.0, 0.0),
+        marker_pos_shift_range: Tuple[float, float] = (0.0, 0.0),
+        marker_random_noise: float = 0.0,
+        marker_lose_tracking_probability: float = 0.0,
+        normalize: bool = False,
+        marker_flow_size: int = 128,
+        camera_params: Tuple[float, float, float, float, float] = (
+            340,
+            325,
+            160,
+            125,
+            0.0,
+        ),
+        **kwargs,
+    ):
         """
         param: marker_interval_rang, in mm.
         param: marker_rotation_range: overall marker rotation, in radian.
@@ -205,7 +236,9 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         param: marker_flow_size: the size of the output marker flow
         param: camera_params: (fx, fy, cx, cy, distortion)
         """
+
         super(VisionTactileSensorSapienIPC, self).__init__(**kwargs)
+
         self.marker_interval_range = marker_interval_range
         self.marker_rotation_range = marker_rotation_range
         self.marker_translation_range = marker_translation_range
@@ -217,23 +250,36 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         # camera frame to gel center
         # NOTE: camera frame follows opencv coordinate system
         self.camera2gel = np.eye(4)
-        self.camera2gel[:3, :3] = t3d.euler.euler2mat(0., 0., -np.pi, axes='sxyz')
+        self.camera2gel[:3, :3] = t3d.euler.euler2mat(0.0, 0.0, -np.pi, axes="sxyz")
         self.camera2gel[:3, 3] = (0.0, 0.0, -0.02)
         self.gel2camera = np.linalg.inv(self.camera2gel)
         self.camera_params = camera_params
-        self.camera_intrinsic = np.array([[camera_params[0], 0, camera_params[2]],
-                                          [0, camera_params[1], camera_params[3]],
-                                          [0, 0, 1]], dtype=np.float32)
-        self.camera_distort_coeffs = np.array([camera_params[4], 0, 0, 0, 0], dtype=np.float32)
+        self.camera_intrinsic = np.array(
+            [
+                [camera_params[0], 0, camera_params[2]],
+                [0, camera_params[1], camera_params[3]],
+                [0, 0, 1],
+            ],
+            dtype=np.float32,
+        )
+        self.camera_distort_coeffs = np.array(
+            [camera_params[4], 0, 0, 0, 0], dtype=np.float32
+        )
         self.init_vertices_camera = self.get_vertices_camera()
         self.init_surface_vertices_camera = self.get_surface_vertices_camera()
         self.reference_surface_vertices_camera = self.get_surface_vertices_camera()
 
-
         self.cam_entity = sapien.Entity()
         self.cam = cam = sapien.render.RenderCameraComponent(320, 240)
-        cam.set_perspective_parameters(0.0001, 0.1, camera_params[0], camera_params[1], camera_params[2],
-                                       camera_params[3], 0)
+        cam.set_perspective_parameters(
+            0.0001,
+            0.1,
+            camera_params[0],
+            camera_params[1],
+            camera_params[2],
+            camera_params[3],
+            0,
+        )
         self.cam_entity.add_component(cam)
         self.cam_entity.name = self.name + "_cam"
         self.scene.add_entity(self.cam_entity)
@@ -242,7 +288,9 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         current_pose_transform = np.eye(4)
         current_pose_transform[:3, :3] = t3d.quaternions.quat2mat(self.current_rot)
         current_pose_transform[:3, 3] = self.current_pos
-        v_cv = transform_pts(input_vertices, self.gel2camera @ np.linalg.inv(current_pose_transform))
+        v_cv = transform_pts(
+            input_vertices, self.gel2camera @ np.linalg.inv(current_pose_transform)
+        )
         return v_cv
 
     def get_vertices_camera(self):
@@ -265,37 +313,71 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         return self.init_surface_vertices_camera.copy()
 
     def set_reference_surface_vertices_camera(self):
-        self.reference_surface_vertices_camera = self.get_surface_vertices_camera().copy()
+        self.reference_surface_vertices_camera = (
+            self.get_surface_vertices_camera().copy()
+        )
 
     def _gen_marker_grid(self):
-        marker_interval = (self.marker_interval_range[1] - self.marker_interval_range[0]) * np.random.rand(1)[0] + \
-                          self.marker_interval_range[0]
-        marker_rotation_angle = 2 * self.marker_rotation_range * np.random.rand(1) - self.marker_rotation_range
-        marker_translation_x = 2 * self.marker_translation_range[0] * np.random.rand(1)[0] - \
-                               self.marker_translation_range[0]
-        marker_translation_y = 2 * self.marker_translation_range[1] * np.random.rand(1)[0] - \
-                               self.marker_translation_range[1]
+        marker_interval = (
+            self.marker_interval_range[1] - self.marker_interval_range[0]
+        ) * np.random.rand(1)[0] + self.marker_interval_range[0]
+        marker_rotation_angle = (
+            2 * self.marker_rotation_range * np.random.rand(1)
+            - self.marker_rotation_range
+        )
+        marker_translation_x = (
+            2 * self.marker_translation_range[0] * np.random.rand(1)[0]
+            - self.marker_translation_range[0]
+        )
+        marker_translation_y = (
+            2 * self.marker_translation_range[1] * np.random.rand(1)[0]
+            - self.marker_translation_range[1]
+        )
 
-        marker_x_start = -math.ceil(  # 16.5
-            (8 + marker_translation_x) / marker_interval) * marker_interval + marker_translation_x
-        marker_x_end = math.ceil((8 - marker_translation_x) / marker_interval) * marker_interval + marker_translation_x
-        marker_y_start = -math.ceil(
-            (6 + marker_translation_y) / marker_interval) * marker_interval + marker_translation_y
-        marker_y_end = math.ceil((6 - marker_translation_y) / marker_interval) * marker_interval + marker_translation_y
+        marker_x_start = (
+            -math.ceil((8 + marker_translation_x) / marker_interval)  # 16.5
+            * marker_interval
+            + marker_translation_x
+        )
+        marker_x_end = (
+            math.ceil((8 - marker_translation_x) / marker_interval) * marker_interval
+            + marker_translation_x
+        )
+        marker_y_start = (
+            -math.ceil((6 + marker_translation_y) / marker_interval) * marker_interval
+            + marker_translation_y
+        )
+        marker_y_end = (
+            math.ceil((6 - marker_translation_y) / marker_interval) * marker_interval
+            + marker_translation_y
+        )
 
-        marker_x = np.linspace(marker_x_start, marker_x_end,
-                               round((marker_x_end - marker_x_start) / marker_interval) + 1, True)
-        marker_y = np.linspace(marker_y_start, marker_y_end,
-                               round((marker_y_end - marker_y_start) / marker_interval) + 1, True)
+        marker_x = np.linspace(
+            marker_x_start,
+            marker_x_end,
+            round((marker_x_end - marker_x_start) / marker_interval) + 1,
+            True,
+        )
+        marker_y = np.linspace(
+            marker_y_start,
+            marker_y_end,
+            round((marker_y_end - marker_y_start) / marker_interval) + 1,
+            True,
+        )
 
         marker_xy = np.array(np.meshgrid(marker_x, marker_y)).reshape((2, -1)).T
         marker_num = marker_xy.shape[0]
+        # print(marker_num)
 
-        marker_pos_shift_x = np.random.rand(marker_num) * self.marker_pos_shift_range[0] * 2 - \
-                             self.marker_pos_shift_range[0]
+        marker_pos_shift_x = (
+            np.random.rand(marker_num) * self.marker_pos_shift_range[0] * 2
+            - self.marker_pos_shift_range[0]
+        )
 
-        marker_pos_shift_y = np.random.rand(marker_num) * self.marker_pos_shift_range[1] * 2 - \
-                             self.marker_pos_shift_range[1]
+        marker_pos_shift_y = (
+            np.random.rand(marker_num) * self.marker_pos_shift_range[1] * 2
+            - self.marker_pos_shift_range[1]
+        )
 
         marker_xy[:, 0] += marker_pos_shift_x
         marker_xy[:, 1] += marker_pos_shift_y
@@ -319,9 +401,13 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         f_on_surface = self.faces[np.sum(f_v_on_surface, axis=1) == 3]
         global_id_to_surface_id = np.cumsum(self.on_surface) - 1
         f_on_surface_on_surface_id = global_id_to_surface_id[f_on_surface]
-        f_center_on_surface = np.mean(self.init_vertices_camera[f_on_surface][:, :, :2], axis=1)
+        f_center_on_surface = np.mean(
+            self.init_vertices_camera[f_on_surface][:, :, :2], axis=1
+        )
 
-        nbrs = NearestNeighbors(n_neighbors=4, algorithm="ball_tree").fit(f_center_on_surface)
+        nbrs = NearestNeighbors(n_neighbors=4, algorithm="ball_tree").fit(
+            f_center_on_surface
+        )
         distances, idx = nbrs.kneighbors(marker_pts)
 
         marker_pts_surface_idx = []
@@ -339,13 +425,17 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
                 w12 = np.linalg.inv(A) @ (p - p0)
                 if possible_face_id == possible_face_ids[0]:
                     marker_pts_surface_idx.append(face_vertices_idx)
-                    marker_pts_surface_weight.append(np.array([1 - w12.sum(), w12[0], w12[1]]))
+                    marker_pts_surface_weight.append(
+                        np.array([1 - w12.sum(), w12[0], w12[1]])
+                    )
                     valid_marker_idx.append(i)
                     if w12[0] >= 0 and w12[1] >= 0 and w12[0] + w12[1] <= 1:
                         break
                 elif w12[0] >= 0 and w12[1] >= 0 and w12[0] + w12[1] <= 1:
                     marker_pts_surface_idx[-1] = face_vertices_idx
-                    marker_pts_surface_weight[-1] = np.array([1 - w12.sum(), w12[0], w12[1]])
+                    marker_pts_surface_weight[-1] = np.array(
+                        [1 - w12.sum(), w12[0], w12[1]]
+                    )
                     valid_marker_idx[-1] = i
                     break
 
@@ -354,25 +444,39 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         marker_pts_surface_idx = np.stack(marker_pts_surface_idx)
         marker_pts_surface_weight = np.stack(marker_pts_surface_weight)
         assert np.allclose(
-            (surface_pts[marker_pts_surface_idx] * marker_pts_surface_weight[..., None]).sum(1), marker_pts
+            (
+                surface_pts[marker_pts_surface_idx]
+                * marker_pts_surface_weight[..., None]
+            ).sum(1),
+            marker_pts,
         ), f"max err: {np.abs((surface_pts[marker_pts_surface_idx] * marker_pts_surface_weight[..., None]).sum(1) - marker_pts).max()}"
 
         return marker_pts_surface_idx, marker_pts_surface_weight
 
     def gen_marker_uv(self, marker_pts):
-        marker_uv = cv2.projectPoints(marker_pts, np.zeros(3, dtype=np.float32), np.zeros(3, dtype=np.float32),
-                                      self.camera_intrinsic,
-                                      self.camera_distort_coeffs)[0].squeeze(1)
+        marker_uv = cv2.projectPoints(
+            marker_pts,
+            np.zeros(3, dtype=np.float32),
+            np.zeros(3, dtype=np.float32),
+            self.camera_intrinsic,
+            self.camera_distort_coeffs,
+        )[0].squeeze(1)
 
         return marker_uv
 
     def gen_marker_flow(self):
         marker_grid = self._gen_marker_grid()
-        marker_pts_surface_idx, marker_pts_surface_weight = self._gen_marker_weight(marker_grid)
-        init_marker_pts = (self.reference_surface_vertices_camera[marker_pts_surface_idx] * marker_pts_surface_weight[
-            ..., None]).sum(1)
-        curr_marker_pts = (self.get_surface_vertices_camera()[marker_pts_surface_idx] * marker_pts_surface_weight[
-            ..., None]).sum(1)
+        marker_pts_surface_idx, marker_pts_surface_weight = self._gen_marker_weight(
+            marker_grid
+        )
+        init_marker_pts = (
+            self.reference_surface_vertices_camera[marker_pts_surface_idx]
+            * marker_pts_surface_weight[..., None]
+        ).sum(1)
+        curr_marker_pts = (
+            self.get_surface_vertices_camera()[marker_pts_surface_idx]
+            * marker_pts_surface_weight[..., None]
+        ).sum(1)
 
         init_marker_uv = self.gen_marker_uv(init_marker_pts)
         curr_marker_uv = self.gen_marker_uv(curr_marker_pts)
@@ -388,7 +492,9 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         marker_flow = marker_flow[:, marker_mask]
 
         # post processing
-        no_lose_tracking_mask = np.random.rand(marker_flow.shape[1]) > self.marker_lose_tracking_probability
+        no_lose_tracking_mask = (
+            np.random.rand(marker_flow.shape[1]) > self.marker_lose_tracking_probability
+        )
         marker_flow = marker_flow[:, no_lose_tracking_mask, :]
         noise = np.random.randn(*marker_flow.shape) * self.marker_random_noise
         marker_flow += noise
@@ -396,12 +502,18 @@ class VisionTactileSensorSapienIPC(TactileSensorSapienIPC):
         original_point_num = marker_flow.shape[1]
 
         if original_point_num >= self.marker_flow_size:
-            chosen = np.random.choice(original_point_num, self.marker_flow_size, replace=False)
+            chosen = np.random.choice(
+                original_point_num, self.marker_flow_size, replace=False
+            )
             ret = marker_flow[:, chosen, ...]
         else:
-            ret = np.zeros((marker_flow.shape[0], self.marker_flow_size, marker_flow.shape[-1]))
+            ret = np.zeros(
+                (marker_flow.shape[0], self.marker_flow_size, marker_flow.shape[-1])
+            )
             ret[:, :original_point_num, :] = marker_flow.copy()
-            ret[:, original_point_num:, :] = ret[:, original_point_num - 1: original_point_num, :]
+            ret[:, original_point_num:, :] = ret[
+                :, original_point_num - 1 : original_point_num, :
+            ]
 
         if self.normalize:
             ret /= 160.0

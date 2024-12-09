@@ -1,5 +1,5 @@
 env:
-  env_name: ContinuousInsertionRandomizedMarkerEnv-v1
+  env_name: PegInsertionRandomizedMarkerEnv-v1
   step_penalty: 1
   final_reward: 10
 
@@ -63,16 +63,16 @@ env:
 
 policy:
   policy_name: TD3PolicyForPointFlowEnv
-  buffer_size: 200000
+  buffer_size: 20000
   train_freq: 2
   gradient_steps: -1
-  learning_starts: 2000
+  learning_starts: 1000
   target_policy_noise: 0.5
   target_noise_clip: 1
   action_noise: 0.5
   batch_size: 128
   learning_rate: 0.0003
-  policy_delay: 2
+  policy_delay: 5
 
   policy_kwargs:
     net_arch:
@@ -87,13 +87,20 @@ policy:
 
 train:
   algorithm_name: TD3
-  total_timesteps: 200000
+  total_timesteps: 100000
   log_interval: 10
   checkpoint_every: 2000
   eval_freq: 2000
   n_eval: 50
-  parallel: 2
+  parallel: [0,0,1,1,1,1]
+  # parallel: An integer or a list of integers.
+  # If you have just one GPU, we recommend using an integer.
+  # If an integer is used, it represents the number of TRAIN environments you want to run in parallel,
+  # and the GPU used by the environment is automatically selected.
+  # If an integer list is used, the environment will be built on the specified GPU, including both TRAIN and EVAL environments.
+  # In this case, the last number in the list specifies the GPU for the EVAL environment.
   seed: 0
   device: "cuda"
-  gpu: 0
+  gpu: 1
   name: "3shape_1.5mm"
+  

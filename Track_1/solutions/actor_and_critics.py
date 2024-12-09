@@ -8,7 +8,8 @@ from stable_baselines3.common.torch_layers import create_mlp
 from stable_baselines3.td3.policies import Actor
 from torch import nn
 
-from Track_1.solutions.networks import PointNetFeatureExtractor
+from solutions.networks import PointNetFeatureExtractor
+
 
 class PointNetActor(Actor):
     def __init__(
@@ -63,7 +64,6 @@ class PointNetActor(Actor):
                 nn.init.zeros_(last_linear.bias)
                 last_linear.weight.data.copy_(0.01 * last_linear.weight.data)
 
-
     def forward(self, obs: torch.Tensor) -> torch.Tensor:
         with torch.set_grad_enabled(False):
             marker_pos = self.extract_features(obs, self.features_extractor)
@@ -84,7 +84,9 @@ class PointNetActor(Actor):
         r_point_flow_fea = point_flow_fea[batch_num:, ...]
 
         point_flow_fea = torch.cat([l_point_flow_fea, r_point_flow_fea], dim=-1)
-        feature = [point_flow_fea, ]
+        feature = [
+            point_flow_fea,
+        ]
 
         if self.use_relative_motion:
             relative_motion = obs["relative_motion"]
@@ -111,7 +113,7 @@ class LongOpenLockPointNetActor(Actor):
         layernorm=False,
         use_relative_motion=True,
         zero_init_output=False,
-            **kwargs,
+        **kwargs,
     ):
         super().__init__(
             observation_space,
@@ -156,14 +158,22 @@ class LongOpenLockPointNetActor(Actor):
         if marker_pos.ndim == 4:
             marker_pos = torch.unsqueeze(marker_pos, dim=0)
 
-        l_marker_pos = torch.cat([marker_pos[:, 0, 0, ...], marker_pos[:, 0, 1, ...]], dim=-1)
-        r_marker_pos = torch.cat([marker_pos[:, 1, 0, ...], marker_pos[:, 1, 1, ...]], dim=-1)
+        l_marker_pos = torch.cat(
+            [marker_pos[:, 0, 0, ...], marker_pos[:, 0, 1, ...]], dim=-1
+        )
+        r_marker_pos = torch.cat(
+            [marker_pos[:, 1, 0, ...], marker_pos[:, 1, 1, ...]], dim=-1
+        )
 
         l_point_flow_fea = self.point_net_feature_extractor(l_marker_pos)
-        r_point_flow_fea = self.point_net_feature_extractor(r_marker_pos)  # (batch_num, pointnet_feature_dim)
+        r_point_flow_fea = self.point_net_feature_extractor(
+            r_marker_pos
+        )  # (batch_num, pointnet_feature_dim)
         point_flow_fea = torch.cat([l_point_flow_fea, r_point_flow_fea], dim=-1)
 
-        feature = [point_flow_fea, ]
+        feature = [
+            point_flow_fea,
+        ]
 
         if self.use_relative_motion:
             relative_motion = obs["relative_motion"]
@@ -176,7 +186,6 @@ class LongOpenLockPointNetActor(Actor):
         feature = torch.cat(feature, dim=-1)
         pred = self.mlp_policy(feature)
         return pred
-
 
 
 class CustomCritic(BaseModel):
@@ -196,7 +205,12 @@ class CustomCritic(BaseModel):
         share_features_extractor: bool = False,
         **kwargs,
     ):
-        super().__init__(observation_space, action_space, features_extractor=features_extractor, **kwargs)
+        super().__init__(
+            observation_space,
+            action_space,
+            features_extractor=features_extractor,
+            **kwargs,
+        )
 
         action_dim = get_action_dim(self.action_space)
         self.features_dim = features_dim
@@ -205,11 +219,15 @@ class CustomCritic(BaseModel):
         self.n_critics = n_critics
         self.q_networks = []
         for idx in range(n_critics):
-            q_net = nn.Sequential(*create_mlp(self.features_dim + action_dim, 1, net_arch, activation_fn))
+            q_net = nn.Sequential(
+                *create_mlp(self.features_dim + action_dim, 1, net_arch, activation_fn)
+            )
             self.add_module(f"qf{idx}", q_net)
             self.q_networks.append(q_net)
 
-    def forward(self, obs: torch.Tensor, actions: torch.Tensor) -> Tuple[torch.Tensor, ...]:
+    def forward(
+        self, obs: torch.Tensor, actions: torch.Tensor
+    ) -> Tuple[torch.Tensor, ...]:
         # Learn the features extractor using the policy loss only
         # when the features_extractor is shared with the actor
         with torch.set_grad_enabled(False):

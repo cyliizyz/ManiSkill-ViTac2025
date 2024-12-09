@@ -7,118 +7,184 @@
 
 ## 🚀 Latest Updates
 
+- **2024/12/08**: Refactor code structure for better readability.
 - **2024/11/16**: Track 2 is online! 
 - **2024/10/22**: Track 3 is now available! Featuring sensor structure optimization.
 
 ## 📋 Overview
 
-ManiSkill-ViTac 2025 is a challenge focused on developing advanced manipulation skills using vision and tactile sensing. The challenge consists of three tracks, each targeting different aspects of robotic manipulation.
+ManiSkill-ViTac 2025 is a challenge focused on developing advanced manipulation skills using vision and tactile sensing. The challenge consists of three tracks:
 
-## 🛠️ Prerequisites
+- **Track 1: Visuotactile Manipulation**
+  - Manipulation tasks with tactile sensing
+  - Input Information: Tactile information only
 
-### System Requirements
+- **Track 2: Tactile-Vision-Fusion Manipulation**
+  - Manipulation with enhanced tactile feedback
+  - Input Information: Tactile information + depth with semantic segmentation
+
+- **Track 3: Sensor Structure Design**
+  - Sensor structure optimization
+  - Design Content: Design the shape of the silicone for the GelSight Mini and the distribution of the markers
+
+## 🛠️ Setup Guide
+
+### Prerequisites
+
+**System Requirements**
 - Python 3.8.x - 3.11.x
 - GCC 7.2 or higher (Linux)
 - CUDA Toolkit 11.8 or higher
 - [Git LFS](https://git-lfs.github.com/)
 
-### Dependencies
+**Core Dependencies**
 - [SAPIEN v3.0.0b1](https://github.com/haosulab/SAPIEN/releases/tag/3.0.0b1)
 - [SapienIPC](https://github.com/Rabbit-Hu/sapienipc-exp)
 
-## 📥 Installation
+### Installation Steps
 
-1. Clone the repository:
+1. **Clone Repository**
    ```bash
    git clone https://github.com/cyliizyz/ManiSkill-ViTac2025.git
    cd ManiSkill-ViTac2025
    ```
 
-2. Create and activate the conda environment:
+2. **Setup Conda Environment**
    ```bash
    conda env create -f environment.yaml
    conda activate mani_vitac
    ```
 
-3. Install SapienIPC following the instructions in its [README](https://github.com/Rabbit-Hu/sapienipc-exp/blob/main/README.md).
+3. **Install SapienIPC**
+   - Follow instructions in the [SapienIPC README](https://github.com/Rabbit-Hu/sapienipc-exp/blob/main/README.md)
 
-⚠️ *Important*: SAPIEN v3.0.0b1 must be installed before installing SapienIPC to ensure compatibility. Using a different version of SAPIEN may cause unexpected issues.
+⚠️ **Important Note**:
+- Install SAPIEN v3.0.0b1 before SapienIPC for compatibility
 
 ## 🎯 Challenge Tracks
 
-### Track 1
-- Modify the network structure in [solutions](Track_1/solutions) and save the model in [policies.py](Track_1/solutions/policies.py)
-- **Important:** Files [peg_insertion_sim_evaluation.py](Track_1/scripts/peg_insertion_sim_evaluation.py) and [open_lock_sim_evaluation.py](Track_1/scripts/open_lock_sim_evaluation.py) **must remain unmodified**. MD5 hash checks will verify compliance.
+### Track 1: Visuotactile Manipulation
 
-#### Training Example
+**Input Information**
+- Tactile information only
+
+**Setup**
+- Modify network structure in `Track_1/solutions/`
+- Save model in `Track_1/solutions/policies.py`
+
+**Training**
 ```bash
-# Example policy for peg insertion
+# Peg insertion training
 python Track_1/scripts/universal_training_script.py --cfg Track_1/configs/parameters/peg_insertion.yaml
-# Example policy for open lock
+
+# Open lock training
 python Track_1/scripts/universal_training_script.py --cfg Track_1/configs/parameters/long_open_lock.yaml
 ```
 
-#### Submission
+**Evaluation & Submission**
 ```bash
-python Track_1/scripts/peg_insertion_sim_evaluation.py --team_name [your_teamname] --model_name [your_model_name] --policy_file_path [your_best_model_path]
-python Track_1/scripts/open_lock_sim_evaluation.py --team_name [your_teamname] --model_name [your_model_name] --policy_file_path [your_best_model_path]
+# Evaluate peg insertion
+python Track_1/scripts/peg_insertion_sim_evaluation.py \
+    --team_name [your_teamname] \
+    --model_name [your_model_name] \
+    --policy_file_path [your_best_model_path]
+
+# Evaluate open lock
+python Track_1/scripts/open_lock_sim_evaluation.py \
+    --team_name [your_teamname] \
+    --model_name [your_model_name] \
+    --policy_file_path [your_best_model_path]
 ```
 
-Submit evaluation logs to [maniskill.vitac@gmail.com](mailto:maniskill.vitac@gmail.com)
+### Track 2: Tactile-Vision-Fusion Manipulation
 
-### Track 2
-- Modify the network structure in [solutions](Track_2/solutions) and save the model in [policies.py](Track_2/solutions/policies.py)
-- **Important:** Files [peg_insertion_v2_sim_evaluation.py](Track_2/scripts/peg_insertion_v2_sim_evaluation.py)  **must remain unmodified**. MD5 hash checks will verify compliance.
+**Input Information**
+- Tactile information + depth with semantic segmentation
 
-#### Training Example
+**Setup**
+- Modify network structure in `Track_2/solutions/`
+- Save model in `Track_2/solutions/policies.py`
+
+**Training**
 ```bash
-# Example policy for peg insertion v2
-python Track_2/scripts/universal_training_script.py --cfg Track_2/configs/parameters/peg_insertion_v2_points.yaml
+python Track_2/scripts/universal_training_script.py \
+    --cfg Track_2/configs/parameters/peg_insertion_v2_points.yaml
 ```
 
-#### Submission
+**Evaluation & Submission**
 ```bash
-python Track_2/scripts/peg_insertion_v2_sim_evaluation.py --team_name [your_teamname] --model_name [your_model_name] --policy_file_path [your_best_model_path]
+python Track_2/scripts/peg_insertion_v2_sim_evaluation.py \
+    --team_name [your_teamname] \
+    --model_name [your_model_name] \
+    --policy_file_path [your_best_model_path]
 ```
 
-Submit evaluation logs to [maniskill.vitac@gmail.com](mailto:maniskill.vitac@gmail.com)
+### Track 3: Sensor Structure Design
 
-### Track 3
-- Modify the network structure in [solutions](Track_3/solutions) and save the model in [policies.py](Track_3/solutions/policies.py)
-- Keep [peg_insertion_sim_evaluation.py](Track_3/scripts/peg_insertion_sim_evaluation.py) unchanged (MD5 hash checks apply)
+**Design Content**
+- Design the shape of the silicone for the GelSight Mini
+- Design the distribution of the markers
 
-Track 3 focuses on optimizing the sensor structure. Use modeling software to design the silicone component and import it for evaluation. Refer to the documentation for more details.
+**Prerequisites**
+- Install PyMesh (required for mesh processing):
+   ```bash
+   # Ensure mani_vitac environment is activated
+   conda activate mani_vitac
 
-After modeling:
-1. Use [translate_STL.py](Track_3/tools/translate_STL.py) to adjust orientation
-2. Run [generate_mesh.py](Track_3/tools/generate_mesh.py) to create an environment-compatible model, saving it in [assets](Track_3/assets)
-3. Update `tac_sensor_meta_file` in [peg_insertion.yaml](Track_3/configs/parameters/peg_insertion.yaml) with the generated folder name
-4. Modify parameters within `Track_3.envs.tactile_sensor_sapienipc.VisionTactileSensorSapienIPC` to create markers
+   # System dependencies (Ubuntu/Debian)
+   sudo apt-get install \
+       libeigen3-dev \
+       libgmp-dev \
+       libgmpxx4ldbl \
+       libmpfr-dev \
+       libboost-dev \
+       libboost-thread-dev \
+       libtbb-dev
 
-#### Training Example
+   # Build and Install PyMesh into mani_vitac environment
+   git clone https://github.com/PyMesh/PyMesh.git
+   cd PyMesh
+   python setup.py build
+   python setup.py install
+   cd ..
+   ```
+
+**Setup**
+1. Design silicone component using modeling software
+2. Process the model:
+   ```bash
+   # Adjust orientation
+   python Track_3/tools/translate_STL.py
+   
+   # Generate environment-compatible model
+   python Track_3/tools/generate_mesh.py
+   ```
+3. Update `tac_sensor_meta_file` in `Track_3/configs/parameters/peg_insertion.yaml`
+4. Configure markers in `Track_3.envs.tactile_sensor_sapienipc.VisionTactileSensorSapienIPC`
+
+**Training & Evaluation**
 ```bash
-# Example policy for peg insertion
-python Track_3/scripts/universal_training_script.py --cfg Track_3/configs/parameters/peg_insertion.yaml
+# Training
+python Track_3/scripts/universal_training_script.py \
+    --cfg Track_3/configs/parameters/peg_insertion.yaml
+
+# Evaluation
+python Track_3/scripts/peg_insertion_sim_evaluation.py \
+    --team_name [your_teamname] \
+    --model_name [your_model_name] \
+    --policy_file_path [your_best_model_path]
 ```
 
-#### Submission
-```bash
-python Track_3/scripts/peg_insertion_sim_evaluation.py --team_name [your_teamname] --model_name [your_model_name] --policy_file_path [your_best_model_path]
-```
+## 📊 Competition Resources
 
-Submit evaluation logs and design documentation to [maniskill.vitac@gmail.com](mailto:maniskill.vitac@gmail.com)
+- **Leaderboard**: [View Rankings](https://ai-workshops.github.io/maniskill-vitac-challenge-2025/#leaderboard)
+- **Real Robot Demo**: Available in `real_env_demo/`
+- **GelSightMini Sensor**: [Code Repository](https://github.com/RVSATHU/gelsight_mini_ros)
 
+## 📞 Contact & Support
 
-## 📊 Leaderboard
-Track your progress on the [official leaderboard](https://ai-workshops.github.io/maniskill-vitac-challenge-2025/#leaderboard).
-
-## 🤖 Real Robot Implementation
-- Implementation code available in `real_env_demo/`
-- GelSightMini sensor code: [gelsight_mini_ros](https://github.com/RVSATHU/gelsight_mini_ros)
-
-## 📞 Contact
-- Discord: [Join our community](https://discord.gg/CKucPQxQPr)
-- Email: [maniskill.vitac@gmail.com](mailto:maniskill.vitac@gmail.com)
+- **Discord**: [Join Community](https://discord.gg/CKucPQxQPr)
+- **Email**: [maniskill.vitac@gmail.com](mailto:maniskill.vitac@gmail.com)
 
 ## 📚 Citations
 

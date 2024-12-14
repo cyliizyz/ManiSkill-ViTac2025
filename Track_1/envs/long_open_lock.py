@@ -853,9 +853,9 @@ class LongOpenLockSimEnv(gym.Env):
             and key2_pts_m[:, 0].min() > 0
             and np.abs(key1_pts_m[:, 1].mean()) < 0.002
             and np.abs(key2_pts_m[:, 1].mean()) < 0.002
-            and key1_pts_m[:, 2].min() > 0.031
+            and key1_pts_m[:, 2].min() > 0.035
             and key1_pts_m[:, 2].max() < 0.04
-            and key2_pts_m[:, 2].min() > 0.031
+            and key2_pts_m[:, 2].min() > 0.035
             and key2_pts_m[:, 2].max() < 0.04
         ):
             info["is_success"] = True

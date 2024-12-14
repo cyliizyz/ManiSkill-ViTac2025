@@ -97,6 +97,10 @@ def generate_tetrahedral_mesh(gel_name, visualize=False):
         mesh = meshio.Mesh(points=tetra_points, cells=tetra_cells)
         mesh.write(os.path.join(output_folder, 'tet.msh'), binary=False, file_format="gmsh")
 
+        # Create and save the meta_file as a plain text file (one line)
+        with open(os.path.join(output_folder, 'meta_file'), 'w') as meta_file:
+            meta_file.write('{"tet_mesh": "tet.msh", "active": "active.txt", "on_surface": "on_surface.txt", "faces": "faces.txt"}\n')
+
         # Optionally visualize the point cloud
         if visualize:
             visualize_mesh(v, vn)

@@ -1,5 +1,5 @@
 env:
-  env_name: ContinuousInsertionRandomizedMarkerEnv-v1
+  env_name: PegInsertionRandomizedMarkerEnv-v1
   final_reward: 10
   marker_interval_range: [1.95, 2.15]
   marker_lose_tracking_probability: 0.01

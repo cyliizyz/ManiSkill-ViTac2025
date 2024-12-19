@@ -6,12 +6,10 @@ from stable_baselines3.td3.policies import Actor, TD3Policy
 from solutions.actor_and_critics import (
     CustomCritic,
     PointNetActor,
-    LongOpenLockPointNetActor,
 )
 from solutions.feature_extractors import (
     CriticFeatureExtractor,
     FeatureExtractorForPointFlowEnv,
-    CriticFeatureExtractorForLongOpenLock,
 )
 
 

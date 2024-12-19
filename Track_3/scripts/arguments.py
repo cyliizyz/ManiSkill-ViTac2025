@@ -6,8 +6,6 @@ import sys
 import numpy as np
 from stable_baselines3.common.noise import VectorizedActionNoise, NormalActionNoise
 
-from Track_1.envs.long_open_lock import LongOpenLockParams
-
 script_path = os.path.dirname(os.path.realpath(__file__))
 Track_3_path = os.path.join(script_path, "..")
 Repo_path = os.path.abspath(os.path.join(script_path, "../.."))
@@ -104,11 +102,9 @@ def solve_argument_conflict(cmd_arg, dict_arg):
 
 
 def parse_params(environment_name, params):
+    print(environment_name)
     if "Peg" in environment_name:
         params_lowerbound: CommonParams = PegInsertionParams()
-    elif "LongOpenLock" in environment_name:
-        params_lowerbound = LongOpenLockParams()
-
     else:
         raise NotImplementedError
 

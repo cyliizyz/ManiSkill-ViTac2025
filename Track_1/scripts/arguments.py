@@ -52,7 +52,6 @@ def get_parser():
     return parser
 
 
-# 以cmd为主
 def solve_argument_conflict(cmd_arg, dict_arg):
     policy_args = [
         "policy_name",

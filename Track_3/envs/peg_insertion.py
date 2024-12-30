@@ -1131,7 +1131,7 @@ class PegInsertionSimEnv(gym.Env):
 
     def close(self):
         self.ipc_system = None
-        pass
+        return super().close()
 
 
 class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
@@ -1224,6 +1224,7 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
             elastic_modulus=self.params.tac_elastic_modulus_l,
             poisson_ratio=self.params.tac_poisson_ratio_l,
             density=self.params.tac_density_l,
+            friction=self.params.tac_friction,
             name="tactile_sensor_1",
             marker_interval_range=self.marker_interval_range,
             marker_rotation_range=self.marker_rotation_range,
@@ -1246,6 +1247,7 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
             elastic_modulus=self.params.tac_elastic_modulus_r,
             poisson_ratio=self.params.tac_poisson_ratio_r,
             density=self.params.tac_density_r,
+            friction=self.params.tac_friction,
             name="tactile_sensor_2",
             marker_interval_range=self.marker_interval_range,
             marker_rotation_range=self.marker_rotation_range,
@@ -1286,6 +1288,7 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
 
 if __name__ == "__main__":
     timestep = 0.1
+    use_gui = False
 
     log_time = get_time()
     log_folder = Path(os.path.join(track_path, f"Memo/{log_time}"))
@@ -1320,7 +1323,7 @@ if __name__ == "__main__":
         allow_self_collision=False,
         line_search_max_iters=10,
         ccd_max_iters=100,
-        tac_sensor_meta_file="gelsight_mini_e430/meta_file",
+        tac_sensor_meta_file="tac_sensor_meta/gelsight_mini_e430/meta_file",
         tac_elastic_modulus_l=3.0e5,
         tac_poisson_ratio_l=0.3,
         tac_density_l=1e3,
@@ -1339,22 +1342,29 @@ if __name__ == "__main__":
 
     env = PegInsertionSimMarkerFLowEnv(
         params=params,
-        gui=True,
+        params_upper_bound=params,
+        gui=use_gui,
         step_penalty=1,
         final_reward=10,
-        # max_action=np.array([2, 2, 4]),
-        max_action=np.array([1.0, 1.0, 1.0]),
+        peg_x_max_offset_mm=5.0,
+        peg_y_max_offset_mm=5.0,
+        peg_theta_max_offset_deg=10.0,
+        max_action_mm_deg=np.array([1.0, 1.0, 1.0]),
         max_steps=10,
-        z_step_size=0.5,
+        z_step_size_mm=0.5,
         marker_interval_range=(2.0625, 2.0625),
         marker_rotation_range=0.0,
         marker_translation_range=(0.0, 0.0),
         marker_pos_shift_range=(0.0, 0.0),
         marker_random_noise=0.1,
+        marker_lose_tracking_probability=0.0,
         normalize=False,
         peg_hole_path_file="configs/peg_insertion/3shape_1.5mm.txt",
         log_path=log_folder,
         logger=log,
+        device="cuda:0",
+        no_render=False,
+        env_type="test",
     )
 
     np.set_printoptions(precision=4)
@@ -1403,6 +1413,8 @@ if __name__ == "__main__":
                 test_log.info(f"{k} : {v.shape}")
             test_log.info(f"timestep: {timestep}")
             test_log.info(f"info : {info}\n")
+            if use_gui:
+                input("Press Enter to continue...")
 
             for i, action in enumerate(actions):
                 test_log.info(f"action: {action}")

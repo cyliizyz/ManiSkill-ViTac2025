@@ -22,7 +22,9 @@ class FeatureExtractorForPointFlowEnv(BaseFeaturesExtractor):
     """
 
     def __init__(self, observation_space: gym.spaces):
-        super(FeatureExtractorForPointFlowEnv, self).__init__(observation_space, features_dim=512)
+        super(FeatureExtractorForPointFlowEnv, self).__init__(
+            observation_space, features_dim=512
+        )
         self._features_dim = 512
 
     def forward(self, observations) -> torch.Tensor:
@@ -30,5 +32,7 @@ class FeatureExtractorForPointFlowEnv(BaseFeaturesExtractor):
         if original_obs.ndim == 4:
             original_obs = torch.unsqueeze(original_obs, 0)
         # (batch_num, 2 (left_and_right), 2 (no-contact and contact), 128 (marker_num), 2 (u, v))
-        fea = torch.cat([original_obs[:, :, 0, ...], original_obs[:, :, 1, ...]], dim=-1)
+        fea = torch.cat(
+            [original_obs[:, :, 0, ...], original_obs[:, :, 1, ...]], dim=-1
+        )
         return fea

@@ -27,8 +27,9 @@ from loguru import logger as log
 EVAL_CFG_FILE = os.path.join(
     track_path, "configs/evaluation/peg_insertion_evaluation.yaml"
 )
+
 PEG_NUM = 3
-REPEAT_NUM = 2
+REPEAT_NUM = 3
 
 
 def get_self_md5():

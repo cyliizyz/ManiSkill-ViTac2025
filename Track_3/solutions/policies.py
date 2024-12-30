@@ -58,4 +58,3 @@ class TD3PolicyForPointFlowEnv(TD3Policy):
         )
 
         return CustomCritic(**critic_kwargs).to(self.device)
-

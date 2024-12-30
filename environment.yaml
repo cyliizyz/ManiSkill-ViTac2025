@@ -101,6 +101,7 @@ dependencies:
       - absl-py==2.0.0
       - addict==2.4.0
       - ansi2html==1.8.0
+      - antlr4-python3-runtime==4.9.3
       - appdirs==1.4.4
       - asttokens==2.4.1
       - attrs==23.1.0
@@ -154,7 +155,9 @@ dependencies:
       - nbformat==5.7.0
       - nest-asyncio==1.5.8
       - numpy==1.26.0
+      - numpy-stl==3.2.0
       - oauthlib==3.2.2
+      - omegaconf==2.3.0
       - open3d==0.17.0
       - opencv-python==4.8.1.78
       - packaging==23.2
@@ -180,6 +183,7 @@ dependencies:
       - pyquaternion==0.9.9
       - python-dateutil==2.8.2
       - python-fcl==0.7.0.5
+      - python-utils==3.9.1
       - pytz==2023.3.post1
       - pyvista==0.42.3
       - pyyaml==6.0.1

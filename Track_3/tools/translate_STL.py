@@ -5,7 +5,9 @@ import transforms3d as t3d
 import os
 
 
-def load_and_transform_mesh(import_path, file_name, rotation_angles=(0, 0, 0), scale=1, translation=(0, 0, 0)):
+def load_and_transform_mesh(
+    import_path, file_name, rotation_angles=(0, 0, 0), scale=1, translation=(0, 0, 0)
+):
     """
     Loads an STL file, applies rotation, scaling, and translation transformations.
 
@@ -69,7 +71,9 @@ def visualize_mesh_with_frame(mesh):
     o3d_mesh.compute_vertex_normals()
 
     # Create a coordinate frame for reference
-    coordinate_frame = o3d.geometry.TriangleMesh.create_coordinate_frame(size=10.0, origin=[0, 0, 0])
+    coordinate_frame = o3d.geometry.TriangleMesh.create_coordinate_frame(
+        size=10.0, origin=[0, 0, 0]
+    )
 
     # Visualize mesh and coordinate frame
     o3d.visualization.draw_geometries([o3d_mesh, coordinate_frame])
@@ -86,7 +90,9 @@ if __name__ == "__main__":
     translation = (0, 0, 0)  # Translation vector along x, y, z axes
 
     # Load, transform, and export the mesh
-    mesh = load_and_transform_mesh(relative_import_path, file_name, rotation_angles, scale, translation)
+    mesh = load_and_transform_mesh(
+        relative_import_path, file_name, rotation_angles, scale, translation
+    )
 
     # Export mesh using relative path
     export_mesh(mesh, relative_import_path, file_name)

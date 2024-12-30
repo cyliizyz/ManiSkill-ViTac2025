@@ -4,7 +4,7 @@ import os
 import pynvml
 
 
-def monitor_process_memory_once(pid=None, logger= None):
+def monitor_process_memory_once(pid=None, logger=None):
     """
     Monitor the memory usage of a specified process at one time.
     """
@@ -25,7 +25,7 @@ def monitor_process_memory_once(pid=None, logger= None):
     return pid, mem_info.rss / 1024 / 1024
 
 
-def monitor_process_gpu_memory(pid=None,logger = None):
+def monitor_process_gpu_memory(pid=None, logger=None):
     """
     Monitor GPU memory usage for specified processes.
     """

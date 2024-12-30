@@ -10,6 +10,7 @@ class MonitorTimeCallback(BaseCallback):
 
     :param verbose: Verbosity level: 0 for no output, 1 for info messages, 2 for debug messages
     """
+
     def __init__(self, verbose: int = 0):
         super().__init__(verbose)
         # Those variables will be accessible in the callback
@@ -46,10 +47,9 @@ class MonitorTimeCallback(BaseCallback):
         This event is triggered before collecting new samples.
         """
         self.time_update_policy_end = time.time()
-        update_policy_time = self.time_update_policy_end - self.time_update_policy_start 
+        update_policy_time = self.time_update_policy_end - self.time_update_policy_start
         self.time_rollout_start = time.time()
         self.logger.record("time/update_policy_time", update_policy_time)
-
 
     def _on_step(self) -> bool:
         """
@@ -71,12 +71,12 @@ class MonitorTimeCallback(BaseCallback):
         rollout_time = self.time_rollout_end - self.time_rollout_start
         self.logger.record("time/rollout_time", rollout_time)
 
-
     def _on_training_end(self) -> None:
         """
         This event is triggered before exiting the `learn()` method.
         """
         pass
+
 
 class MonitorMemUsedCallback(BaseCallback):
     """
@@ -84,6 +84,7 @@ class MonitorMemUsedCallback(BaseCallback):
 
     :param verbose: Verbosity level: 0 for no output, 1 for info messages, 2 for debug messages
     """
+
     def __init__(self, verbose: int = 0):
         super().__init__(verbose)
         # Those variables will be accessible in the callback
@@ -105,12 +106,10 @@ class MonitorMemUsedCallback(BaseCallback):
         # to have access to the parent object
         # self.parent = None  # type: Optional[BaseCallback]
 
-
     def _on_training_start(self) -> None:
         """
         This method is called before the first rollout starts.
         """
-
 
     def _on_rollout_start(self) -> None:
         """
@@ -118,7 +117,6 @@ class MonitorMemUsedCallback(BaseCallback):
         using the current policy.
         This event is triggered before collecting new samples.
         """
-
 
     def _on_step(self) -> bool:
         """
@@ -138,20 +136,15 @@ class MonitorMemUsedCallback(BaseCallback):
         """
         # monitor all memory used for the machine
         mem = psutil.virtual_memory()
-        self.logger.record("rollout/CPU_used_memory", mem.used/ (1024**2))
+        self.logger.record("rollout/CPU_used_memory", mem.used / (1024**2))
         # monitor GPU memory used for the machine
         pynvml.nvmlInit()
         device_count = pynvml.nvmlDeviceGetCount()
         for i in range(device_count):
             handle = pynvml.nvmlDeviceGetHandleByIndex(i)
             meminfo = pynvml.nvmlDeviceGetMemoryInfo(handle)
-            self.logger.record(f"rollout/gpu_{i}_used_memory", meminfo.used/ (1024**2))
+            self.logger.record(f"rollout/gpu_{i}_used_memory", meminfo.used / (1024**2))
         pynvml.nvmlShutdown()
-
-
-
-
-
 
     def _on_training_end(self) -> None:
         """

@@ -46,7 +46,10 @@ def parse_cfg_file(cfg_file_path):
     }
     if "max_action" in cfg["env"].keys():
         ret_dict["max_action"] = cfg["env"]["max_action"]
-    if "pos_offset_range" in cfg["env"].keys() and "rot_offset_range" in cfg["env"].keys():
+    if (
+        "pos_offset_range" in cfg["env"].keys()
+        and "rot_offset_range" in cfg["env"].keys()
+    ):
         ret_dict["max_error"] = [
             cfg["env"]["pos_offset_range"],
             cfg["env"]["pos_offset_range"],
@@ -83,7 +86,9 @@ def evaluate_RL_pointnet_policy(arg):
     log_subdir = os.path.join(arg.logdir, f"{cfg['env_name']}_{current_time}")
     try_make_dir(log_subdir)
     log_file = logging.FileHandler(os.path.join(log_subdir, f"stdout.log"))
-    file_formatter = logging.Formatter("[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s")
+    file_formatter = logging.Formatter(
+        "[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s"
+    )
     log_file.setFormatter(file_formatter)
     logger.addHandler(log_file)
 
@@ -97,9 +102,13 @@ def evaluate_RL_pointnet_policy(arg):
     env_name, policy_name = cfg.pop("env_name"), cfg.pop("policy_name")
     data, params, _ = load_from_zip_file(arg.policy_file)
 
-    motion_manager = MotionManagerStage("/dev/translation_stage", "/dev/rotation_stage", "/dev/hande")
+    motion_manager = MotionManagerStage(
+        "/dev/translation_stage", "/dev/rotation_stage", "/dev/hande"
+    )
 
-    env = ContinuousInsertionRealPointFlowEnvironment(motion_manager, clearance=2, **cfg)
+    env = ContinuousInsertionRealPointFlowEnvironment(
+        motion_manager, clearance=2, **cfg
+    )
 
     model = TD3PolicyForPointFlowEnv(
         # observation_space=data["observation_space"],
@@ -115,12 +124,38 @@ def evaluate_RL_pointnet_policy(arg):
     ep_ret_total = 0
     test_result = []
 
-    offset_list = [[-4.0, -4.0, -8.0], [-4.0, -2.0, 2.0], [-4.0, 1.0, -6.0], [-4.0, 3.0, 6.0], [-3.0, -3.0, -2.0],
-                   [-3.0, -1.0, 8.0], [-3.0, 2.0, 2.0], [-2.0, -4.0, -6.0], [-2.0, -2.0, 4.0], [-2.0, 1.0, -2.0],
-                   [-2.0, 3.0, 8.0], [-1.0, -3.0, 0.0], [-1.0, 0.0, 6.0], [-1.0, 3.0, 4.0], [0.0, -3.0, -4.0],
-                   [0.0, 0.0, 6.0], [0.0, 3.0, 4.0], [1.0, -3.0, -4.0], [1.0, 0.0, -4.0], [1.0, 3.0, 0.0],
-                   [2.0, -3.0, -8.0], [2.0, -1.0, 4.0], [2.0, 2.0, -4.0], [2.0, 4.0, 6.0], [3.0, -2.0, 0.0],
-                   [3.0, 1.0, -8.0], [3.0, 3.0, 2.0], [4.0, -3.0, -4.0], [4.0, -1.0, 6.0], [4.0, 2.0, -2.0]]
+    offset_list = [
+        [-4.0, -4.0, -8.0],
+        [-4.0, -2.0, 2.0],
+        [-4.0, 1.0, -6.0],
+        [-4.0, 3.0, 6.0],
+        [-3.0, -3.0, -2.0],
+        [-3.0, -1.0, 8.0],
+        [-3.0, 2.0, 2.0],
+        [-2.0, -4.0, -6.0],
+        [-2.0, -2.0, 4.0],
+        [-2.0, 1.0, -2.0],
+        [-2.0, 3.0, 8.0],
+        [-1.0, -3.0, 0.0],
+        [-1.0, 0.0, 6.0],
+        [-1.0, 3.0, 4.0],
+        [0.0, -3.0, -4.0],
+        [0.0, 0.0, 6.0],
+        [0.0, 3.0, 4.0],
+        [1.0, -3.0, -4.0],
+        [1.0, 0.0, -4.0],
+        [1.0, 3.0, 0.0],
+        [2.0, -3.0, -8.0],
+        [2.0, -1.0, 4.0],
+        [2.0, 2.0, -4.0],
+        [2.0, 4.0, 6.0],
+        [3.0, -2.0, 0.0],
+        [3.0, 1.0, -8.0],
+        [3.0, 3.0, 2.0],
+        [4.0, -3.0, -4.0],
+        [4.0, -1.0, 6.0],
+        [4.0, 2.0, -2.0],
+    ]
     logger.info(offset_list)
     offset_list = offset_list * arg.repeat_num
     np.set_printoptions(precision=3, suppress=True)
@@ -161,20 +196,28 @@ def evaluate_RL_pointnet_policy(arg):
         logger.info("Test total reward %.2f, episode length %d" % (ep_ret, ep_len))
         cur_test_log.append(("total_reward", ep_ret))
         cur_test_log.append(("episode_length", ep_len))
-        current_success_rate = np.sum(np.array([int(v[0]) for v in test_result])) / (k + 1)
+        current_success_rate = np.sum(np.array([int(v[0]) for v in test_result])) / (
+            k + 1
+        )
         if current_success_rate > 0:
             current_mean_ep_len = (
-                np.mean(np.array([int(v[1]) if v[0] else 0 for v in test_result])) / current_success_rate
+                np.mean(np.array([int(v[1]) if v[0] else 0 for v in test_result]))
+                / current_success_rate
             )
         else:
             current_mean_ep_len = 0
-        logger.info(f"current success rate: {current_success_rate:.2f}; current mean ep_len: {current_mean_ep_len}")
+        logger.info(
+            f"current success rate: {current_success_rate:.2f}; current mean ep_len: {current_mean_ep_len}"
+        )
         all_test_log.append(cur_test_log)
 
     env.close()
     success_rate = np.sum(np.array([int(v[0]) for v in test_result])) / len(offset_list)
     if success_rate > 0:
-        avg_steps = np.mean(np.array([int(v[1]) if v[0] else 0 for v in test_result])) / success_rate
+        avg_steps = (
+            np.mean(np.array([int(v[1]) if v[0] else 0 for v in test_result]))
+            / success_rate
+        )
     else:
         avg_steps = 0
 
@@ -213,4 +256,3 @@ if __name__ == "__main__":
     for cfg_file in cfg_files:
         args.cfg = cfg_file
         evaluate_RL_pointnet_policy(copy.deepcopy(args))
-

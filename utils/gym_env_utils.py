@@ -17,7 +17,12 @@ def get_dtype_bounds(dtype: np.dtype):
 
 def convert_observation_to_space(observation, prefix=""):
     if isinstance(observation, (dict)):
-        space = spaces.Dict({k: convert_observation_to_space(v, prefix + "/" + k) for k, v in observation.items()})
+        space = spaces.Dict(
+            {
+                k: convert_observation_to_space(v, prefix + "/" + k)
+                for k, v in observation.items()
+            }
+        )
     elif isinstance(observation, np.ndarray):
         shape = observation.shape
         dtype = observation.dtype

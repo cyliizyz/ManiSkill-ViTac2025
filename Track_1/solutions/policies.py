@@ -7,12 +7,11 @@ from solutions.actor_and_critics import (
     CustomCritic,
     PointNetActor,
     LongOpenLockPointNetActor,
-
 )
 from solutions.feature_extractors import (
     CriticFeatureExtractor,
-    CriticFeatureExtractorForLongOpenLock,
     FeatureExtractorForPointFlowEnv,
+    CriticFeatureExtractorForLongOpenLock,
 )
 
 

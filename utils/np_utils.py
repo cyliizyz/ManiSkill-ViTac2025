@@ -23,8 +23,8 @@ def transform_pts(pts, RT):
 
 def dist2np(pts_0, pts_1):
     """compute MxN point distance"""
-    square_sum0 = np.sum(pts_0 ** 2, axis=1, keepdims=True)
-    square_sum1 = np.sum(pts_1 ** 2, axis=1, keepdims=True)
+    square_sum0 = np.sum(pts_0**2, axis=1, keepdims=True)
+    square_sum1 = np.sum(pts_1**2, axis=1, keepdims=True)
     square_sum = square_sum0 + square_sum1.T
     square_sum -= 2 * pts_0 @ pts_1.T
     return np.sqrt(square_sum + 1e-7)
@@ -112,14 +112,14 @@ def estimate_rigid_transform(P, Q):
 
 def generate_offset(xy_range, r_min, theta_range):
     offset_xy = np.zeros(2)
-    while offset_xy[0] ** 2 + offset_xy[1] ** 2 <= r_min ** 2:
+    while offset_xy[0] ** 2 + offset_xy[1] ** 2 <= r_min**2:
         offset_xy = np.random.rand(2) * 2 * xy_range + np.array([-xy_range])
 
     offset = np.zeros(3)
     offset[0] = offset_xy[0]
     offset[1] = offset_xy[1]
     offset[2] = (
-            np.random.rand(1) * 2 * theta_range / 180 * np.pi - theta_range / 180 * np.pi
+        np.random.rand(1) * 2 * theta_range / 180 * np.pi - theta_range / 180 * np.pi
     )
     return offset
 
@@ -144,7 +144,9 @@ def generate_mono_offset(xy_max, xy_min):
     return offset
 
 
-def generate_blocked_offset(pos_offset_range, rot_offset_range, peg_v, peg_f, hole_v, hole_f):
+def generate_blocked_offset(
+    pos_offset_range, rot_offset_range, peg_v, peg_f, hole_v, hole_f
+):
     peg = fcl.BVHModel()
     peg.beginModel(peg_v.shape[0], peg_f.shape[0])
     peg.addSubModel(peg_v, peg_f)
@@ -172,26 +174,36 @@ def generate_blocked_offset(pos_offset_range, rot_offset_range, peg_v, peg_f, ho
         result = fcl.CollisionResult()
         ret = fcl.collide(peg_fcl, hole_fcl, request, result)
         if ret > 0:
-            offset = np.array([x_offset * 1000, y_offset * 1000, theta_offset * 180 / np.pi])
+            offset = np.array(
+                [x_offset * 1000, y_offset * 1000, theta_offset * 180 / np.pi]
+            )
             break
     return offset
 
 
 def EulerToQuternion(euler):
     """
-        Euler to Quternion
+    Euler to Quternion
     """
     euler = euler * np.pi / 180
     x1 = np.cos(euler[1]) * np.cos(euler[2])
     x2 = np.cos(euler[1]) * np.sin(euler[2])
     x3 = -np.sin(euler[1])
 
-    y1 = -np.cos(euler[0]) * np.sin(euler[2]) + np.sin(euler[0]) * np.sin(euler[1]) * np.cos(euler[2])
-    y2 = np.cos(euler[0]) * np.cos(euler[2]) + np.sin(euler[0]) * np.sin(euler[1]) * np.sin(euler[2])
+    y1 = -np.cos(euler[0]) * np.sin(euler[2]) + np.sin(euler[0]) * np.sin(
+        euler[1]
+    ) * np.cos(euler[2])
+    y2 = np.cos(euler[0]) * np.cos(euler[2]) + np.sin(euler[0]) * np.sin(
+        euler[1]
+    ) * np.sin(euler[2])
     y3 = np.sin(euler[0]) * np.cos(euler[1])
 
-    z1 = np.sin(euler[0]) * np.sin(euler[2]) + np.cos(euler[0]) * np.sin(euler[1]) * np.cos(euler[2])
-    z2 = -np.sin(euler[0]) * np.cos(euler[2]) + np.cos(euler[0]) * np.sin(euler[1]) * np.sin(euler[2])
+    z1 = np.sin(euler[0]) * np.sin(euler[2]) + np.cos(euler[0]) * np.sin(
+        euler[1]
+    ) * np.cos(euler[2])
+    z2 = -np.sin(euler[0]) * np.cos(euler[2]) + np.cos(euler[0]) * np.sin(
+        euler[1]
+    ) * np.sin(euler[2])
     z3 = np.cos(euler[0]) * np.cos(euler[1])
 
     Q = np.zeros(4, dtype=float)
@@ -211,6 +223,7 @@ def EulerToQuternion(euler):
     else:
         Q[3] = -np.sqrt(z3 - x1 - y2 + 1) / 2
     return Q
+
 
 if __name__ == "__main__":
     for i in range(10):

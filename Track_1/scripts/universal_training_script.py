@@ -69,6 +69,9 @@ def make_multi_env(
     if type(parallel) is int:
         device_list = [f"cuda:{(i) % num_devices}" for i in range(parallel + 1)]
     else:
+        assert (
+            len(parallel) > 1
+        ), f"parallel should be a list with length > 1 or use int"
         device_list = [f"cuda:{(i) % num_devices}" for i in parallel]
 
     specified_env_args.update({"env_type": "train"})
@@ -121,6 +124,7 @@ if __name__ == "__main__":
             "params": params_lb,
             "params_upper_bound": params_ub,
             "log_path": log_dir,
+            "no_render": cfg["no_render"],
         }
     )
     with open(Path(log_dir) / "params_lb.txt", "w") as f:
@@ -228,3 +232,4 @@ if __name__ == "__main__":
         wandb_run.finish()
     model.save(os.path.join(log_dir, "rl_model_final.zip"))
     train_env.close()
+    eval_env.close

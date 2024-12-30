@@ -39,6 +39,7 @@ from utils.sapienipc_utils import build_sapien_entity_ABD
 
 from loguru import logger as log
 from utils.mem_monitor import *
+import cv2 as cv
 
 wp.init()
 wp_device = wp.get_preferred_device()
@@ -1131,7 +1132,7 @@ class PegInsertionSimEnv(gym.Env):
 
     def close(self):
         self.ipc_system = None
-        pass
+        return super().close()
 
 
 class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
@@ -1144,6 +1145,7 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
 
     def __init__(
         self,
+        render_rgb: bool = False,
         marker_interval_range: Tuple[float, float] = (2.0, 2.0),
         marker_rotation_range: float = 0.0,
         marker_translation_range: Tuple[float, float] = (0.0, 0.0),
@@ -1157,6 +1159,7 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
         Initializes a new instance of PegInsertionSimMarkerFLowEnv.
 
         Args:
+        - render_rgb (bool): A flag indicating whether to render RGB images in the observation.
         - marker_interval_range (Tuple[float, float]): The range of intervals between marker points in millimeters.
         - marker_rotation_range (float): The range of overall marker rotation in radians.
         - marker_translation_range (Tuple[float, float]): The range of overall marker translation in millimeters.
@@ -1166,6 +1169,7 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
         - normalize (bool): A flag indicating whether to normalize the marker flow observations.
         - **kwargs: Additional keyword arguments passed to the parent class.
         """
+        self.render_rgb = render_rgb
         self.sensor_meta_file = kwargs.get("params").tac_sensor_meta_file
         self.marker_interval_range = marker_interval_range
         self.marker_rotation_range = marker_rotation_range
@@ -1182,6 +1186,14 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
         self.default_observation["marker_flow"] = np.zeros(
             (2, 2, self.marker_flow_size, 2), dtype=np.float32
         )
+        if self.render_rgb:
+            self.default_observation["rgb_images"] = np.stack(
+                [
+                    np.zeros((240, 320, 3), dtype=np.uint8),
+                    np.zeros((240, 320, 3), dtype=np.uint8),
+                ],
+                axis=0,
+            )
 
         self.observation_space = convert_observation_to_space(self.default_observation)
 
@@ -1224,6 +1236,7 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
             elastic_modulus=self.params.tac_elastic_modulus_l,
             poisson_ratio=self.params.tac_poisson_ratio_l,
             density=self.params.tac_density_l,
+            friction=self.params.tac_friction,
             name="tactile_sensor_1",
             marker_interval_range=self.marker_interval_range,
             marker_rotation_range=self.marker_rotation_range,
@@ -1246,6 +1259,7 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
             elastic_modulus=self.params.tac_elastic_modulus_r,
             poisson_ratio=self.params.tac_poisson_ratio_r,
             density=self.params.tac_density_r,
+            friction=self.params.tac_friction,
             name="tactile_sensor_2",
             marker_interval_range=self.marker_interval_range,
             marker_rotation_range=self.marker_rotation_range,
@@ -1281,11 +1295,22 @@ class PegInsertionSimMarkerFLowEnv(PegInsertionSimEnv):
             ],
             axis=0,
         ).astype(np.float32)
+        if self.render_rgb:
+            obs["rgb_images"] = np.stack(
+                [
+                    self.tactile_sensor_1.gen_rgb_image(),
+                    self.tactile_sensor_2.gen_rgb_image(),
+                ],
+                axis=0,
+            )
+
         return obs
 
 
 if __name__ == "__main__":
     timestep = 0.1
+    use_gui = False
+    use_render_rgb = True
 
     log_time = get_time()
     log_folder = Path(os.path.join(track_path, f"Memo/{log_time}"))
@@ -1339,22 +1364,30 @@ if __name__ == "__main__":
 
     env = PegInsertionSimMarkerFLowEnv(
         params=params,
-        gui=False,
+        params_upper_bound=params,
+        gui=use_gui,
         step_penalty=1,
         final_reward=10,
-        # max_action=np.array([2, 2, 4]),
-        max_action=np.array([1.0, 1.0, 1.0]),
+        peg_x_max_offset_mm=5.0,
+        peg_y_max_offset_mm=5.0,
+        peg_theta_max_offset_deg=10.0,
+        max_action_mm_deg=np.array([1.0, 1.0, 1.0]),
         max_steps=10,
-        z_step_size=0.5,
+        z_step_size_mm=0.5,
+        render_rgb=use_render_rgb,
         marker_interval_range=(2.0625, 2.0625),
         marker_rotation_range=0.0,
         marker_translation_range=(0.0, 0.0),
         marker_pos_shift_range=(0.0, 0.0),
         marker_random_noise=0.1,
+        marker_lose_tracking_probability=0.0,
         normalize=False,
         peg_hole_path_file="configs/peg_insertion/3shape_1.5mm.txt",
         log_path=log_folder,
         logger=log,
+        device="cuda:0",
+        no_render=False,
+        env_type="test",
     )
 
     np.set_printoptions(precision=4)

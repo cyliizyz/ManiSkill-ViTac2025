@@ -1,7 +1,7 @@
 import math
-
 import numpy as np
 import scipy
+
 
 def estimate_rigid_transform(P, Q):
     assert P.shape == Q.shape
@@ -19,7 +19,7 @@ def estimate_rigid_transform(P, Q):
     except Exception as e:
         print(e)
         try:
-            V, S, W = scipy.linalg.svd(C, lapack_driver='gesvd')
+            V, S, W = scipy.linalg.svd(C, lapack_driver="gesvd")
             d = np.linalg.det(V) * np.linalg.det(W)
             D = np.eye(3)
             D[2, 2] = d
@@ -78,8 +78,8 @@ def quat2R_np(q):
 
 def dist2np(pts_0, pts_1):
     """compute MxN point distance"""
-    square_sum0 = np.sum(pts_0 ** 2, axis=1, keepdims=True)
-    square_sum1 = np.sum(pts_1 ** 2, axis=1, keepdims=True)
+    square_sum0 = np.sum(pts_0**2, axis=1, keepdims=True)
+    square_sum1 = np.sum(pts_1**2, axis=1, keepdims=True)
     square_sum = square_sum0 + square_sum1.T
     square_sum -= 2 * pts_0 @ pts_1.T
     return np.sqrt(square_sum + 1e-7)
@@ -105,12 +105,16 @@ def in_hull(p, hull):
 def vertical_ray_intersects_segment(ray_point, segment_start, segment_end):
     if segment_start[0] == segment_end[0]:
         return False
-    segment_slope = (segment_end[1] - segment_start[1]) / (segment_end[0] - segment_start[0])
+    segment_slope = (segment_end[1] - segment_start[1]) / (
+        segment_end[0] - segment_start[0]
+    )
     segment_b = segment_end[1] - segment_end[0] * segment_slope
 
     intersect_point = (ray_point[0], ray_point[0] * segment_slope + segment_b)
     if intersect_point[1] >= ray_point[1]:
-        intersect_ratio = (ray_point[0] - segment_start[0]) / (segment_end[0] - segment_start[0])
+        intersect_ratio = (ray_point[0] - segment_start[0]) / (
+            segment_end[0] - segment_start[0]
+        )
         if 0 <= intersect_ratio < 1:
             return True
         else:

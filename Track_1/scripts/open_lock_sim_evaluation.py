@@ -15,8 +15,8 @@ sys.path.append(script_path)
 sys.path.append(track_path)
 sys.path.append(repo_path)
 
-from Track_1.scripts.arguments import parse_params
-from Track_1.envs.long_open_lock import LongOpenLockRandPointFlowEnv
+from scripts.arguments import parse_params
+from envs.long_open_lock import LongOpenLockRandPointFlowEnv
 from path import Path
 from stable_baselines3.common.utils import set_random_seed
 

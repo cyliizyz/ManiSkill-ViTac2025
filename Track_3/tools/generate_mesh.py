@@ -33,7 +33,6 @@ def generate_tetrahedral_mesh(gel_name, visualize=False):
         tetgen = pymesh.tetgen()
         tetgen.points = stl_mesh.vertices / SCALE
 
-
         ###########################################################################################
         # You can generate the mesh by adjusting these parameters.
         tetgen.triangles = stl_mesh.faces
@@ -43,14 +42,21 @@ def generate_tetrahedral_mesh(gel_name, visualize=False):
         tetgen.coarsening = False  # Coarsen input tet mesh, default is False
         tetgen.max_tet_volume = 0.00000001  # Default is unbounded
         tetgen.optimization_level = 2  # Ranges from 0 to 10, default is 2
-        tetgen.coplanar_tolerance = 1e-8  # Used for coplanar point detection, default is 1e-8
+        tetgen.coplanar_tolerance = (
+            1e-8  # Used for coplanar point detection, default is 1e-8
+        )
         tetgen.exact_arithmetic = True  # Use exact predicates, default is True
-        tetgen.merge_coplanar = True  # Merge coplanar faces and nearby vertices, default is True
-        tetgen.weighted_delaunay = False  # Perform weighted Delaunay tetrahedralization, default is False
-        tetgen.keep_convex_hull = False  # Keep all tets within convex hull, default is False
+        tetgen.merge_coplanar = (
+            True  # Merge coplanar faces and nearby vertices, default is True
+        )
+        tetgen.weighted_delaunay = (
+            False  # Perform weighted Delaunay tetrahedralization, default is False
+        )
+        tetgen.keep_convex_hull = (
+            False  # Keep all tets within convex hull, default is False
+        )
         tetgen.verbosity = 1  # Verbosity level from 0 to 4, where 1 is normal output
         ############################################################################################
-
 
         # Run tetgen to generate tetrahedral mesh
         tetgen.run()
@@ -61,7 +67,7 @@ def generate_tetrahedral_mesh(gel_name, visualize=False):
         elements = tetra_mesh.elements.copy()
 
         vn = nodes.shape[0]
-        print(f'vn: {vn}, fn: {faces.shape[0]}, en: {elements.shape[0]}')
+        print(f"vn: {vn}, fn: {faces.shape[0]}, en: {elements.shape[0]}")
 
         # Compute bounding box and center the mesh
         bbox_min = nodes.min(0)
@@ -70,7 +76,7 @@ def generate_tetrahedral_mesh(gel_name, visualize=False):
         v = nodes - center[None, :]
 
         # Apply rotation (currently no rotation applied)
-        R = t3d.euler.euler2mat(0, 0., 0.)
+        R = t3d.euler.euler2mat(0, 0.0, 0.0)
         v = (R @ v.T).T
 
         # Detect active and surface points based on z-axis bounds
@@ -82,24 +88,30 @@ def generate_tetrahedral_mesh(gel_name, visualize=False):
         # Save active points and surface points
         active_output = np.zeros(vn, dtype=int)
         active_output[active] = 1
-        np.savetxt(os.path.join(output_folder, 'active.txt'), active_output, fmt='%d')
+        np.savetxt(os.path.join(output_folder, "active.txt"), active_output, fmt="%d")
 
         on_surface_output = np.zeros(vn, dtype=int)
         on_surface_output[on_surface] = 1
-        np.savetxt(os.path.join(output_folder, 'on_surface.txt'), on_surface_output, fmt='%d')
+        np.savetxt(
+            os.path.join(output_folder, "on_surface.txt"), on_surface_output, fmt="%d"
+        )
 
         # Save faces to a text file
-        np.savetxt(os.path.join(output_folder, 'faces.txt'), faces, fmt='%d')
+        np.savetxt(os.path.join(output_folder, "faces.txt"), faces, fmt="%d")
 
         # Save tetrahedral mesh in .msh format
         tetra_points = v
         tetra_cells = {"tetra": elements}
         mesh = meshio.Mesh(points=tetra_points, cells=tetra_cells)
-        mesh.write(os.path.join(output_folder, 'tet.msh'), binary=False, file_format="gmsh")
+        mesh.write(
+            os.path.join(output_folder, "tet.msh"), binary=False, file_format="gmsh"
+        )
 
         # Create and save the meta_file as a plain text file (one line)
-        with open(os.path.join(output_folder, 'meta_file'), 'w') as meta_file:
-            meta_file.write('{"tet_mesh": "tet.msh", "active": "active.txt", "on_surface": "on_surface.txt", "faces": "faces.txt"}\n')
+        with open(os.path.join(output_folder, "meta_file"), "w") as meta_file:
+            meta_file.write(
+                '{"tet_mesh": "tet.msh", "active": "active.txt", "on_surface": "on_surface.txt", "faces": "faces.txt"}\n'
+            )
 
         # Optionally visualize the point cloud
         if visualize:
@@ -131,5 +143,5 @@ def visualize_mesh(vertices, vn):
     o3d.visualization.draw_geometries([pcd, frame])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     generate_tetrahedral_mesh("gelsight_mini", visualize=True)

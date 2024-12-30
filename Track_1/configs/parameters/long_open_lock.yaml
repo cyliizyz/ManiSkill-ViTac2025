@@ -1,6 +1,6 @@
 env:
   env_name: LongOpenLockRandPointFlowEnv-v1
-  max_action_mm: [2.0, 1.0]
+  max_action_mm: [4.0, 2.0]
   step_penalty: 1
   final_reward: 10
   max_steps: 50
@@ -10,6 +10,8 @@ env:
   key_y_max_offset_mm: 0
   key_z_max_offset_mm: 0
   normalize: False
+  gui: False
+  render_rgb: True
   marker_random_noise: 0.5
   marker_lose_tracking_probability: 0.01
   marker_interval_range: [1.95, 2.15]
@@ -47,15 +49,15 @@ env:
     tac_friction: [ 50.0, 125.0 ]
     # task specific parameters
     key_lock_path_file: "configs/key_and_lock/key_lock.txt"
-    indentation_depth: [ 0.5, 1.25 ]
+    indentation_depth_mm: [ 0.5, 1.25 ]
     key_friction: [ 0.2, 1.0 ]
     lock_friction: [ 0.0, 1.0 ]
 policy:
   policy_name: TD3PolicyForLongOpenLockPointFlowEnv
-  buffer_size: 200000
+  buffer_size: 10000
   train_freq: 2
   gradient_steps: -1
-  learning_starts: 2000
+  learning_starts: 1000
   target_policy_noise: 0.5
   target_noise_clip: 1
   action_noise: 0.5
@@ -75,12 +77,12 @@ policy:
 
 train:
   algorithm_name: TD3
-  total_timesteps: 5000000
+  total_timesteps: 400000
   log_interval: 10
   checkpoint_every: 2000
   eval_freq: 2000
   n_eval: 50
-  parallel: [0,0,0,0,0]
+  parallel: [0,0,0,1,1,1,1]
   # parallel: An integer or a list of integers.
   # If you have just one GPU, we recommend using an integer.
   # If an integer is used, it represents the number of TRAIN environments you want to run in parallel,

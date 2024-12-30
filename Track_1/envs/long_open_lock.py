@@ -35,9 +35,37 @@ from utils.sapienipc_utils import build_sapien_entity_ABD
 
 from loguru import logger as log
 from utils.mem_monitor import *
+import cv2 as cv
 
 wp.init()
 wp_device = wp.get_preferred_device()
+
+
+class LongOpenLockConstants:
+    # Key insertion thresholds (in meters)
+    KEY_THRESHOLD_0_2 = 0.046  # For index 0 and 2
+    KEY_THRESHOLD_1 = 0.052  # For index 1
+    KEY_THRESHOLD_3 = 0.062  # For index 3
+
+    # Target heights (in meters)
+    TARGET_HEIGHT_INSIDE = 0.032  # Target height when key is inside lock
+    TARGET_HEIGHT_OUTSIDE = 0.030  # Target height when aligning with hole
+
+    # Error thresholds (in meters)
+    MAX_Y_ERROR = 0.01  # Maximum allowed Y error
+    MAX_Z_ERROR = 0.045  # Maximum allowed Z error
+    MIN_Z_ERROR = 0.015  # Minimum allowed Z error
+    MAX_X_ERROR = 0.090  # Maximum allowed X error
+
+    # Success criteria thresholds (in meters)
+    SUCCESS_Y_THRESHOLD = 0.002  # Maximum Y deviation for success
+    SUCCESS_Z_MIN = 0.034  # Minimum Z position for success
+    SUCCESS_Z_MAX = 0.04  # Maximum Z position for success
+
+    # Key offset positions (in millimeters)
+    KEY_OFFSET_0_2 = 12.5  # Base offset for index 0 and 2
+    KEY_OFFSET_1 = 12.5  # Base offset for index 1
+    KEY_OFFSET_3 = 12.5  # Base offset for index 3
 
 
 class LongOpenLockParams(CommonParams):
@@ -77,7 +105,7 @@ class LongOpenLockSimEnv(gym.Env):
         key_y_max_offset_mm: float = 0.0,
         key_z_max_offset_mm: float = 0.0,
         sensor_offset_x_range_len_mm: float = 0.0,
-        senosr_offset_z_range_len_mm: float = 0.0,
+        sensor_offset_z_range_len_mm: float = 0.0,
         # key movement
         max_action_mm: np.ndarray = [4.0, 2.0],
         max_steps: int = 100,
@@ -105,7 +133,7 @@ class LongOpenLockSimEnv(gym.Env):
         - key_y_max_offset_mm (float): The maximum y-axis offset for the key in millimeters.
         - key_z_max_offset_mm (float): The maximum z-axis offset for the key in millimeters.
         - sensor_offset_x_range_len_mm (float): The range length of x-axis offset for the sensor in millimeters.
-        - senosr_offset_z_range_len_mm (float): The range length of z-axis offset for the sensor in millimeters.
+        - sensor_offset_z_range_len_mm (float): The range length of z-axis offset for the sensor in millimeters.
         - max_action_mm (np.ndarray): The maximum action values in millimeters.
         - max_steps (int): The maximum number of steps allowed.
         - params (LongOpenLockParams): The parameters object.
@@ -138,7 +166,7 @@ class LongOpenLockSimEnv(gym.Env):
         self.log_path = Path(
             os.path.join(
                 self.log_folder,
-                f"{self.log_time}_{env_type}_{self.pid}_PegInsertionEnv.log",
+                f"{self.log_time}_{env_type}_{self.pid}_OpenLockEnv.log",
             )
         )
         print(self.log_path)
@@ -163,7 +191,7 @@ class LongOpenLockSimEnv(gym.Env):
         self.key_y_max_offset_mm = key_y_max_offset_mm
         self.key_z_max_offset_mm = key_z_max_offset_mm
         self.sensor_offset_x_range_len_mm = sensor_offset_x_range_len_mm
-        self.sensor_offset_z_range_len_mm = senosr_offset_z_range_len_mm
+        self.sensor_offset_z_range_len_mm = sensor_offset_z_range_len_mm
 
         self.current_episode_elapsed_steps = 0
         self.current_episode_over = False
@@ -289,58 +317,62 @@ class LongOpenLockSimEnv(gym.Env):
 
         error_sum += abs(key1_pts_center_m[0] - lock1_pts_center_m[0])  # x direction
         error_sum += abs(key2_pts_center_m[0] - lock2_pts_center_m[0])
-        # print(f"reward start: {reward}")
-        # z_offset
-        if self.index == 0 or self.index == 2:
-            if key1_pts_max_m[0] < 0.046 and key2_pts_max_m[0] < 0.046:
-                # if key is inside the lock, then encourage it to fit in to the holes
-                error_sum += abs(
-                    0.037 - key1_pts_center_m[2]
-                )  # must be constrained in both directions
-                error_sum += abs(
-                    0.037 - key2_pts_center_m[2]
-                )  # otherwise the policy would keep lifting the key
-                # and smooth the error to avoid sudden change
-            else:
-                # else, align it with the hole
-                error_sum += abs(key1_pts_center_m[2] - 0.030)
-                error_sum += abs(key2_pts_center_m[2] - 0.030)
-                pass
-        if self.index == 1:
-            if key1_pts_max_m[0] < 0.052 and key2_pts_max_m[0] < 0.052:
-                # if key is inside the lock, then encourage it to fit in to the holes
-                error_sum += abs(
-                    0.037 - key1_pts_center_m[2]
-                )  # must be constrained in both directions
-                error_sum += abs(
-                    0.037 - key2_pts_center_m[2]
-                )  # otherwise the policy would keep lifting the key
-                # and smooth the error to avoid sudden change
-            else:
-                # else, align it with the hole
-                error_sum += abs(key1_pts_center_m[2] - 0.030)
-                error_sum += abs(key2_pts_center_m[2] - 0.030)
-                pass
-        if self.index == 3:
-            if key1_pts_max_m[0] < 0.062 and key2_pts_max_m[0] < 0.062:
-                # if key is inside the lock, then encourage it to fit in to the holes
-                error_sum += abs(
-                    0.037 - key1_pts_center_m[2]
-                )  # must be constrained in both directions
-                error_sum += abs(
-                    0.037 - key2_pts_center_m[2]
-                )  # otherwise the policy would keep lifting the key
-                # and smooth the error to avoid sudden change
-            else:
-                # else, align it with the hole
-                error_sum += abs(key1_pts_center_m[2] - 0.030)
-                error_sum += abs(key2_pts_center_m[2] - 0.030)
-                pass
 
-        # y_offset
-        error_sum += abs(key1_pts_center_m[1])
-        error_sum += abs(key2_pts_center_m[1])
-        error_sum *= error_scale
+        if self.index == 0 or self.index == 2:
+            if (
+                key1_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_0_2
+                and key2_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_0_2
+            ):
+                error_sum += abs(
+                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key1_pts_center_m[2]
+                )
+                error_sum += abs(
+                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key2_pts_center_m[2]
+                )
+            else:
+                error_sum += abs(
+                    key1_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
+                )
+                error_sum += abs(
+                    key2_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
+                )
+        elif self.index == 1:
+            if (
+                key1_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_1
+                and key2_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_1
+            ):
+                error_sum += abs(
+                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key1_pts_center_m[2]
+                )
+                error_sum += abs(
+                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key2_pts_center_m[2]
+                )
+            else:
+                error_sum += abs(
+                    key1_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
+                )
+                error_sum += abs(
+                    key2_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
+                )
+        elif self.index == 3:
+            if (
+                key1_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_3
+                and key2_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_3
+            ):
+                error_sum += abs(
+                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key1_pts_center_m[2]
+                )
+                error_sum += abs(
+                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key2_pts_center_m[2]
+                )
+            else:
+                error_sum += abs(
+                    key1_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
+                )
+                error_sum += abs(
+                    key2_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
+                )
+
         return error_sum
 
     def seed(self, seed=None):
@@ -419,15 +451,21 @@ class LongOpenLockSimEnv(gym.Env):
         lock_path = asset_dir / lock_path
 
         if key_offset_mm is None:
-            if self.index == 0:
-                x_offset = np.random.rand() * self.key_x_max_offset_mm + 46 - 5
-
+            if self.index == 0 or self.index == 2:
+                x_offset = (
+                    np.random.rand() * self.key_x_max_offset_mm
+                    + LongOpenLockConstants.KEY_OFFSET_0_2
+                )
             elif self.index == 1:
-                x_offset = np.random.rand() * self.key_x_max_offset_mm + 52 - 5
-            elif self.index == 2:
-                x_offset = np.random.rand() * self.key_x_max_offset_mm + 46 - 5
+                x_offset = (
+                    np.random.rand() * self.key_x_max_offset_mm
+                    + LongOpenLockConstants.KEY_OFFSET_1
+                )
             elif self.index == 3:
-                x_offset = np.random.rand() * self.key_x_max_offset_mm + 62 - 5
+                x_offset = (
+                    np.random.rand() * self.key_x_max_offset_mm
+                    + LongOpenLockConstants.KEY_OFFSET_3
+                )
 
             y_offset = (np.random.rand() * 2 - 1) * self.key_y_max_offset_mm
             z_offset = (np.random.rand() * 2 - 1) * self.key_z_max_offset_mm
@@ -441,14 +479,12 @@ class LongOpenLockSimEnv(gym.Env):
             self.unique_logger.info(f"index={self.index}, keyoffset_mm={key_offset_mm}")
         else:
             x_offset_mm, y_offset_mm, z_offset_mm = tuple(key_offset_mm)
-            if self.index == 0:
-                x_offset_mm += 46
+            if self.index == 0 or self.index == 2:
+                x_offset_mm += LongOpenLockConstants.KEY_OFFSET_0_2
             elif self.index == 1:
-                x_offset_mm += 52
-            elif self.index == 2:
-                x_offset_mm += 46
+                x_offset_mm += LongOpenLockConstants.KEY_OFFSET_1
             elif self.index == 3:
-                x_offset_mm += 62
+                x_offset_mm += LongOpenLockConstants.KEY_OFFSET_3
             key_offset_mm = (x_offset_mm, y_offset_mm, z_offset_mm)
             print(
                 "index=",
@@ -834,14 +870,14 @@ class LongOpenLockSimEnv(gym.Env):
         )
         info["error_too_large"] = False
         if (
-            np.abs(info["key1_pts_m"].mean(0)[1]) > 0.01
-            or np.abs(info["key2_pts_m"].mean(0)[1]) > 0.01
-            or info["key1_pts_m"].mean(0)[2] > 0.045
-            or info["key2_pts_m"].mean(0)[2] > 0.045
-            or info["key1_pts_m"].mean(0)[2] < 0.015
-            or info["key2_pts_m"].mean(0)[2] < 0.015
-            or info["key1_pts_m"].mean(0)[0] > 0.110
-            or info["key2_pts_m"].mean(0)[0] > 0.110
+            np.abs(info["key1_pts_m"].mean(0)[1]) > LongOpenLockConstants.MAX_Y_ERROR
+            or np.abs(info["key2_pts_m"].mean(0)[1]) > LongOpenLockConstants.MAX_Y_ERROR
+            or info["key1_pts_m"].mean(0)[2] > LongOpenLockConstants.MAX_Z_ERROR
+            or info["key2_pts_m"].mean(0)[2] > LongOpenLockConstants.MAX_Z_ERROR
+            or info["key1_pts_m"].mean(0)[2] < LongOpenLockConstants.MIN_Z_ERROR
+            or info["key2_pts_m"].mean(0)[2] < LongOpenLockConstants.MIN_Z_ERROR
+            or info["key1_pts_m"].mean(0)[0] > LongOpenLockConstants.MAX_X_ERROR
+            or info["key2_pts_m"].mean(0)[0] > LongOpenLockConstants.MAX_X_ERROR
         ):
             info["error_too_large"] = True
 
@@ -851,12 +887,14 @@ class LongOpenLockSimEnv(gym.Env):
             and key1_pts_m[:, 0].min() > 0
             and key2_pts_m[:, 0].max() < info["lock_side_pts_m"].mean(0)[0]
             and key2_pts_m[:, 0].min() > 0
-            and np.abs(key1_pts_m[:, 1].mean()) < 0.002
-            and np.abs(key2_pts_m[:, 1].mean()) < 0.002
-            and key1_pts_m[:, 2].min() > 0.035
-            and key1_pts_m[:, 2].max() < 0.04
-            and key2_pts_m[:, 2].min() > 0.035
-            and key2_pts_m[:, 2].max() < 0.04
+            and np.abs(key1_pts_m[:, 1].mean())
+            < LongOpenLockConstants.SUCCESS_Y_THRESHOLD
+            and np.abs(key2_pts_m[:, 1].mean())
+            < LongOpenLockConstants.SUCCESS_Y_THRESHOLD
+            and key1_pts_m[:, 2].min() > LongOpenLockConstants.SUCCESS_Z_MIN
+            and key1_pts_m[:, 2].max() < LongOpenLockConstants.SUCCESS_Z_MAX
+            and key2_pts_m[:, 2].min() > LongOpenLockConstants.SUCCESS_Z_MIN
+            and key2_pts_m[:, 2].max() < LongOpenLockConstants.SUCCESS_Z_MAX
         ):
             info["is_success"] = True
         return info
@@ -1014,6 +1052,7 @@ class LongOpenLockRandPointFlowEnv(LongOpenLockSimEnv):
 
     def __init__(
         self,
+        render_rgb: bool = False,
         marker_interval_range: Tuple[float, float] = (2.0, 2.0),
         marker_rotation_range: float = 0.0,
         marker_translation_range: Tuple[float, float] = (0.0, 0.0),
@@ -1034,6 +1073,7 @@ class LongOpenLockRandPointFlowEnv(LongOpenLockSimEnv):
           marker_random_noise, marker_lose_tracking_probability, normalize: See class documentation for details.
         - **kwargs: See parent class LongOpenLockSimEnv for additional parameters.
         """
+        self.render_rgb = render_rgb
         self.sensor_meta_file = kwargs.get("params").tac_sensor_meta_file
         self.marker_interval_range = marker_interval_range
         self.marker_rotation_range = marker_rotation_range
@@ -1090,6 +1130,7 @@ class LongOpenLockRandPointFlowEnv(LongOpenLockSimEnv):
             elastic_modulus=self.params.tac_elastic_modulus_l,
             poisson_ratio=self.params.tac_poisson_ratio_l,
             density=self.params.tac_density_l,
+            friction=self.params.tac_friction,
             name="tactile_sensor_1",
             marker_interval_range=self.marker_interval_range,
             marker_rotation_range=self.marker_rotation_range,
@@ -1112,6 +1153,7 @@ class LongOpenLockRandPointFlowEnv(LongOpenLockSimEnv):
             elastic_modulus=self.params.tac_elastic_modulus_r,
             poisson_ratio=self.params.tac_poisson_ratio_r,
             density=self.params.tac_density_r,
+            friction=self.params.tac_friction,
             name="tactile_sensor_2",
             marker_interval_range=self.marker_interval_range,
             marker_rotation_range=self.marker_rotation_range,
@@ -1148,6 +1190,14 @@ class LongOpenLockRandPointFlowEnv(LongOpenLockSimEnv):
             ],
             axis=0,
         ).astype(np.float32)
+        if self.render_rgb:
+            obs["rgb_images"] = np.stack(
+                [
+                    self.tactile_sensor_1.gen_rgb_image(),
+                    self.tactile_sensor_2.gen_rgb_image(),
+                ],
+                axis=0,
+            )
 
         key1_pts = obs.pop("key1_pts")
         key2_pts = obs.pop("key2_pts")
@@ -1205,8 +1255,22 @@ if __name__ == "__main__":
         plt.savefig(filename)
         plt.close()
 
-    GUI = True
+    use_gui = True
+    use_render_rgb = True
     timestep = 0.05
+
+    log_time = get_time()
+    log_folder = Path(os.path.join(track_path, f"Memo/{log_time}"))
+    log_dir = Path(os.path.join(log_folder, "main.log"))
+    log.remove()
+    log.add(log_dir, filter=lambda record: record["extra"]["name"] == "main")
+    log.add(
+        sys.stderr,
+        format="{time:YYYY-MM-DD HH:mm:ss} {level} {message}",
+        level="INFO",
+        filter=lambda record: record["extra"]["name"] == "main",
+    )
+    test_log = log.bind(name="main")
 
     params = LongOpenLockParams(
         sim_time_step=timestep,
@@ -1215,12 +1279,15 @@ if __name__ == "__main__":
         indentation_depth_mm=1.0,
         elastic_modulus_r=3e5,
         elastic_modulus_l=3e5,
+        key_friction=1.0,
+        lock_friction=1.0,
     )
     print(params)
 
     env = LongOpenLockRandPointFlowEnv(
         params=params,
-        gui=GUI,
+        params_upper_bound=params,
+        gui=use_gui,
         step_penalty=1,
         final_reward=10,
         max_action_mm=np.array([2, 2]),
@@ -1229,33 +1296,41 @@ if __name__ == "__main__":
         key_y_max_offset_mm=0,
         key_z_max_offset_mm=0,
         sensor_offset_x_range_len_mm=2.0,
-        senosr_offset_z_range_len_mm=2.0,
+        sensor_offset_z_range_len_mm=2.0,
+        render_rgb=use_render_rgb,
         marker_interval_range=(2.0625, 2.0625),
         marker_rotation_range=0.0,
         marker_translation_range=(0.0, 0.0),
         marker_pos_shift_range=(0.0, 0.0),
         marker_random_noise=0.1,
+        marker_lose_tracking_probability=0.0,
+        log_path=log_folder,
+        logger=log,
         normalize=False,
+        device="cuda:0",
+        no_render=False,
+        env_type="test",
     )
 
     np.set_printoptions(precision=4)
 
     offset = [0, 0, 0]
-    o, _ = env.reset(offset)
+    o, _ = env.reset(key_idx=3)
     for k, v in o.items():
-        print(k, v.shape)
+        test_log.info(f"{k} : {v.shape}")
     info = env.get_info()
-    print("timestep: ", timestep)
+    test_log.info(f"timestep: {timestep}")
+    test_log.info(f"info : {info}\n")
 
-    for i in range(31):
-        obs, rew, done, _, info = env.step(np.array([0.0, 0.5]))
+    for i in range(7):
+        obs, rew, done, _, info = env.step(np.array([-0.5, 0.0]))
         visualize_marker_point_flow(obs, i, "test")
-        print(
+        test_log.info(
             f"step: {env.current_episode_elapsed_steps:2d} rew: {rew:.2f} done: {done} success: {info['is_success']} re: {info['relative_motion_mm']}"
         )
     for i in range(10):
         obs, rew, done, _, info = env.step(np.array([0.0, -0.5]))
         visualize_marker_point_flow(obs, i + 24, "test")
-        print(
+        test_log.info(
             f"step: {env.current_episode_elapsed_steps:2d} rew: {rew:.2f} done: {done} success: {info['is_success']}"
         )

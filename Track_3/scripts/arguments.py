@@ -3,18 +3,19 @@ import copy
 import os
 import sys
 
+script_path = os.path.dirname(os.path.realpath(__file__))
+track_path = os.path.abspath(os.path.join(script_path, ".."))
+repo_path = os.path.abspath(os.path.join(track_path, ".."))
+sys.path.append(script_path)
+sys.path.append(track_path)
+sys.path.append(repo_path)
+
 import numpy as np
 from stable_baselines3.common.noise import VectorizedActionNoise, NormalActionNoise
 
-script_path = os.path.dirname(os.path.realpath(__file__))
-Track_3_path = os.path.join(script_path, "..")
-Repo_path = os.path.abspath(os.path.join(script_path, "../.."))
-sys.path.append(Repo_path)
-sys.path.append(script_path)
-sys.path.insert(0, Track_3_path)
 
-from Track_3.envs.common_params import CommonParams
-from Track_3.envs.peg_insertion import PegInsertionParams
+from envs.common_params import CommonParams
+from envs.peg_insertion import PegInsertionParams
 
 
 def get_parser():
@@ -50,7 +51,6 @@ def get_parser():
     return parser
 
 
-# 以cmd为主
 def solve_argument_conflict(cmd_arg, dict_arg):
     policy_args = [
         "policy_name",
@@ -102,8 +102,7 @@ def solve_argument_conflict(cmd_arg, dict_arg):
 
 
 def parse_params(environment_name, params):
-    print(environment_name)
-    if "Peg" in environment_name:
+    if "PegInsertion" in environment_name:
         params_lowerbound: CommonParams = PegInsertionParams()
     else:
         raise NotImplementedError
@@ -123,7 +122,10 @@ def handle_policy_args(original_cfg, log_dir, action_dim=3):
     original_cfg["policy"]["device"] = original_cfg["train"]["device"]
 
     original_cfg["policy"]["action_noise"] = VectorizedActionNoise(
-        NormalActionNoise(np.array([0] * action_dim), np.array([original_cfg["policy"]["action_noise"]] * action_dim)),
+        NormalActionNoise(
+            np.array([0] * action_dim),
+            np.array([original_cfg["policy"]["action_noise"]] * action_dim),
+        ),
         original_cfg["train"]["parallel"],
     )
 
@@ -134,15 +136,25 @@ def handle_policy_args(original_cfg, log_dir, action_dim=3):
     if "policy_kwargs" in original_cfg["policy"].keys():
 
         if "encoder_weight" in original_cfg["policy"]["policy_kwargs"]:
-            if not original_cfg["policy"]["policy_kwargs"]["encoder_weight"].startswith("/"):
-                original_cfg["policy"]["policy_kwargs"]["encoder_weight"] = os.path.join(
-                    Track_3_path, original_cfg["policy"]["policy_kwargs"]["encoder_weight"]
+            if not original_cfg["policy"]["policy_kwargs"]["encoder_weight"].startswith(
+                "/"
+            ):
+                original_cfg["policy"]["policy_kwargs"]["encoder_weight"] = (
+                    os.path.join(
+                        track_path,
+                        original_cfg["policy"]["policy_kwargs"]["encoder_weight"],
+                    )
                 )
 
         if "decoder_weight" in original_cfg["policy"]["policy_kwargs"]:
-            if not original_cfg["policy"]["policy_kwargs"]["decoder_weight"].startswith("/"):
-                original_cfg["policy"]["policy_kwargs"]["decoder_weight"] = os.path.join(
-                    Track_3_path, original_cfg["policy"]["policy_kwargs"]["decoder_weight"]
+            if not original_cfg["policy"]["policy_kwargs"]["decoder_weight"].startswith(
+                "/"
+            ):
+                original_cfg["policy"]["policy_kwargs"]["decoder_weight"] = (
+                    os.path.join(
+                        track_path,
+                        original_cfg["policy"]["policy_kwargs"]["decoder_weight"],
+                    )
                 )
 
     return original_cfg

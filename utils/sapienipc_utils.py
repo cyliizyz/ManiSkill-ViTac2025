@@ -76,10 +76,8 @@ def build_sapien_entity_ABD_Tet(
             )
         )
 
-    
     if not no_render:
         entity.add_component(render_component)
-    
 
     return entity, abd_component
 

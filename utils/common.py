@@ -14,24 +14,51 @@ def generate_patch_array(super_resolution_ratio=10):
     base_circle_radius = 1.5
 
     patch_array = np.zeros(
-        (super_resolution_ratio, super_resolution_ratio, size_slot_num, 4 * circle_radius, 4 * circle_radius),
-        dtype=np.uint8)
+        (
+            super_resolution_ratio,
+            super_resolution_ratio,
+            size_slot_num,
+            4 * circle_radius,
+            4 * circle_radius,
+        ),
+        dtype=np.uint8,
+    )
     for u in range(super_resolution_ratio):
         for v in range(super_resolution_ratio):
             for w in range(size_slot_num):
-                img_highres = np.ones(
-                    (4 * circle_radius * super_resolution_ratio, 4 * circle_radius * super_resolution_ratio),
-                    dtype=np.uint8) * 255
+                img_highres = (
+                    np.ones(
+                        (
+                            4 * circle_radius * super_resolution_ratio,
+                            4 * circle_radius * super_resolution_ratio,
+                        ),
+                        dtype=np.uint8,
+                    )
+                    * 255
+                )
                 center = np.array(
-                    [circle_radius * super_resolution_ratio * 2, circle_radius * super_resolution_ratio * 2],
-                    dtype=np.uint8)
+                    [
+                        circle_radius * super_resolution_ratio * 2,
+                        circle_radius * super_resolution_ratio * 2,
+                    ],
+                    dtype=np.uint8,
+                )
                 center_offseted = center + np.array([u, v])
                 radius = round(base_circle_radius * super_resolution_ratio + w)
-                img_highres = cv2.circle(img_highres, tuple(center_offseted), radius, (0, 0, 0), thickness=cv2.FILLED,
-                                         lineType=cv2.LINE_AA)
+                img_highres = cv2.circle(
+                    img_highres,
+                    tuple(center_offseted),
+                    radius,
+                    (0, 0, 0),
+                    thickness=cv2.FILLED,
+                    lineType=cv2.LINE_AA,
+                )
                 img_highres = cv2.GaussianBlur(img_highres, (17, 17), 15)
-                img_lowres = cv2.resize(img_highres, (4 * circle_radius, 4 * circle_radius),
-                                        interpolation=cv2.INTER_CUBIC)
+                img_lowres = cv2.resize(
+                    img_highres,
+                    (4 * circle_radius, 4 * circle_radius),
+                    interpolation=cv2.INTER_CUBIC,
+                )
                 patch_array[u, v, w, ...] = img_lowres
 
     return {
@@ -108,7 +135,9 @@ def dump_args_to_tensorboard(tensorboard_writer, arg, global_step=0):
         except:
             pass
 
-    tensorboard_writer.add_text(tag="ARGUMENTS", text_string=string, global_step=global_step)
+    tensorboard_writer.add_text(
+        tag="ARGUMENTS", text_string=string, global_step=global_step
+    )
 
 
 def dump_dict_to_tensorboard(tensorboard_writer, target_dict, global_step=0):
@@ -118,7 +147,9 @@ def dump_dict_to_tensorboard(tensorboard_writer, target_dict, global_step=0):
     def append_dict_to_string(target_string, target_dict, prefix=""):
         for key, value in target_dict.items():
             if type(value) is dict:
-                target_string = append_dict_to_string(target_string, value, prefix=f"{key}.")
+                target_string = append_dict_to_string(
+                    target_string, value, prefix=f"{key}."
+                )
             else:
                 try:
                     str_append = "{:>50}: {:<100}\n".format(prefix + key, value)
@@ -129,7 +160,9 @@ def dump_dict_to_tensorboard(tensorboard_writer, target_dict, global_step=0):
 
     string = append_dict_to_string(string, target_dict)
 
-    tensorboard_writer.add_text(tag="ARGUMENTS", text_string=string, global_step=global_step)
+    tensorboard_writer.add_text(
+        tag="ARGUMENTS", text_string=string, global_step=global_step
+    )
 
 
 def copy_args(source, target):

@@ -1,6 +1,7 @@
 .idea/
 .vscode/
 *.png
+!gelsight_mini_bg.png
 *.pcd
 
 # Byte-compiled / optimized / DLL files

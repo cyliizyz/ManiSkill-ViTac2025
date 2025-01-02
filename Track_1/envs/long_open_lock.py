@@ -35,37 +35,9 @@ from utils.sapienipc_utils import build_sapien_entity_ABD
 
 from loguru import logger as log
 from utils.mem_monitor import *
-import cv2 as cv
 
 wp.init()
 wp_device = wp.get_preferred_device()
-
-
-class LongOpenLockConstants:
-    # Key insertion thresholds (in meters)
-    KEY_THRESHOLD_0_2 = 0.046  # For index 0 and 2
-    KEY_THRESHOLD_1 = 0.052  # For index 1
-    KEY_THRESHOLD_3 = 0.062  # For index 3
-
-    # Target heights (in meters)
-    TARGET_HEIGHT_INSIDE = 0.032  # Target height when key is inside lock
-    TARGET_HEIGHT_OUTSIDE = 0.030  # Target height when aligning with hole
-
-    # Error thresholds (in meters)
-    MAX_Y_ERROR = 0.01  # Maximum allowed Y error
-    MAX_Z_ERROR = 0.045  # Maximum allowed Z error
-    MIN_Z_ERROR = 0.015  # Minimum allowed Z error
-    MAX_X_ERROR = 0.090  # Maximum allowed X error
-
-    # Success criteria thresholds (in meters)
-    SUCCESS_Y_THRESHOLD = 0.002  # Maximum Y deviation for success
-    SUCCESS_Z_MIN = 0.034  # Minimum Z position for success
-    SUCCESS_Z_MAX = 0.04  # Maximum Z position for success
-
-    # Key offset positions (in millimeters)
-    KEY_OFFSET_0_2 = 12.5  # Base offset for index 0 and 2
-    KEY_OFFSET_1 = 12.5  # Base offset for index 1
-    KEY_OFFSET_3 = 12.5  # Base offset for index 3
 
 
 class LongOpenLockParams(CommonParams):
@@ -317,62 +289,58 @@ class LongOpenLockSimEnv(gym.Env):
 
         error_sum += abs(key1_pts_center_m[0] - lock1_pts_center_m[0])  # x direction
         error_sum += abs(key2_pts_center_m[0] - lock2_pts_center_m[0])
-
+        # print(f"reward start: {reward}")
+        # z_offset
         if self.index == 0 or self.index == 2:
-            if (
-                key1_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_0_2
-                and key2_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_0_2
-            ):
+            if key1_pts_max_m[0] < 0.046 and key2_pts_max_m[0] < 0.046:
+                # if key is inside the lock, then encourage it to fit in to the holes
                 error_sum += abs(
-                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key1_pts_center_m[2]
-                )
+                    0.037 - key1_pts_center_m[2]
+                )  # must be constrained in both directions
                 error_sum += abs(
-                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key2_pts_center_m[2]
-                )
+                    0.037 - key2_pts_center_m[2]
+                )  # otherwise the policy would keep lifting the key
+                # and smooth the error to avoid sudden change
             else:
+                # else, align it with the hole
+                error_sum += abs(key1_pts_center_m[2] - 0.030)
+                error_sum += abs(key2_pts_center_m[2] - 0.030)
+                pass
+        if self.index == 1:
+            if key1_pts_max_m[0] < 0.052 and key2_pts_max_m[0] < 0.052:
+                # if key is inside the lock, then encourage it to fit in to the holes
                 error_sum += abs(
-                    key1_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
-                )
+                    0.037 - key1_pts_center_m[2]
+                )  # must be constrained in both directions
                 error_sum += abs(
-                    key2_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
-                )
-        elif self.index == 1:
-            if (
-                key1_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_1
-                and key2_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_1
-            ):
-                error_sum += abs(
-                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key1_pts_center_m[2]
-                )
-                error_sum += abs(
-                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key2_pts_center_m[2]
-                )
+                    0.037 - key2_pts_center_m[2]
+                )  # otherwise the policy would keep lifting the key
+                # and smooth the error to avoid sudden change
             else:
+                # else, align it with the hole
+                error_sum += abs(key1_pts_center_m[2] - 0.030)
+                error_sum += abs(key2_pts_center_m[2] - 0.030)
+                pass
+        if self.index == 3:
+            if key1_pts_max_m[0] < 0.062 and key2_pts_max_m[0] < 0.062:
+                # if key is inside the lock, then encourage it to fit in to the holes
                 error_sum += abs(
-                    key1_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
-                )
+                    0.037 - key1_pts_center_m[2]
+                )  # must be constrained in both directions
                 error_sum += abs(
-                    key2_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
-                )
-        elif self.index == 3:
-            if (
-                key1_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_3
-                and key2_pts_max_m[0] < LongOpenLockConstants.KEY_THRESHOLD_3
-            ):
-                error_sum += abs(
-                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key1_pts_center_m[2]
-                )
-                error_sum += abs(
-                    LongOpenLockConstants.TARGET_HEIGHT_INSIDE - key2_pts_center_m[2]
-                )
+                    0.037 - key2_pts_center_m[2]
+                )  # otherwise the policy would keep lifting the key
+                # and smooth the error to avoid sudden change
             else:
-                error_sum += abs(
-                    key1_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
-                )
-                error_sum += abs(
-                    key2_pts_center_m[2] - LongOpenLockConstants.TARGET_HEIGHT_OUTSIDE
-                )
+                # else, align it with the hole
+                error_sum += abs(key1_pts_center_m[2] - 0.030)
+                error_sum += abs(key2_pts_center_m[2] - 0.030)
+                pass
 
+        # y_offset
+        error_sum += abs(key1_pts_center_m[1])
+        error_sum += abs(key2_pts_center_m[1])
+        error_sum *= error_scale
         return error_sum
 
     def seed(self, seed=None):
@@ -451,21 +419,15 @@ class LongOpenLockSimEnv(gym.Env):
         lock_path = asset_dir / lock_path
 
         if key_offset_mm is None:
-            if self.index == 0 or self.index == 2:
-                x_offset = (
-                    np.random.rand() * self.key_x_max_offset_mm
-                    + LongOpenLockConstants.KEY_OFFSET_0_2
-                )
+            if self.index == 0:
+                x_offset = np.random.rand() * self.key_x_max_offset_mm + 46 - 5
+
             elif self.index == 1:
-                x_offset = (
-                    np.random.rand() * self.key_x_max_offset_mm
-                    + LongOpenLockConstants.KEY_OFFSET_1
-                )
+                x_offset = np.random.rand() * self.key_x_max_offset_mm + 52 - 5
+            elif self.index == 2:
+                x_offset = np.random.rand() * self.key_x_max_offset_mm + 46 - 5
             elif self.index == 3:
-                x_offset = (
-                    np.random.rand() * self.key_x_max_offset_mm
-                    + LongOpenLockConstants.KEY_OFFSET_3
-                )
+                x_offset = np.random.rand() * self.key_x_max_offset_mm + 62 - 5
 
             y_offset = (np.random.rand() * 2 - 1) * self.key_y_max_offset_mm
             z_offset = (np.random.rand() * 2 - 1) * self.key_z_max_offset_mm
@@ -479,12 +441,14 @@ class LongOpenLockSimEnv(gym.Env):
             self.unique_logger.info(f"index={self.index}, keyoffset_mm={key_offset_mm}")
         else:
             x_offset_mm, y_offset_mm, z_offset_mm = tuple(key_offset_mm)
-            if self.index == 0 or self.index == 2:
-                x_offset_mm += LongOpenLockConstants.KEY_OFFSET_0_2
+            if self.index == 0:
+                x_offset_mm += 46
             elif self.index == 1:
-                x_offset_mm += LongOpenLockConstants.KEY_OFFSET_1
+                x_offset_mm += 52
+            elif self.index == 2:
+                x_offset_mm += 46
             elif self.index == 3:
-                x_offset_mm += LongOpenLockConstants.KEY_OFFSET_3
+                x_offset_mm += 62
             key_offset_mm = (x_offset_mm, y_offset_mm, z_offset_mm)
             print(
                 "index=",
@@ -870,14 +834,14 @@ class LongOpenLockSimEnv(gym.Env):
         )
         info["error_too_large"] = False
         if (
-            np.abs(info["key1_pts_m"].mean(0)[1]) > LongOpenLockConstants.MAX_Y_ERROR
-            or np.abs(info["key2_pts_m"].mean(0)[1]) > LongOpenLockConstants.MAX_Y_ERROR
-            or info["key1_pts_m"].mean(0)[2] > LongOpenLockConstants.MAX_Z_ERROR
-            or info["key2_pts_m"].mean(0)[2] > LongOpenLockConstants.MAX_Z_ERROR
-            or info["key1_pts_m"].mean(0)[2] < LongOpenLockConstants.MIN_Z_ERROR
-            or info["key2_pts_m"].mean(0)[2] < LongOpenLockConstants.MIN_Z_ERROR
-            or info["key1_pts_m"].mean(0)[0] > LongOpenLockConstants.MAX_X_ERROR
-            or info["key2_pts_m"].mean(0)[0] > LongOpenLockConstants.MAX_X_ERROR
+            np.abs(info["key1_pts_m"].mean(0)[1]) > 0.01
+            or np.abs(info["key2_pts_m"].mean(0)[1]) > 0.01
+            or info["key1_pts_m"].mean(0)[2] > 0.045
+            or info["key2_pts_m"].mean(0)[2] > 0.045
+            or info["key1_pts_m"].mean(0)[2] < 0.015
+            or info["key2_pts_m"].mean(0)[2] < 0.015
+            or info["key1_pts_m"].mean(0)[0] > 0.110
+            or info["key2_pts_m"].mean(0)[0] > 0.110
         ):
             info["error_too_large"] = True
 
@@ -887,14 +851,12 @@ class LongOpenLockSimEnv(gym.Env):
             and key1_pts_m[:, 0].min() > 0
             and key2_pts_m[:, 0].max() < info["lock_side_pts_m"].mean(0)[0]
             and key2_pts_m[:, 0].min() > 0
-            and np.abs(key1_pts_m[:, 1].mean())
-            < LongOpenLockConstants.SUCCESS_Y_THRESHOLD
-            and np.abs(key2_pts_m[:, 1].mean())
-            < LongOpenLockConstants.SUCCESS_Y_THRESHOLD
-            and key1_pts_m[:, 2].min() > LongOpenLockConstants.SUCCESS_Z_MIN
-            and key1_pts_m[:, 2].max() < LongOpenLockConstants.SUCCESS_Z_MAX
-            and key2_pts_m[:, 2].min() > LongOpenLockConstants.SUCCESS_Z_MIN
-            and key2_pts_m[:, 2].max() < LongOpenLockConstants.SUCCESS_Z_MAX
+            and np.abs(key1_pts_m[:, 1].mean()) < 0.002
+            and np.abs(key2_pts_m[:, 1].mean()) < 0.002
+            and key1_pts_m[:, 2].min() > 0.033
+            and key1_pts_m[:, 2].max() < 0.04
+            and key2_pts_m[:, 2].min() > 0.033
+            and key2_pts_m[:, 2].max() < 0.04
         ):
             info["is_success"] = True
         return info

@@ -10,29 +10,30 @@ env:
   peg_theta_max_offset_deg: 10.0
   peg_x_max_offset_mm: 5.0
   peg_y_max_offset_mm: 5.0
-  no_render: False
-  insertion_depth_mm: 1.0 
+  gui: False
   # V2 unique parameters
   peg_dist_z_mm: 6.0
   peg_dist_z_diff_mm: 3.0
+  insertion_depth_mm: 2.0
   vision_params:
     render_mode: "rast" # "rast" or "rt"
-    vision_type : ["point_cloud"] # ["rgb", "depth", "point_cloud"], take one, two, or all three.
+    vision_type : ["rgb", "depth","point_cloud"] # ["rgb", "depth", "point_cloud"], take one, two, or all three.
     # if use point_cloud, the following parameters are needed
-    gt_point_cloud: True #  If True is specified, use the ground truth point cloud; otherwise, use the point cloud under render_mode.
+    gt_point_cloud: False #  If True is specified, use the ground truth point cloud; otherwise, use the point cloud under render_mode.
     max_points: 128 # sample the points from the point cloud
     # if use ray_trace, the following parameters are needed
     # ray_tracing_denoiser: "optix"
     # ray_tracing_samples_per_pixel: 4
 
   # marker parameters
+  render_rgb: False
   marker_interval_range: [1.95, 2.15]
   marker_lose_tracking_probability: 0.01
   marker_pos_shift_range: [0.1, 0.1]
   marker_random_noise: 0.5
   marker_rotation_range: 0.1
   marker_translation_range: [1, 1]
-
+  
   params:
     # simulation parameters
     sim_time_step: 0.1
@@ -54,8 +55,8 @@ env:
     tac_elastic_modulus_l: [300000.0, 300000.0]
     tac_elastic_modulus_r: [300000.0, 300000.0]
     tac_friction: [50.0, 125.0]
-    tac_poisson_ratio_l: [0.3, 0.3]
-    tac_poisson_ratio_r: [0.3, 0.3]
+    tac_poisson_ratio_l: [ 0.3, 0.3 ]
+    tac_poisson_ratio_r: [ 0.3, 0.3 ]
     allow_self_collision: False
     ccd_max_iters: 100
     ccd_slackness: 0.7
@@ -70,6 +71,7 @@ env:
     indentation_depth_mm: [ 0.5, 1.25 ]
     peg_friction: [ 4.0, 15.0 ]
     hole_friction: [ 0.0, 1.0 ]
+
 
 policy:
   policy_name: TD3PolicyForPegInsertionV2
@@ -104,12 +106,18 @@ policy:
 
 train:
   algorithm_name: TD3
-  total_timesteps: 5000
+  total_timesteps: 100000
   log_interval: 10
-  checkpoint_every: 1000
-  eval_freq: 1000
+  checkpoint_every: 5000
+  eval_freq: 5000
   n_eval: 50
-  parallel: 1
+  parallel: [0,0,0,1,1,1,1]
+  # parallel: An integer or a list of integers.
+  # If you have just one GPU, we recommend using an integer.
+  # If an integer is used, it represents the number of TRAIN environments you want to run in parallel,
+  # and the GPU used by the environment is automatically selected.
+  # If an integer list is used, the environment will be built on the specified GPU, including both TRAIN and EVAL environments.
+  # In this case, the last number in the list specifies the GPU for the EVAL environment.
   seed: 0
   device: "cuda"
   gpu: 0

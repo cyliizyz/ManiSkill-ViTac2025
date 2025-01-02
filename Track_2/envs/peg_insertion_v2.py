@@ -1,12 +1,5 @@
-import copy
-import json
-import math
 import os
 import sys
-import random
-
-from sapienipc.ipc_utils.user_utils import ipc_update_render_all
-from loguru import logger as log
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 track_path = os.path.abspath(os.path.join(script_path, ".."))
@@ -14,20 +7,26 @@ repo_path = os.path.abspath(os.path.join(track_path, ".."))
 sys.path.append(script_path)
 sys.path.append(track_path)
 sys.path.append(repo_path)
+
+import copy
+import json
+import math
 import time
 from typing import Tuple, Union
 
+import fcl
 import gymnasium as gym
 import matplotlib.pyplot as plt
 import numpy as np
-import sapien
-import sapien.sensor as sapien_sensor
 import transforms3d as t3d
 import warp as wp
 from gymnasium import spaces
 from path import Path
+import sapien
+import sapien.sensor as sapien_sensor
 from sapien.utils.viewer import Viewer as viewer
 from sapienipc.ipc_system import IPCSystem, IPCSystemConfig
+from sapienipc.ipc_utils.user_utils import ipc_update_render_all
 
 from envs.common_params import CommonParams
 from envs.tactile_sensor_sapienipc import (
@@ -39,17 +38,49 @@ from utils.geometry import quat_product
 from utils.gym_env_utils import convert_observation_to_space
 from utils.sapienipc_utils import build_sapien_entity_ABD
 
+from loguru import logger as log
+from utils.mem_monitor import *
+import open3d as o3d
+import cv2 as cv
+
 wp.init()
 wp_device = wp.get_preferred_device()
 
-gui = False
-
 
 def evaluate_error_v2(info):
-    return np.linalg.norm(info["gt_offset_mm_deg"], ord=1)
+    """
+    Evaluates the error between the peg and the hole based on the ground truth offset.
+
+    This function calculates the L2 norm (Euclidean distance) of the ground truth offset,
+    which represents the difference between the peg's current position and the target position.
+
+    Parameters:
+    - info (dict): A dictionary containing the environment's state information,
+                   including the ground truth offset ('gt_offset_mm_deg') in millimeters and degrees.
+
+    Returns:
+    - error (float): The L2 norm of the ground truth offset, representing the error.
+
+    """
+    return np.linalg.norm(info["gt_offset_mm_deg"], ord=2)
 
 
 class PegInsertionParams(CommonParams):
+    """
+    Stores parameters specific to the Peg Insertion environment.
+
+    This class extends CommonParams and adds parameters that are specific to the peg insertion task.
+    It includes parameters for gripper offsets, indentation depth, and friction coefficients for the peg and hole.
+
+    Attributes:
+    - gripper_x_offset_mm (float): The x-axis offset of the gripper in millimeters.
+    - gripper_z_offset_mm (float): The z-axis offset of the gripper in millimeters.
+    - indentation_depth_mm (float): The depth of gripper indentation in millimeters.
+    - peg_friction (float): The friction coefficient of the peg.
+    - hole_friction (float): The friction coefficient of the hole.
+
+    """
+
     def __init__(
         self,
         gripper_x_offset_mm: float = 0.0,
@@ -68,48 +99,81 @@ class PegInsertionParams(CommonParams):
 
 
 class PegInsertionSimEnvV2(gym.Env):
+    """
+    A simulation environment for a peg insertion task using the Gym interface.
+
+    This class simulates the process of inserting a peg into a hole, providing a realistic
+    physical interaction using the Sapien physics engine and IPC system.
+    """
+
     def __init__(
         self,
-        step_penalty: float,
-        final_reward: float,
-        max_action_mm_deg: np.ndarray,
-        max_steps: int,
-        insertion_depth_mm: float,
+        # reward
+        step_penalty: float = 1.0,
+        final_reward: float = 10.0,
+        # peg file
         peg_hole_path_file: str = "",
-        params=None,
-        params_upper_bound=None,
-        device: str = "cuda:0",
-        no_render: bool = False,
         # peg position
         peg_x_max_offset_mm: float = 5.0,
         peg_y_max_offset_mm: float = 5.0,
         peg_theta_max_offset_deg: float = 10.0,
         peg_dist_z_mm: float = 10.0,
         peg_dist_z_diff_mm: float = 5.0,
+        # peg movement
+        max_action_mm_deg: np.ndarray = [1.0, 1.0, 1.0, 1.0],
+        max_steps: int = 50,
+        insertion_depth_mm: float = 1.0,
+        # env randomization
+        params=None,
+        params_upper_bound=None,
+        # device
+        device: str = "cuda:0",
+        # render
+        no_render: bool = False,
+        # for logging
+        log_path=None,
+        logger=None,
+        env_type: str = "train",
+        gui: bool = False,
         # for vision
         vision_params: dict = None,
-        # for logging
-        log_folder=None,
         **kwargs,
     ):
         """
-        Initialize the ContinuousInsertionSimEnv.
+        Initialize the PegInsertionSimEnvV2.
         """
         # for logging
-        self.logger = log
+        time.sleep(np.random.rand(1)[0])
+        if logger is None:
+            self.logger = log
+            self.logger.remove()
+        else:
+            self.logger = logger
+
         self.log_time = get_time()
-        if log_folder is None:
+        self.pid = os.getpid()
+        if log_path is None:
             self.log_folder = track_path + "/envs/" + self.log_time
             if not os.path.exists(self.log_folder):
                 os.makedirs(self.log_folder)
+        elif os.path.isdir(log_path):
+            self.log_folder = log_path
         else:
-            self.log_folder = log_folder
-        self.log_dir = Path(
-            os.path.join(self.log_folder, f"{self.log_time}_PegInsertionEnvV2.log")
+            self.log_folder = Path(log_path).dirname()
+        self.log_path = Path(
+            os.path.join(
+                self.log_folder,
+                f"{self.log_time}_{env_type}_{self.pid}_PegInsertionEnvV2.log",
+            )
         )
-        print(self.log_dir)
-        self.logger.add(self.log_dir)
-
+        print(self.log_path)
+        self.logger.add(
+            self.log_path,
+            filter=lambda record: record["extra"]["name"] == self.log_time,
+        )
+        self.unique_logger = self.logger.bind(name=self.log_time)
+        self.env_type = env_type
+        self.gui = gui
         super(PegInsertionSimEnvV2, self).__init__()
 
         # Initialize environment parameters
@@ -149,30 +213,12 @@ class PegInsertionSimEnvV2(gym.Env):
         self.sensor_grasp_center_init_mm_deg = np.array([0, 0, 0, 0])
         self.sensor_grasp_center_current_mm_deg = self.sensor_grasp_center_init_mm_deg
 
-        # build scene
-        self.viewer = None
-
-        if not no_render:
-            self.scene = sapien.Scene()
-            self.scene.set_ambient_light([1.0, 1.0, 1.0])
-            self.scene.add_directional_light([0, -1, -1], [1.0, 1.0, 1.0], True)
-        else:
-            self.scene = sapien.Scene()
-
-        # add a camera to indicate shader
-        if not no_render:
-            cam_entity = sapien.Entity()
-            cam = sapien.render.RenderCameraComponent(512, 512)
-            cam_entity.add_component(cam)
-            cam_entity.name = "camera"
-            self.scene.add_entity(cam_entity)
-
         # create IPC system
         ipc_system_config = IPCSystemConfig()
         # memory config
         ipc_system_config.max_scenes = 1
-        ipc_system_config.max_surface_primitives_per_scene = 1 << 14
-        ipc_system_config.max_blocks = 4000000
+        ipc_system_config.max_surface_primitives_per_scene = 1 << 11
+        ipc_system_config.max_blocks = 100000
         # scene config
         ipc_system_config.time_step = self.params.sim_time_step
         ipc_system_config.gravity = wp.vec3(0, 0, 0)
@@ -189,7 +235,6 @@ class PegInsertionSimEnvV2(gym.Env):
         ipc_system_config.ee_classify_thres = self.params.ee_classify_thres
         ipc_system_config.ee_mollifier_thres = self.params.ee_mollifier_thres
         ipc_system_config.allow_self_collision = bool(self.params.allow_self_collision)
-
         # solver config
         ipc_system_config.newton_max_iters = int(
             self.params.sim_solver_newton_max_iters
@@ -202,11 +247,32 @@ class PegInsertionSimEnvV2(gym.Env):
         ipc_system_config.cg_error_frequency = int(
             self.params.sim_solver_cg_error_frequency
         )
-
         ipc_system_config.device = wp.get_device(device)
-        self.logger.info("device : " + str(ipc_system_config.device))
+        self.unique_logger.info("device : " + str(ipc_system_config.device))
         self.ipc_system = IPCSystem(ipc_system_config)
-        self.scene.add_system(self.ipc_system)
+
+        # build scene
+        sapien_system = [
+            sapien.physx.PhysxCpuSystem(),
+            sapien.render.RenderSystem(device=device),
+            self.ipc_system,
+        ]
+        if not no_render:
+            self.scene = sapien.Scene(systems=sapien_system)
+            self.scene.set_ambient_light([1.0, 1.0, 1.0])
+            self.scene.add_directional_light([0, -1, -1], [1.0, 1.0, 1.0], True)
+        else:
+            self.scene = sapien.Scene(systems=sapien_system)
+
+        self.viewer = None
+
+        # add a camera to indicate shader
+        if not no_render:
+            cam_entity = sapien.Entity()
+            cam = sapien.render.RenderCameraComponent(512, 512)
+            cam_entity.add_component(cam)
+            cam_entity.name = "camera"
+            self.scene.add_entity(cam_entity)
 
         # vision info
         self.camera_size = (480, 640)
@@ -236,7 +302,7 @@ class PegInsertionSimEnvV2(gym.Env):
             seed = (int(time.time() * 1000) % 10000 * os.getpid()) % 2**30
         np.random.seed(seed)
 
-    def __get_sensor_default_observation__(self):
+    def __get_sensor_default_observation__(self) -> dict:
 
         meta_file = self.params.tac_sensor_meta_file
         meta_file = Path(track_path) / "assets" / meta_file
@@ -244,7 +310,7 @@ class PegInsertionSimEnvV2(gym.Env):
             config = json.load(f)
         meta_dir = Path(meta_file).dirname()
         on_surface_np = np.loadtxt(meta_dir / config["on_surface"]).astype(np.int32)
-        initial_surface_pts = np.zeros((np.sum(on_surface_np), 3)).astype(np.float32)
+        initial_surface_pts = np.zeros((np.sum(on_surface_np), 3)).astype(float)
 
         obs = {
             "gt_direction": np.zeros((1,), dtype=np.float32),
@@ -274,6 +340,10 @@ class PegInsertionSimEnvV2(gym.Env):
 
     def reset(self, offset_mm_deg=None, seed=None, options=None) -> Tuple[dict, dict]:
 
+        self.unique_logger.info(
+            "*************************************************************"
+        )
+        self.unique_logger.info(self.env_type + " reset once")
         if self.viewer:
             self.viewer.close()
             self.viewer = None
@@ -281,10 +351,12 @@ class PegInsertionSimEnvV2(gym.Env):
         self.current_episode_elapsed_steps = 0
 
         if offset_mm_deg:
+            self.unique_logger.info(f"given offset_mm_deg: {offset_mm_deg}")
             offset_mm_deg = np.array(offset_mm_deg).astype(float)
 
         offset_mm_deg = self._initialize(offset_mm_deg)
-        self.logger.info(f"offset_mm_deg: {offset_mm_deg}")
+        self.unique_logger.info(f"after initialize offset_mm_deg: {offset_mm_deg}")
+
         self.init_left_surface_pts_m = self.no_contact_surface_mesh[0]
         self.init_right_surface_pts_m = self.no_contact_surface_mesh[1]
         self.init_offset_of_current_episode_mm_deg = offset_mm_deg
@@ -296,15 +368,10 @@ class PegInsertionSimEnvV2(gym.Env):
 
         return obs, info
 
-    def _initialize(self, offset_mm_deg: Union[np.ndarray, None]):
+    def _initialize(self, offset_mm_deg: Union[np.ndarray, None]) -> np.ndarray:
         """
         offset_mm_deg: (x_offset in mm, y_offset in mm, theta_offset in degree, z_offset in mm,  choose_left)
         """
-        # remove all entities except camera
-        for e in self.scene.entities:
-            if "camera" not in e.name:
-                e.remove_from_scene()
-        self.ipc_system.rebuild()
 
         # randomly choose peg and hole
         self.peg_index = np.random.randint(
@@ -312,194 +379,232 @@ class PegInsertionSimEnvV2(gym.Env):
         )  # only one peg and hole in Track 2
         peg_path_l, peg_path_r, hole_path = self.peg_hole_path_list[self.peg_index]
         y_start_mm = 45.25 / 2  # mm, based on assets/peg_insertion/hole_2.5mm.STL
-        z_target_mm = 4.4  # mm, based on assets/peg_insertion/hole_2.5mm.STL
-        choose_left = random.random() < 0.5
+        z_target_mm = 6.9  # mm, based on assets/peg_insertion/hole_2.5mm.STL
+        self.z_target_mm = z_target_mm
+        choose_left = np.random.random() < 0.5
         if offset_mm_deg is not None:
             if len(offset_mm_deg) > 4:
                 choose_left = offset_mm_deg[4]
                 offset_mm_deg = offset_mm_deg[:4]
         if choose_left:
-            self.logger.info("choose left")
+            self.unique_logger.info("choose left")
             peg_path = peg_path_l
-            self.y_target_mm = 45.25  # mm, based on assets/peg_insertion/hole_2.5mm.STL
+            self.y_target_mm = 45.25  # mm, based on assets/peg_insertion/sim_hole_base_2.0mm.STL
             self.gt_direction = np.ones((1,), dtype=np.float32)
         else:
-            self.logger.info("choose right")
+            self.unique_logger.info("choose right")
             peg_path = peg_path_r
-            self.y_target_mm = 0  # mm, based on assets/peg_insertion/hole_2.5mm.STL
+            self.y_target_mm = 0  # mm, based on assets/peg_insertion/sim_hole_base_2.0mm.STL
             self.gt_direction = -np.ones((1,), dtype=np.float32)
 
-        # get peg and hole path
-        asset_dir = Path(track_path) / "assets"
-        peg_path = asset_dir / peg_path
-        hole_path = asset_dir / hole_path
+        # to avoid the first frame black
+        while True:
+            # remove all entities except camera
+            for e in self.scene.entities:
+                if "camera" not in e.name:
+                    e.remove_from_scene()
+            self.ipc_system.rebuild()
 
-        # add hole to the sapien scene
-        with suppress_stdout_stderr():
-            self.hole_entity, hole_abd = build_sapien_entity_ABD(
-                hole_path,
-                density=500.0,
-                color=[0.0, 0.0, 1.0, 1.0],
-                friction=self.params.hole_friction,
-                no_render=self.no_render,
-            )  # blue
-        self.hole_ext = os.path.splitext(hole_path)[-1]
-        self.hole_entity.set_name("hole")
-        self.hole_abd = hole_abd
-        if self.hole_ext == ".msh":
-            self.hole_upper_z_m = hole_height_m = np.max(
-                hole_abd.tet_mesh.vertices[:, 2]
-            ) - np.min(hole_abd.tet_mesh.vertices[:, 2])
-        else:
-            self.hole_upper_z_m = hole_height_m = np.max(
-                hole_abd.tri_mesh.vertices[:, 2]
-            ) - np.min(hole_abd.tri_mesh.vertices[:, 2])
-        self.scene.add_entity(self.hole_entity)
+            # get peg and hole path
+            asset_dir = Path(track_path) / "assets"
+            peg_path = asset_dir / peg_path
+            hole_path = asset_dir / hole_path
 
-        # add peg model
-        with suppress_stdout_stderr():
-            self.peg_entity, peg_abd = build_sapien_entity_ABD(
-                peg_path,
-                density=500.0,
-                color=[1.0, 0.0, 0.0, 1.0],
-                friction=self.params.peg_friction,
-                no_render=self.no_render,
-            )  # red
-        self.peg_ext = os.path.splitext(peg_path)[-1]
-        self.peg_abd = peg_abd
-        self.peg_entity.set_name("peg")
-        if self.peg_ext == ".msh":
-            peg_width_m = np.max(peg_abd.tet_mesh.vertices[:, 1]) - np.min(
-                peg_abd.tet_mesh.vertices[:, 1]
-            )
-            peg_height_m = np.max(peg_abd.tet_mesh.vertices[:, 2]) - np.min(
-                peg_abd.tet_mesh.vertices[:, 2]
-            )
-            self.peg_bottom_pts_id = np.where(
-                peg_abd.tet_mesh.vertices[:, 2]
-                < np.min(peg_abd.tet_mesh.vertices[:, 2]) + 1e-4
-            )[0]
-        else:
-            peg_width_m = np.max(peg_abd.tri_mesh.vertices[:, 1]) - np.min(
-                peg_abd.tri_mesh.vertices[:, 1]
-            )
-            peg_height_m = np.max(peg_abd.tri_mesh.vertices[:, 2]) - np.min(
-                peg_abd.tri_mesh.vertices[:, 2]
-            )
-            self.peg_bottom_pts_id = np.where(
-                peg_abd.tri_mesh.vertices[:, 2]
-                < np.min(peg_abd.tri_mesh.vertices[:, 2]) + 1e-4
-            )[0]
+            # add hole to the sapien scene
+            with suppress_stdout_stderr():
+                self.hole_entity, hole_abd = build_sapien_entity_ABD(
+                    hole_path,
+                    density=500.0,
+                    color=[0.0, 0.0, 1.0, 0.95],
+                    friction=self.params.hole_friction,
+                    no_render=self.no_render,
+                )  # blue
+            self.hole_ext = os.path.splitext(hole_path)[-1]
+            self.hole_entity.set_name("hole")
+            self.hole_abd = hole_abd
+            if self.hole_ext == ".msh":
+                self.hole_upper_z_m = hole_height_m = np.max(
+                    hole_abd.tet_mesh.vertices[:, 2]
+                ) - np.min(hole_abd.tet_mesh.vertices[:, 2])
+            else:
+                self.hole_upper_z_m = hole_height_m = np.max(
+                    hole_abd.tri_mesh.vertices[:, 2]
+                ) - np.min(hole_abd.tri_mesh.vertices[:, 2])
+            self.scene.add_entity(self.hole_entity)
 
-        # generate random and valid offset
-        if offset_mm_deg is None:
-            x_offset_mm = (np.random.rand() * 2 - 1) * self.peg_x_max_offset_mm
-            y_offset_mm = (np.random.rand() * 2 - 1) * self.peg_y_max_offset_mm
-            theta_offset_deg = (
-                np.random.rand() * 2 - 1
-            ) * self.peg_theta_max_offset_deg
-            z_offset_mm = (
-                self.peg_dist_z_mm
-                + (np.random.rand() * 2 - 1) * self.peg_dist_z_diff_mm
+            # add peg model
+            with suppress_stdout_stderr():
+                self.peg_entity, peg_abd = build_sapien_entity_ABD(
+                    peg_path,
+                    density=500.0,
+                    color=[1.0, 0.0, 0.0, 0.95],
+                    friction=self.params.peg_friction,
+                    no_render=self.no_render,
+                )  # red
+            self.peg_ext = os.path.splitext(peg_path)[-1]
+            self.peg_abd = peg_abd
+            self.peg_entity.set_name("peg")
+            if self.peg_ext == ".msh":
+                peg_width_m = np.max(peg_abd.tet_mesh.vertices[:, 1]) - np.min(
+                    peg_abd.tet_mesh.vertices[:, 1]
+                )
+                peg_height_m = np.max(peg_abd.tet_mesh.vertices[:, 2]) - np.min(
+                    peg_abd.tet_mesh.vertices[:, 2]
+                )
+                self.peg_bottom_pts_id = np.where(
+                    peg_abd.tet_mesh.vertices[:, 2]
+                    < np.min(peg_abd.tet_mesh.vertices[:, 2]) + 1e-4
+                )[0]
+            else:
+                peg_width_m = np.max(peg_abd.tri_mesh.vertices[:, 1]) - np.min(
+                    peg_abd.tri_mesh.vertices[:, 1]
+                )
+                peg_height_m = np.max(peg_abd.tri_mesh.vertices[:, 2]) - np.min(
+                    peg_abd.tri_mesh.vertices[:, 2]
+                )
+                self.peg_bottom_pts_id = np.where(
+                    peg_abd.tri_mesh.vertices[:, 2]
+                    < np.min(peg_abd.tri_mesh.vertices[:, 2]) + 1e-4
+                )[0]
+
+            # generate random and valid offset
+            if offset_mm_deg is None:
+                x_offset_mm = (np.random.rand() * 2 - 1) * self.peg_x_max_offset_mm
+                y_offset_mm = (np.random.rand() * 2 - 1) * self.peg_y_max_offset_mm
+                theta_offset_deg = (
+                    np.random.rand() * 2 - 1
+                ) * self.peg_theta_max_offset_deg
+                z_offset_mm = (
+                    self.peg_dist_z_mm
+                    + (np.random.rand() * 2 - 1) * self.peg_dist_z_diff_mm
+                )
+                # no need to check collision here.
+                offset_mm_deg = np.array(
+                    [x_offset_mm, y_offset_mm, theta_offset_deg, z_offset_mm]
+                )
+            else:
+                x_offset_mm, y_offset_mm, theta_offset_deg, z_offset_mm = (
+                    offset_mm_deg[0],
+                    offset_mm_deg[1],
+                    offset_mm_deg[2],
+                    offset_mm_deg[3],
+                )
+            # add peg to the scene
+            epsilon = 0.001
+            init_pos_m = (
+                x_offset_mm / 1000,
+                y_start_mm / 1000 + y_offset_mm / 1000,
+                hole_height_m
+                + z_offset_mm / 1000
+                + epsilon,  # move to the initial z-distance.
             )
-            # no need to check collision here.
-            offset_mm_deg = np.array(
-                [x_offset_mm, y_offset_mm, theta_offset_deg, z_offset_mm]
+            init_theta_offset_rad = theta_offset_deg * np.pi / 180
+            peg_offset_quat = t3d.quaternions.axangle2quat(
+                (0, 0, 1), init_theta_offset_rad, True
             )
-        else:
-            x_offset_mm, y_offset_mm, theta_offset_deg, z_offset_mm = (
-                offset_mm_deg[0],
-                offset_mm_deg[1],
-                offset_mm_deg[2],
-                offset_mm_deg[3],
+            self.peg_entity.set_pose(sapien.Pose(p=init_pos_m, q=peg_offset_quat))
+            self.scene.add_entity(self.peg_entity)
+
+            # add tactile sensors to the sapien scene
+            gripper_x_offset_m = self.params.gripper_x_offset_mm / 1000  # mm to m
+            gripper_z_offset_m = self.params.gripper_z_offset_mm / 1000
+            sensor_grasp_center_m = np.array(
+                (
+                    math.cos(init_theta_offset_rad) * gripper_x_offset_m
+                    + init_pos_m[0],
+                    math.sin(init_theta_offset_rad) * gripper_x_offset_m
+                    + init_pos_m[1],
+                    peg_height_m + init_pos_m[2] + gripper_z_offset_m,
+                )
+            )
+            init_pos_l_m = (
+                -math.sin(init_theta_offset_rad) * (peg_width_m / 2 + 0.0020 + 0.0001)
+                + sensor_grasp_center_m[0],
+                math.cos(init_theta_offset_rad) * (peg_width_m / 2 + 0.0020 + 0.0001)
+                + sensor_grasp_center_m[1],
+                sensor_grasp_center_m[2],
+            )
+            init_pos_r_m = (
+                math.sin(init_theta_offset_rad) * (peg_width_m / 2 + 0.0020 + 0.0001)
+                + sensor_grasp_center_m[0],
+                -math.cos(init_theta_offset_rad) * (peg_width_m / 2 + 0.0020 + 0.0001)
+                + sensor_grasp_center_m[1],
+                sensor_grasp_center_m[2],
+            )
+            init_rot_l = quat_product(peg_offset_quat, (0.5, 0.5, 0.5, -0.5))
+            init_rot_r = quat_product(peg_offset_quat, (0.5, -0.5, 0.5, 0.5))
+            with suppress_stdout_stderr():
+                self._add_tactile_sensors(
+                    init_pos_l_m, init_rot_l, init_pos_r_m, init_rot_r
+                )
+
+            # get init sensor center
+            sensor_grasp_center_mm = tuple(
+                (x * 1000 + y * 1000) / 2 for x, y in zip(init_pos_l_m, init_pos_r_m)
+            )
+            self.sensor_grasp_center_init_mm_deg = np.array(
+                sensor_grasp_center_mm[:2]
+                + (init_theta_offset_rad / np.pi * 180,)
+                + sensor_grasp_center_mm[2:]
+            )
+            self.sensor_grasp_center_current_mm_deg = (
+                self.sensor_grasp_center_init_mm_deg.copy()
             )
 
-        # add peg to the scene
-        init_pos_m = (
-            x_offset_mm / 1000,
-            y_start_mm / 1000 + y_offset_mm / 1000,
-            hole_height_m + z_offset_mm / 1000,  # move to the initial z-distance.
-        )
-        init_theta_offset_rad = theta_offset_deg * np.pi / 180
-        peg_offset_quat = t3d.quaternions.axangle2quat(
-            (0, 0, 1), init_theta_offset_rad, True
-        )
-        self.peg_entity.set_pose(sapien.Pose(p=init_pos_m, q=peg_offset_quat))
-        self.scene.add_entity(self.peg_entity)
-
-        # add tactile sensors to the sapien scene
-        gripper_x_offset_m = self.params.gripper_x_offset_mm / 1000  # mm to m
-        gripper_z_offset_m = self.params.gripper_z_offset_mm / 1000
-        sensor_grasp_center_m = np.array(
-            (
-                math.cos(init_theta_offset_rad) * gripper_x_offset_m + init_pos_m[0],
-                math.sin(init_theta_offset_rad) * gripper_x_offset_m + init_pos_m[1],
-                peg_height_m + init_pos_m[2] + gripper_z_offset_m,
+            # add depth sensor
+            sensor_config = sapien_sensor.StereoDepthSensorConfig()
+            sensor_config.rgb_resolution = (self.camera_size[1], self.camera_size[0])
+            sensor_config.ir_resolution = (self.camera_size[1], self.camera_size[0])
+            ir_intrinsic_matrix = np.array(
+                [
+                    [595.8051147460938, 0.0, 315.040283203125],
+                    [0.0, 595.8051147460938, 246.26866149902344],
+                    [0.0, 0.0, 1.0],
+                ]
             )
-        )
-        init_pos_l_m = (
-            -math.sin(init_theta_offset_rad) * (peg_width_m / 2 + 0.0020 + 0.0001)
-            + sensor_grasp_center_m[0],
-            math.cos(init_theta_offset_rad) * (peg_width_m / 2 + 0.0020 + 0.0001)
-            + sensor_grasp_center_m[1],
-            sensor_grasp_center_m[2],
-        )
-        init_pos_r_m = (
-            math.sin(init_theta_offset_rad) * (peg_width_m / 2 + 0.0020 + 0.0001)
-            + sensor_grasp_center_m[0],
-            -math.cos(init_theta_offset_rad) * (peg_width_m / 2 + 0.0020 + 0.0001)
-            + sensor_grasp_center_m[1],
-            sensor_grasp_center_m[2],
-        )
-        init_rot_l = quat_product(peg_offset_quat, (0.5, 0.5, 0.5, -0.5))
-        init_rot_r = quat_product(peg_offset_quat, (0.5, -0.5, 0.5, 0.5))
-        with suppress_stdout_stderr():
-            self._add_tactile_sensors(
-                init_pos_l_m, init_rot_l, init_pos_r_m, init_rot_r
+            rgb_intrinsic_matrix = np.array(
+                [
+                    [604.3074951171875, 0.0, 317.234130859375],
+                    [0.0, 604.3074951171875, 233.79444885253906],
+                    [0.0, 0.0, 1.0],
+                ]
             )
+            sensor_config.rgb_intrinsic = rgb_intrinsic_matrix
+            sensor_config.ir_intrinsic = ir_intrinsic_matrix
+            sensor_config.min_depth = 0.01
+            sensor_config.max_depth = 1.0
+            sensor_config.trans_pose_l = sapien.Pose([0, -0.01502214651554823, 0])
+            sensor_config.trans_pose_r = sapien.Pose([0, -0.07004545629024506, 0])
+            self.main_cam = Depth_sensor(sensor_config, sapien.Entity())
+            self.main_cam.set_name("Depth_Cam")
+            self.scene.add_entity(self.main_cam.get_entity())
 
-        # get init sensor center
-        sensor_grasp_center_mm = tuple(
-            (x * 1000 + y * 1000) / 2 for x, y in zip(init_pos_l_m, init_pos_r_m)
-        )
-        self.sensor_grasp_center_init_mm_deg = np.array(
-            sensor_grasp_center_mm[:2]
-            + (init_theta_offset_rad / np.pi * 180,)
-            + sensor_grasp_center_mm[2:]
-        )
-        self.sensor_grasp_center_current_mm_deg = (
-            self.sensor_grasp_center_init_mm_deg.copy()
-        )
-
-        sensor_config = sapien_sensor.StereoDepthSensorConfig()
-        sensor_config.rgb_resolution = (self.camera_size[1], self.camera_size[0])
-        sensor_config.ir_resolution = (self.camera_size[1], self.camera_size[0])
-        ir_intrinsic_matrix = np.array(
-            [
-                [595.8051147460938, 0.0, 315.040283203125],
-                [0.0, 595.8051147460938, 246.26866149902344],
-                [0.0, 0.0, 1.0],
-            ]
-        )
-        rgb_intrinsic_matrix = np.array(
-            [
-                [604.3074951171875, 0.0, 317.234130859375],
-                [0.0, 604.3074951171875, 233.79444885253906],
-                [0.0, 0.0, 1.0],
-            ]
-        )
-        sensor_config.rgb_intrinsic = rgb_intrinsic_matrix
-        sensor_config.ir_intrinsic = ir_intrinsic_matrix
-        sensor_config.min_depth = 0.01
-        sensor_config.max_depth = 1.0
-        sensor_config.trans_pose_l = sapien.Pose([0, -0.01502214651554823, 0])
-        sensor_config.trans_pose_r = sapien.Pose([0, -0.07004545629024506, 0])
-        self.main_cam = Depth_sensor(sensor_config, sapien.Entity())
-        self.main_cam.set_name("Depth_Cam")
-        self.scene.add_entity(self.main_cam.get_entity())
+            self.scene.step()
+            self.main_cam.set_pose(
+                self._gen_camera_pose(
+                    y=(self.sensor_grasp_center_init_mm_deg[1] + self.y_target_mm)
+                    / 1000,
+                    z=(self.sensor_grasp_center_init_mm_deg[2] + self.z_target_mm)
+                    / 1000,
+                )
+            )
+            # update render
+            # avoid the first frame black
+            self.scene.update_render()
+            ipc_update_render_all(self.scene)
+            self.main_cam.reset()
+            rgb_raw = self.main_cam.get_rgb_data()
+            rgb = (rgb_raw * 255).astype(np.uint8)
+            blue_mask = (rgb[:, :, 2] > 200) & (rgb[:, :, 1] < 100)
+            red_mask = (
+                (rgb[:, :, 0] > 200) & (rgb[:, :, 1] < 100) & (rgb[:, :, 2] < 100)
+            )
+            if np.any(blue_mask) and np.any(red_mask):
+                break
+            # break
 
         # gui initialization
-        if gui:
+        if self.gui:
             self.viewer = viewer()
             self.viewer.set_scene(self.scene)
             self.viewer.set_camera_pose(
@@ -553,11 +658,12 @@ class PegInsertionSimEnvV2(gym.Env):
                     np.concatenate([np.eye(3), np.zeros((1, 3))], axis=0)
                 )  # hole stays static
                 self.ipc_system.step()
+                self.scene.step()
             self.tactile_sensor_1.step()
             self.tactile_sensor_2.step()
-            if gui:
-                self.scene.update_render()
-                ipc_update_render_all(self.scene)
+            self.scene.update_render()
+            ipc_update_render_all(self.scene)
+            if self.gui:
                 self.viewer.render()
 
         if isinstance(
@@ -570,7 +676,7 @@ class PegInsertionSimEnvV2(gym.Env):
         )
 
         offset_mm_deg[1] = offset_mm_deg[1] + y_start_mm - self.y_target_mm
-        offset_mm_deg[3] = offset_mm_deg[3] + hole_height_m * 1000 - z_target_mm
+        offset_mm_deg[3] = offset_mm_deg[3] + hole_height_m * 1000 - self.z_target_mm
 
         return offset_mm_deg
 
@@ -588,7 +694,7 @@ class PegInsertionSimEnvV2(gym.Env):
             friction=self.params.tac_friction,
             name="tactile_sensor_1",
             no_render=self.no_render,
-            logger=self.logger,
+            logger=self.unique_logger,
         )
 
         self.tactile_sensor_2 = TactileSensorSapienIPC(
@@ -603,31 +709,70 @@ class PegInsertionSimEnvV2(gym.Env):
             friction=self.params.tac_friction,
             name="tactile_sensor_2",
             no_render=self.no_render,
-            logger=self.logger,
+            logger=self.unique_logger,
         )
 
-    def step(self, action_mm_deg):
+    def step(self, action) -> Tuple[dict, float, bool, bool, dict]:
+        """
+        Advances the simulation by one step using the provided action.
+
+        This method is called to execute one step of the simulation, where the action is applied to the environment.
+        It updates the environment state, calculates the reward, and checks for termination conditions.
+
+        Parameters:
+        - action (np.ndarray): A numpy array representing the action to be taken, scaled to millimeters and degrees.
+
+        Returns:
+        - obs (dict): The observation of the environment after applying the action.
+        - reward (float): The reward earned for the action taken.
+        - terminated (bool): Whether the episode has terminated.
+        - truncated (bool): Whether the episode was truncated (e.g., due to exceeding maximum steps).
+        - info (dict): Additional information about the environment's state.
+        """
 
         self.current_episode_elapsed_steps += 1
-        action_mm_deg = np.array(action_mm_deg).flatten() * self.max_action_mm_deg
+        self.unique_logger.info(
+            "#############################################################"
+        )
+        self.unique_logger.info(
+            f"current_episode_elapsed_steps: {self.current_episode_elapsed_steps}"
+        )
+        self.unique_logger.info(f"action: {action}")
+        action_mm_deg = np.array(action).flatten() * self.max_action_mm_deg
+        self.unique_logger.info(f"action_mm_deg: {action_mm_deg}")
         self._sim_step(action_mm_deg)
 
         info = self.get_info()
+        self.unique_logger.info(f"info: {info}")
         obs = self.get_obs(info)
-        reward = self.get_reward(info=info)
-        terminated = self.get_terminated(info=info)
-        truncated = self.get_truncated(info=info)
-
+        reward = self.get_reward(info)
+        terminated = self.get_terminated(info)
+        truncated = self.get_truncated(info)
+        self.unique_logger.info(
+            "#############################################################"
+        )
         return obs, reward, terminated, truncated, info
 
     def _sim_step(self, action_mm_deg):
+        """
+        Executes a single simulation step with the given action in millimeters and degrees.
+
+        This method applies the action to the peg by updating its position and orientation in the simulation environment.
+        It handles the physical interaction between the peg and the hole, as well as the tactile sensors.
+
+        Parameters:
+        - action_mm_deg (np.ndarray): A numpy array representing the action to be taken, containing x and y displacements in millimeters and a rotation in degrees.
+
+        Returns:
+        - None
+
+        """
         action_mm_deg = np.clip(
             action_mm_deg, -self.max_action_mm_deg, self.max_action_mm_deg
         )
         current_theta_rad = (
             self.current_offset_of_current_episode_mm_deg[2] * np.pi / 180
         )
-
         action_x_mm, action_y_mm = action_mm_deg[:2] @ [
             math.cos(current_theta_rad),
             -math.sin(current_theta_rad),
@@ -691,6 +836,7 @@ class PegInsertionSimEnvV2(gym.Env):
                     np.concatenate([np.eye(3), np.zeros((1, 3))], axis=0)
                 )  # hole stays static
                 self.ipc_system.step()
+                self.scene.step()
             state1 = self.tactile_sensor_1.step()
             state2 = self.tactile_sensor_2.step()
             sensor_grasp_center_m = (
@@ -698,13 +844,21 @@ class PegInsertionSimEnvV2(gym.Env):
             ) / 2
             if (not state1) or (not state2):
                 self.error_too_large = True
-            if gui:
+            if self.gui:
                 self.scene.update_render()
                 ipc_update_render_all(self.scene)
                 self.viewer.render()
-        return
 
-    def get_info(self):
+    def get_info(self) -> dict:
+        """
+        Retrieves additional information about the environment's state.
+
+        This method collects various metrics and data points that describe the current state of the simulation,
+        including the positions of the peg and hole, surface differences, and success criteria.
+
+        Returns:
+        - info (dict): A dictionary containing the environment's state information.
+        """
         info = {"steps": self.current_episode_elapsed_steps}
 
         observation_left_surface_pts_m, observation_right_surface_pts_m = (
@@ -745,7 +899,10 @@ class PegInsertionSimEnvV2(gym.Env):
         info["peg_relative_z_mm"] = peg_relative_z_mm
         info["is_success"] = False
         if (
-            np.sum(peg_relative_z_mm < -self.insertion_depth_mm)
+            not info["error_too_large"]
+            and not info["too_many_steps"]
+            and not info["tactile_movement_too_large"]
+            and np.sum(peg_relative_z_mm < -self.insertion_depth_mm)
             == peg_relative_z_mm.shape[0]
             and np.abs(x_offset_mm) < 6.0
             and np.abs(y_offset_mm) < 6.0
@@ -762,17 +919,28 @@ class PegInsertionSimEnvV2(gym.Env):
 
         return info
 
-    def get_obs(self, info):
+    def get_obs(self, info) -> dict:
+        """
+        Constructs the observation dictionary from the environment's state information.
 
-        obs_dict = self.default_observation.copy()
+        This method takes the state information and processes it to create an observation that can be used by an agent or algorithm.
+        The observation includes the ground truth direction, ground truth offset, relative motion, surface points of the tactile sensors,
+        and some vision information.
+
+        Parameters:
+        - info (dict): A dictionary containing the environment's state information, obtained from `get_info`.
+
+        Returns:
+        - obs (dict): A dictionary containing the observation data.
+        """
+
+        obs_dict = dict()
 
         obs_dict["gt_direction"] = self.gt_direction
         obs_dict["gt_offset"] = np.array(info["gt_offset_mm_deg"]).astype(np.float32)
-
         obs_dict["relative_motion"] = np.array(info["relative_motion_mm_deg"]).astype(
             np.float32
         )
-
         observation_left_surface_pts, observation_right_surface_pts = (
             self._get_sensor_surface_vertices()
         )
@@ -799,7 +967,9 @@ class PegInsertionSimEnvV2(gym.Env):
         self.main_cam.set_pose(
             self._gen_camera_pose(
                 y=(self.current_offset_of_current_episode_mm_deg[1] + self.y_target_mm)
-                / 1000
+                / 1000,
+                z=(self.current_offset_of_current_episode_mm_deg[2] + self.z_target_mm)
+                / 1000,
             )
         )
 
@@ -826,9 +996,58 @@ class PegInsertionSimEnvV2(gym.Env):
                 rgb, obs_dict["point_cloud"]
             )
 
+        ## if you want to save the image and point cloud, uncomment the following code
+        # folder_name = self.log_folder
+        # if not os.path.exists(folder_name):
+        #     os.makedirs(folder_name)
+        # temp_name = (
+        #     folder_name
+        #     + f"/{self.current_episode_elapsed_steps}_"
+        #     + self.vision_params["render_mode"]
+        # )
+        # if "rgb" in self.vision_params["vision_type"]:
+        #     plt.figure(figsize=(12, 8))
+        #     plt.subplot(111)
+        #     plt.title("RGB Image")
+        #     plt.imshow(obs_dict["rgb_picture"])
+        #     plt.savefig(temp_name + "_rgb.png", dpi=500)
+        #     plt.close()
+        # if "depth" in self.vision_params["vision_type"]:
+        #     plt.figure(figsize=(12, 8))
+        #     plt.subplot(111)
+        #     plt.title("Depth Map")
+        #     plt.imshow(obs_dict["depth_picture"])
+        #     plt.savefig(temp_name + "_depth.png", dpi=500)
+        #     plt.close()
+        # if "point_cloud" in self.vision_params["vision_type"]:
+        #     point_world = point_list[0]
+        #     point_peg = point_list[1]
+        #     point_hole = point_list[2]
+        #     pcd_all = o3d.geometry.PointCloud()
+        #     pcd_all.points = o3d.utility.Vector3dVector(point_world)
+        #     o3d.io.write_point_cloud(temp_name + "_all.pcd", pcd_all)
+        #     pcd_peg = o3d.geometry.PointCloud()
+        #     pcd_peg.points = o3d.utility.Vector3dVector(point_peg)
+        #     o3d.io.write_point_cloud(temp_name + "_peg.pcd", pcd_peg)
+        #     pcd_hole = o3d.geometry.PointCloud()
+        #     pcd_hole.points = o3d.utility.Vector3dVector(point_hole)
+        #     o3d.io.write_point_cloud(temp_name + "_hole.pcd", pcd_hole)
+
         return obs_dict
 
-    def get_reward(self, info):
+    def get_reward(self, info) -> float:
+        """
+        Calculates the reward based on the environment's state information.
+
+        This method determines the reward for the current state by evaluating the progress towards solving the peg insertion task.
+        The reward is based on the error evaluation, step penalty, and final reward criteria.
+
+        Parameters:
+        - info (dict): A dictionary containing the environment's state information, obtained from `get_info`.
+
+        Returns:
+        - reward (float): The calculated reward for the current state and action.
+        """
 
         self.error_evaluation_list.append(evaluate_error_v2(info))
 
@@ -847,20 +1066,43 @@ class PegInsertionSimEnvV2(gym.Env):
             reward_part_3 += self.final_reward
 
         reward = reward_part_1 + reward_part_2 + reward_part_3
-        self.logger.info(
+        self.unique_logger.info(
             f"reward: {reward}, reward_part_1: {reward_part_1}, reward_part_2: {reward_part_2}, reward_part_3: {reward_part_3}"
         )
 
         return reward
 
-    def get_truncated(self, info):
+    def get_truncated(self, info) -> bool:
+        """
+        Determines if the episode was truncated due to specific conditions.
+
+        An episode can be truncated if certain conditions are met, such as exceeding the maximum
+        number of steps or if the agent's actions lead to an undesirable state.
+
+        Parameters:
+        - info (dict): A dictionary containing the environment's state information, obtained from `get_info`.
+
+        Returns:
+        - truncated (bool): True if the episode was truncated, False otherwise.
+        """
         return (
             info["too_many_steps"]
             or info["tactile_movement_too_large"]
             or info["error_too_large"]
         )
 
-    def get_terminated(self, info):
+    def get_terminated(self, info) -> bool:
+        """
+        Determines if the episode has terminated due to success or failure.
+
+        An episode can terminate either because the agent successfully opens the lock or because it fails to do so within the allowed steps.
+
+        Parameters:
+        - info (dict): A dictionary containing the environment's state information, obtained from `get_info`.
+
+        Returns:
+        - terminated (bool): True if the episode has terminated, False otherwise.
+        """
         return info["is_success"]
 
     def _parse_points(self, rgb, points):
@@ -886,13 +1128,32 @@ class PegInsertionSimEnvV2(gym.Env):
 
         return object_point_cloud, [object_all, points_peg, points_hole]
 
-    def _get_sensor_surface_vertices(self):
+    def _get_sensor_surface_vertices(self) -> list[np.ndarray, np.ndarray]:
+        """
+        Retrieves the surface vertices of the tactile sensors in the world coordinate system.
+
+        This function is used to get the current surface vertices of the tactile sensors, which can be used to
+        calculate the relative motion or deformation of the surface.
+
+        Returns:
+        - vertices (list of np.ndarray): A list containing the surface vertices of the left and right tactile sensors.
+
+        """
         return [
             self.tactile_sensor_1.get_surface_vertices_sensor(),
             self.tactile_sensor_2.get_surface_vertices_sensor(),
         ]
 
     def _get_peg_relative_z_mm(self) -> np.ndarray:
+        """
+        Calculates the relative z-coordinates of the peg's bottom points with respect to the hole's upper surface.
+
+        This method is used to determine how far the peg has been inserted into the hole. It retrieves the z-coordinates
+        of the bottom points of the peg and calculates their distances from the upper surface of the hole.
+
+        Returns:
+        - peg_relative_z_mm (np.ndarray): An array of relative z-coordinates in millimeters.
+        """
         peg_pts_m = self.peg_abd.get_positions().cpu().numpy().copy()
         peg_bottom_z_m = peg_pts_m[self.peg_bottom_pts_id][:, 2]
         return (peg_bottom_z_m - self.hole_upper_z_m) * 1000
@@ -919,15 +1180,21 @@ class PegInsertionSimEnvV2(gym.Env):
             )
         return points[selected_indices, :]
 
-    def _gen_camera_pose(self, y=0.0, add_random_offset=False):
-        camera_theta = np.pi * 3.3 / 8
+    def _gen_camera_pose(self, y=0.0, z=0.0, add_random_offset=False):
+        camera_theta = (90 + 53.75) / 2 * np.pi / 180  # align to real
+
         if add_random_offset:
             camera_theta += (np.random.rand() * 2 - 1) * 0.04
             random_offset = (np.random.rand(3) * 2 - 1) * 0.02
         else:
             random_offset = np.zeros(3)
+        ####align sim2real#######
         return sapien.Pose(
-            p=[0.365 + random_offset[0], y + random_offset[1], 0.27 + random_offset[2]],
+            p=[
+                0.371 + random_offset[0],
+                y + 0.02 + random_offset[1],
+                z + 0.25 + random_offset[2],
+            ],
             q=[np.cos(camera_theta), 0, np.sin(camera_theta), 0],
         )
 
@@ -937,8 +1204,16 @@ class PegInsertionSimEnvV2(gym.Env):
 
 
 class PegInsertionSimMarkerFLowEnvV2(PegInsertionSimEnvV2):
+    """
+    An environment class that extends PegInsertionSimEnv to incorporate marker flow observations for tactile sensors.
+
+    This class adds functionality for handling marker flow observations from tactile sensors,
+    which can be used to simulate realistic sensor noise and dynamics in a peg insertion task.
+    """
+
     def __init__(
         self,
+        render_rgb: bool = False,
         marker_interval_range: Tuple[float, float] = (2.0, 2.0),
         marker_rotation_range: float = 0.0,
         marker_translation_range: Tuple[float, float] = (0.0, 0.0),
@@ -949,8 +1224,19 @@ class PegInsertionSimMarkerFLowEnvV2(PegInsertionSimEnvV2):
         **kwargs,
     ):
         """
-        Initialize the ContinuousInsertionSimGymRandomizedPointFLowEnv.
+        Initializes a new instance of PegInsertionSimMarkerFLowEnv.
+
+        Args:
+        - marker_interval_range (Tuple[float, float]): The range of intervals between marker points in millimeters.
+        - marker_rotation_range (float): The range of overall marker rotation in radians.
+        - marker_translation_range (Tuple[float, float]): The range of overall marker translation in millimeters.
+        - marker_pos_shift_range (Tuple[float, float]): The range of independent marker position shift in millimeters.
+        - marker_random_noise (float): The standard deviation of Gaussian noise applied to marker points in pixels.
+        - marker_lose_tracking_probability (float): The probability of losing tracking for each marker.
+        - normalize (bool): A flag indicating whether to normalize the marker flow observations.
+        - **kwargs: Additional keyword arguments passed to the parent class.
         """
+        self.render_rgb = render_rgb
         self.sensor_meta_file = kwargs.get("params").tac_sensor_meta_file
         self.marker_interval_range = marker_interval_range
         self.marker_rotation_range = marker_rotation_range
@@ -967,16 +1253,47 @@ class PegInsertionSimMarkerFLowEnvV2(PegInsertionSimEnvV2):
         self.default_observation["marker_flow"] = np.zeros(
             (2, 2, self.marker_flow_size, 2), dtype=np.float32
         )
+        if self.render_rgb:
+            self.default_observation["rgb_images"] = np.stack(
+                [
+                    np.zeros((240, 320, 3), dtype=np.uint8),
+                    np.zeros((240, 320, 3), dtype=np.uint8),
+                ],
+                axis=0,
+            )
+
         self.observation_space = convert_observation_to_space(self.default_observation)
 
-    def _get_sensor_surface_vertices(self):
+    def _get_sensor_surface_vertices(self) -> list[np.ndarray, np.ndarray]:
+        """
+        Retrieves the surface vertices of the tactile sensors in the camera coordinate system.
+
+        This method is used to get the current surface vertices of the tactile sensors, which can be used to calculate the relative motion or deformation of the surface in the context of the camera view.
+
+        Returns:
+        - vertices (list of np.ndarray): A list containing the surface vertices of the left and right tactile sensors in the camera coordinate system.
+        """
         return [
             self.tactile_sensor_1.get_surface_vertices_camera(),
             self.tactile_sensor_2.get_surface_vertices_camera(),
         ]
 
     def _add_tactile_sensors(self, init_pos_l, init_rot_l, init_pos_r, init_rot_r):
+        """
+        Initializes and adds two tactile sensors with marker flow capabilities to the simulation environment.
 
+        This method creates two instances of VisionTactileSensorSapienIPC, one for each side (left and right) of the peg insertion mechanism.
+        Each sensor is configured with its own initial position, rotation, and marker flow parameters.
+
+        Parameters:
+        - init_pos_l (list or np.array): The initial position of the left tactile sensor in meters.
+        - init_rot_l (list or np.array): The initial rotation (as a quaternion) of the left tactile sensor.
+        - init_pos_r (list or np.array): The initial position of the right tactile sensor in meters.
+        - init_rot_r (list or np.array): The initial rotation (as a quaternion) of the right tactile sensor.
+
+        Returns:
+        - None
+        """
         self.tactile_sensor_1 = VisionTactileSensorSapienIPC(
             scene=self.scene,
             ipc_system=self.ipc_system,
@@ -986,6 +1303,7 @@ class PegInsertionSimMarkerFLowEnvV2(PegInsertionSimEnvV2):
             elastic_modulus=self.params.tac_elastic_modulus_l,
             poisson_ratio=self.params.tac_poisson_ratio_l,
             density=self.params.tac_density_l,
+            friction=self.params.tac_friction,
             name="tactile_sensor_1",
             marker_interval_range=self.marker_interval_range,
             marker_rotation_range=self.marker_rotation_range,
@@ -996,7 +1314,7 @@ class PegInsertionSimMarkerFLowEnvV2(PegInsertionSimEnvV2):
             normalize=self.normalize,
             marker_flow_size=self.marker_flow_size,
             no_render=self.no_render,
-            logger=self.logger,
+            logger=self.unique_logger,
         )
 
         self.tactile_sensor_2 = VisionTactileSensorSapienIPC(
@@ -1008,6 +1326,7 @@ class PegInsertionSimMarkerFLowEnvV2(PegInsertionSimEnvV2):
             elastic_modulus=self.params.tac_elastic_modulus_r,
             poisson_ratio=self.params.tac_poisson_ratio_r,
             density=self.params.tac_density_r,
+            friction=self.params.tac_friction,
             name="tactile_sensor_2",
             marker_interval_range=self.marker_interval_range,
             marker_rotation_range=self.marker_rotation_range,
@@ -1018,11 +1337,23 @@ class PegInsertionSimMarkerFLowEnvV2(PegInsertionSimEnvV2):
             normalize=self.normalize,
             marker_flow_size=self.marker_flow_size,
             no_render=self.no_render,
-            logger=self.logger,
+            logger=self.unique_logger,
         )
 
-    def get_obs(self, info):
-        obs = super().get_obs(info=info)
+    def get_obs(self, info) -> dict:
+        """
+        Constructs the observation dictionary including marker flow data from the environment's state.
+
+        This method generates the observation that an agent would receive after taking an action in the environment.
+        In addition to the standard observations from the parent class, this method includes marker flow data from the tactile sensors.
+
+        Parameters:
+        - info (dict): Optional dictionary containing additional environment state information.
+
+        Returns:
+        - obs (dict): A dictionary containing the observation data, including marker flow from tactile sensors.
+        """
+        obs = super().get_obs(info)
         obs.pop("surface_pts")
         obs["marker_flow"] = np.stack(
             [
@@ -1031,6 +1362,15 @@ class PegInsertionSimMarkerFLowEnvV2(PegInsertionSimEnvV2):
             ],
             axis=0,
         ).astype(np.float32)
+        if self.render_rgb:
+            obs["rgb_images"] = np.stack(
+                [
+                    self.tactile_sensor_1.gen_rgb_image(),
+                    self.tactile_sensor_2.gen_rgb_image(),
+                ],
+                axis=0,
+            )
+
         return obs
 
 
@@ -1071,7 +1411,8 @@ class Depth_sensor(sapien_sensor.StereoDepthSensor):
     def get_depth_data(self):
         self.depth = True
         self.take_picture(True)
-        self.compute_depth()
+        with suppress_stdout_stderr():
+            self.compute_depth()
         # if you want to get lr pic
         # ir_l, ir_r = self.get_ir()
         depth = self.get_depth()
@@ -1081,17 +1422,16 @@ class Depth_sensor(sapien_sensor.StereoDepthSensor):
         if gt_point_cloud:
             if not self.rgb:
                 scene: sapien.Scene = self._mount.get_scene()
-                scene.step()
                 scene.update_render()
                 self._cam_rgb.take_picture()
             points_frame = self._cam_rgb.get_picture("Position")[:, :, :3]
+            points_frame[:, :, 1] = -points_frame[:, :, 1]
+            points_frame[:, :, 2] = -points_frame[:, :, 2]
         else:
             if not self.depth:
                 self.take_picture(True)
                 self.compute_depth()
             points = self.get_pointcloud()
-            points[:, 1] = -points[:, 1]
-            points[:, 2] = -points[:, 2]
             points_frame = points.reshape(
                 [
                     self.get_config().rgb_resolution[1],
@@ -1104,17 +1444,25 @@ class Depth_sensor(sapien_sensor.StereoDepthSensor):
 
 
 if __name__ == "__main__":
-    gui = False
-    timestep = 0.05
+    timestep = 0.1
+    use_gui = True
+    use_render_rgb = True
 
-    logger_ = log
     log_time = get_time()
     log_folder = Path(os.path.join(track_path, f"Memo/{log_time}"))
     log_dir = Path(os.path.join(log_folder, "main.log"))
-    logger_.add(log_dir)
+    log.remove()
+    log.add(log_dir, filter=lambda record: record["extra"]["name"] == "main")
+    log.add(
+        sys.stderr,
+        format="{time:YYYY-MM-DD HH:mm:ss} {level} {message}",
+        level="INFO",
+        filter=lambda record: record["extra"]["name"] == "main",
+    )
+    test_log = log.bind(name="main")
 
     params = PegInsertionParams(
-        sim_time_step=0.1,
+        sim_time_step=timestep,
         sim_d_hat=0.1e-3,
         sim_kappa=1e2,
         sim_kappa_affine=1e5,
@@ -1153,10 +1501,12 @@ if __name__ == "__main__":
     vision_params = {
         "render_mode": "rast",  # "rast" or "rt"
         "vision_type": [
-            "point_cloud"
+            "rgb",
+            "point_cloud",
+            "depth",
         ],  # ["rgb", "depth", "point_cloud"], take one, two, or all three.
         # if use point_cloud, the following parameters are needed
-        "gt_point_cloud": True,  #  If True is specified, use the ground truth point cloud; otherwise, use the point cloud under render_mode.
+        "gt_point_cloud": False,  #  If True is specified, use the ground truth point cloud; otherwise, use the point cloud under render_mode.
         "max_points": 128,  # sample the points from the point cloud
         # if use ray_trace, the following parameters are needed
         # "ray_tracing_denoiser": "optix",
@@ -1165,28 +1515,38 @@ if __name__ == "__main__":
 
     env = PegInsertionSimMarkerFLowEnvV2(
         params=params,
-        step_penalty=0.8,
+        params_upper_bound=params,
+        gui=use_gui,
+        step_penalty=1,
         final_reward=10,
+        peg_x_max_offset_mm=5,
+        peg_y_max_offset_mm=5,
+        peg_theta_max_offset_deg=10,
         max_action_mm_deg=np.array([1.0, 1.0, 1.0, 1.0]),
         max_steps=50,
         insertion_depth_mm=1,
+        render_rgb=use_render_rgb,
         marker_interval_range=(2.0625, 2.0625),
         marker_rotation_range=0.0,
         marker_translation_range=(0.0, 0.0),
         marker_pos_shift_range=(0.0, 0.0),
         marker_random_noise=0.1,
+        marker_lose_tracking_probability=0.0,
         normalize=False,
-        peg_hole_path_file="configs/peg_insertion/to_real_multihole_1shape.txt",
         peg_dist_z_mm=6.0,
         peg_dist_z_diff_mm=3.0,
-        log_folder=log_folder,
         vision_params=vision_params,
+        peg_hole_path_file="configs/peg_insertion/to_real_multihole_1shape.txt",
+        log_path=log_folder,
+        logger=log,
+        device="cuda:0",
+        no_render=False,
+        env_type="test",
     )
 
     np.set_printoptions(precision=4)
 
-    def visualize_marker_point_flow(o, i, name, save_dir="marker_flow_images3"):
-
+    def visualize_marker_point_flow(o, i, name, save_dir="marker_flow_images"):
         # Create a directory to save images if it doesn't exist
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
@@ -1214,48 +1574,55 @@ if __name__ == "__main__":
         plt.savefig(filename)
         plt.close()
 
-    offset_list = [[5, -5, 10, 9, 1], [5, 5, -10, 9, 0]]
-    action_list = []
-    action_list.append(
-        [[-0.5, 1, -1, -0.2]] * 10
-        + [[0.05, 1, 0, 0]] * 18
-        + [[0.0, 0, 0, -1]] * 7
-        + [[0.0, 0, 0, -1]] * 2
-    )
-    action_list.append(
-        [[-0.5, -1, 1, -0.2]] * 10
-        + [[0.05, -1, 0, 0]] * 18
-        + [[0.0, 0, 0, -1]] * 7
-        + [[0.0, 0, 0, -1]] * 2
-    )
+    start_time = time.time()
+    test_times = 5
+    for ii in range(test_times):
 
-    for offset, actions in zip(offset_list, action_list):
-        o, info = env.reset(offset)
-        # input("Press Enter")
-        for k, v in o.items():
-            logger_.info(f"{k} : {v.shape}")
-        logger_.info(f"timestep: {timestep}")
-        logger_.info(f"info : {info}\n")
+        offset_list = []
+        offset_list.append([5, -5, 10, 9, 1])
+        # offset_list.append([5, 5, -10, 9, 0])
+        action_list = []
+        action_list.append(
+            [[-0.5, 1, -1, -0.2]] * 10
+            + [[0.05, 1, 0, 0]] * 18
+            + [[0.0, 0, 0, -1]] * 7
+            + [[0.0, 0, 0, -1]] * 2
+        )
+        # action_list.append(
+        #     [[-0.5, -1, 1, -0.2]] * 10
+        #     + [[0.05, -1, 0, 0]] * 18
+        #     + [[0.0, 0, 0, -1]] * 7
+        #     + [[0.0, 0, 0, -1]] * 2
+        # )
 
-        for i, action in enumerate(actions):
-            logger_.info(f"action: {action}")
-            o, r, d, _, info = env.step(action)
-            logger_.info(f"info : ")
-            for k, v in info.items():
-                logger_.info(f"{k} : {v}")
-            logger_.info(
-                f"gt_direction : {o['gt_direction']}\n \
-                         gt_offset(mm,deg) : {o['gt_offset']}\n \
-                         relative_motion(mm,deg) : {o['relative_motion']}\n"
-            )
-            logger_.info(f"reward : {r}")
-            # visualize_marker_point_flow(o, i, str(offset), save_dir="saved_images")
-            # time.sleep(1)
-            # input("Press Enter")
-        if env.viewer is not None:
-            while True:
-                if env.viewer.window.key_down("c"):
-                    break
-                env.scene.update_render()
-                ipc_update_render_all(env.scene)
-                env.viewer.render()
+        for offset, actions in zip(offset_list, action_list):
+            o, info = env.reset([0,0,0,0,0])
+            for k, v in o.items():
+                test_log.info(f"{k} : {v.shape}")
+            test_log.info(f"timestep: {timestep}")
+            test_log.info(f"info : {info}\n")
+            if use_gui:
+                input("Press Enter to continue...")
+
+            for i, action in enumerate(actions):
+                test_log.info(f"action: {action}")
+                o, r, d, _, info = env.step(action)
+                test_log.info(f"info : ")
+                for k, v in info.items():
+                    test_log.info(f"{k} : {v}")
+                test_log.info(
+                    f"gt_offset(mm,deg) : {o['gt_offset']}\n \
+                            relative_motion(mm,deg) : {o['relative_motion']}\n"
+                )
+                test_log.info(f"reward : {r}")
+                # visualize_marker_point_flow(o, i, str(offset), save_dir="saved_images")
+            if env.viewer is not None:
+                while True:
+                    if env.viewer.window.key_down("c"):
+                        break
+                    env.scene.update_render()
+                    ipc_update_render_all(env.scene)
+                    env.viewer.render()
+
+    end_time = time.time()
+    test_log.info(f"{test_times} times cost time: {end_time - start_time}")

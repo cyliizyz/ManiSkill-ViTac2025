@@ -1,6 +1,6 @@
 env:
   env_name: LongOpenLockRandPointFlowEnv-v1
-  max_action_mm: [4.0, 2.0]
+  max_action_mm: [2.0, 1.0]
   step_penalty: 1
   final_reward: 10
   max_steps: 50
@@ -11,7 +11,7 @@ env:
   key_z_max_offset_mm: 0
   normalize: False
   gui: False
-  render_rgb: True
+  render_rgb: False
   marker_random_noise: 0.5
   marker_lose_tracking_probability: 0.01
   marker_interval_range: [1.95, 2.15]

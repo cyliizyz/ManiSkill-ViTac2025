@@ -10,6 +10,7 @@ from torch import nn
 
 from solutions.networks import PointNetFeatureExtractor
 
+
 class PointNetActor(Actor):
     def __init__(
         self,
@@ -79,6 +80,7 @@ class PointNetActor(Actor):
 
         return pred
 
+
 class CustomCritic(BaseModel):
     """
     Critic network(s) for DDPG/SAC/TD3.
@@ -96,7 +98,12 @@ class CustomCritic(BaseModel):
         share_features_extractor: bool = False,
         **kwargs,
     ):
-        super().__init__(observation_space, action_space, features_extractor=features_extractor, **kwargs)
+        super().__init__(
+            observation_space,
+            action_space,
+            features_extractor=features_extractor,
+            **kwargs,
+        )
 
         action_dim = get_action_dim(self.action_space)
         self.features_dim = features_dim
@@ -105,11 +112,15 @@ class CustomCritic(BaseModel):
         self.n_critics = n_critics
         self.q_networks = []
         for idx in range(n_critics):
-            q_net = nn.Sequential(*create_mlp(self.features_dim + action_dim, 1, net_arch, activation_fn))
+            q_net = nn.Sequential(
+                *create_mlp(self.features_dim + action_dim, 1, net_arch, activation_fn)
+            )
             self.add_module(f"qf{idx}", q_net)
             self.q_networks.append(q_net)
 
-    def forward(self, obs: torch.Tensor, actions: torch.Tensor) -> Tuple[torch.Tensor, ...]:
+    def forward(
+        self, obs: torch.Tensor, actions: torch.Tensor
+    ) -> Tuple[torch.Tensor, ...]:
         # Learn the features extractor using the policy loss only
         # when the features_extractor is shared with the actor
         with torch.set_grad_enabled(False):
@@ -126,4 +137,3 @@ class CustomCritic(BaseModel):
         with torch.no_grad():
             features = self.extract_features(obs, self.features_extractor)
         return self.q_networks[0](torch.cat([features, actions], dim=1))
-

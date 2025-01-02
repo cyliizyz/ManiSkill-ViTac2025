@@ -3,9 +3,6 @@ import copy
 import os
 import sys
 
-import numpy as np
-from stable_baselines3.common.noise import VectorizedActionNoise, NormalActionNoise
-
 script_path = os.path.dirname(os.path.realpath(__file__))
 track_path = os.path.abspath(os.path.join(script_path, ".."))
 repo_path = os.path.abspath(os.path.join(track_path, ".."))
@@ -13,6 +10,8 @@ sys.path.append(script_path)
 sys.path.append(track_path)
 sys.path.append(repo_path)
 
+import numpy as np
+from stable_baselines3.common.noise import VectorizedActionNoise, NormalActionNoise
 from envs.common_params import CommonParams
 from envs.peg_insertion_v2 import PegInsertionParams
 

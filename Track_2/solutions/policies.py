@@ -9,9 +9,9 @@ from solutions.feature_extractors import FeatureExtractorState
 
 class TD3PolicyForPegInsertionV2(TD3Policy):
     def __init__(
-            self,
-            *args,
-            **kwargs,
+        self,
+        *args,
+        **kwargs,
     ):
         super(TD3PolicyForPegInsertionV2, self).__init__(*args, **kwargs)
 

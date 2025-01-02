@@ -7,6 +7,7 @@
 
 ## 🚀 Latest Updates
 
+- **2025/01/22**: Refactor the entire repository, added render_rgb options, and visualization during the evaluation. For details, please refer to the repository. Stage 1 starts! 🚀
 - **2024/12/08**: Refactor code structure for better readability.
 - **2024/11/16**: Track 2 is online! 
 - **2024/10/22**: Track 3 is now available! Featuring sensor structure optimization.

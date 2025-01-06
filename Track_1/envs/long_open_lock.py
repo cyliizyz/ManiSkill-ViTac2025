@@ -420,14 +420,14 @@ class LongOpenLockSimEnv(gym.Env):
 
         if key_offset_mm is None:
             if self.index == 0:
-                x_offset = np.random.rand() * self.key_x_max_offset_mm + 46 - 5
+                x_offset = np.random.rand() * self.key_x_max_offset_mm + 6.5
 
             elif self.index == 1:
-                x_offset = np.random.rand() * self.key_x_max_offset_mm + 52 - 5
+                x_offset = np.random.rand() * self.key_x_max_offset_mm + 6.5
             elif self.index == 2:
-                x_offset = np.random.rand() * self.key_x_max_offset_mm + 46 - 5
+                x_offset = np.random.rand() * self.key_x_max_offset_mm + 6.5
             elif self.index == 3:
-                x_offset = np.random.rand() * self.key_x_max_offset_mm + 62 - 5
+                x_offset = np.random.rand() * self.key_x_max_offset_mm + 6.5
 
             y_offset = (np.random.rand() * 2 - 1) * self.key_y_max_offset_mm
             z_offset = (np.random.rand() * 2 - 1) * self.key_z_max_offset_mm
@@ -442,13 +442,13 @@ class LongOpenLockSimEnv(gym.Env):
         else:
             x_offset_mm, y_offset_mm, z_offset_mm = tuple(key_offset_mm)
             if self.index == 0:
-                x_offset_mm += 46
+                x_offset_mm += 6.5
             elif self.index == 1:
-                x_offset_mm += 52
+                x_offset_mm += 6.5
             elif self.index == 2:
-                x_offset_mm += 46
+                x_offset_mm += 6.5
             elif self.index == 3:
-                x_offset_mm += 62
+                x_offset_mm += 6.5
             key_offset_mm = (x_offset_mm, y_offset_mm, z_offset_mm)
             print(
                 "index=",
@@ -930,11 +930,7 @@ class LongOpenLockSimEnv(gym.Env):
             reward += self.final_reward
         elif info["tactile_movement_too_large"] or info["error_too_large"]:
             # prevent the agent from suicide
-            reward += (
-                -10
-                * self.step_penalty
-                * (self.max_steps - self.current_episode_elapsed_steps)
-            )
+            reward -= 5
         return reward
 
     def get_truncated(self, info) -> bool:

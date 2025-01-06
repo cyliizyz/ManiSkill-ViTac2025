@@ -6,12 +6,12 @@ env:
   max_steps: 50
   sensor_offset_x_range_len_mm: 2.0
   sensor_offset_z_range_len_mm: 2.0
-  key_x_max_offset_mm: 10
+  key_x_max_offset_mm: 5
   key_y_max_offset_mm: 0
   key_z_max_offset_mm: 0
   normalize: False
   gui: False
-  render_rgb: True
+  render_rgb: False
   marker_random_noise: 0.5
   marker_lose_tracking_probability: 0.01
   marker_interval_range: [1.95, 2.15]

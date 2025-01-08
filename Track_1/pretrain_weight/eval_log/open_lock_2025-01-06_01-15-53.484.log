@@ -1,0 +1,1363 @@
+2025-01-06 01:15:53.488 | INFO     | __main__:evaluate_policy:103 - #KEY: 1
+2025-01-06 01:15:53.488 | INFO     | __main__:evaluate_policy:104 - this is MD5: 970358fafd55d4b48063fa7be67e8a05
+2025-01-06 01:15:53.489 | INFO     | __main__:evaluate_policy:108 - Git Repository Information:
+2025-01-06 01:15:53.489 | INFO     | __main__:evaluate_policy:110 -   error: Failed to get git info: /home/rvsa/cy/ManiSkill-ViTac2025-main/Track_1/scripts
+2025-01-06 01:15:53.496 | INFO     | __main__:evaluate_policy:121 - 
+-----------Parameters-----------------
+          allow_self_collision: 0.0                                                         
+                 ccd_max_iters: 100.0                                                       
+                 ccd_slackness: 0.7                                                         
+       ccd_tet_inversion_thres: 0.0                                                         
+                 ccd_thickness: 1e-06                                                       
+             ee_classify_thres: 0.001                                                       
+            ee_mollifier_thres: 0.001                                                       
+          indentation_depth_mm: 0.875                                                       
+                  key_friction: 0.6                                                         
+            key_lock_path_file: configs/key_and_lock/key_lock.txt                           
+         line_search_max_iters: 10.0                                                        
+                 lock_friction: 0.5                                                         
+                     sim_d_hat: 0.0001                                                      
+                     sim_eps_d: 0.0                                                         
+                     sim_eps_v: 0.001                                                       
+                     sim_kappa: 100.0                                                       
+              sim_kappa_affine: 100000.0                                                    
+                 sim_kappa_con: 10000000000.0                                               
+ sim_solver_cg_error_frequency: 10.0                                                        
+ sim_solver_cg_error_tolerance: 0.0                                                         
+       sim_solver_cg_max_iters: 50.0                                                        
+   sim_solver_newton_max_iters: 5.0                                                         
+                 sim_time_step: 0.2                                                         
+                 tac_density_l: 1000.0                                                      
+                 tac_density_r: 1000.0                                                      
+         tac_elastic_modulus_l: 300000.0                                                    
+         tac_elastic_modulus_r: 300000.0                                                    
+                  tac_friction: 87.5                                                        
+           tac_poisson_ratio_l: 0.3                                                         
+           tac_poisson_ratio_r: 0.3                                                         
+          tac_sensor_meta_file: gelsight_mini_e430/meta_file                                
+-----------------------End-----------------------
+
+2025-01-06 01:15:53.496 | INFO     | __main__:evaluate_policy:122 - {'max_action_mm': [2.0, 1.0], 'step_penalty': 1, 'final_reward': 10, 'max_steps': 50, 'sensor_offset_x_range_len_mm': 2.0, 'sensor_offset_z_range_len_mm': 2.0, 'key_x_max_offset_mm': 5, 'key_y_max_offset_mm': 0, 'key_z_max_offset_mm': 0, 'normalize': False, 'gui': False, 'render_rgb': False, 'marker_random_noise': 0.5, 'marker_lose_tracking_probability': 0.01, 'marker_interval_range': [1.95, 2.15], 'marker_rotation_range': 0.1, 'marker_translation_range': [1, 1], 'marker_pos_shift_range': [0.1, 0.1]}
+2025-01-06 01:15:55.783 | INFO     | __main__:evaluate_policy:149 - #### Test No. 1 ####
+2025-01-06 01:15:56.313 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999693  -0.99501014]
+2025-01-06 01:15:56.998 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99118   -0.2538063]
+2025-01-06 01:15:57.503 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9960201 -0.2509172]
+2025-01-06 01:15:58.176 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9994371  -0.23680727]
+2025-01-06 01:15:58.653 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:15:59.298 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999861 -1.       ]
+2025-01-06 01:15:59.925 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.99997723 -1.        ]
+2025-01-06 01:16:00.433 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:00.434 | INFO     | __main__:evaluate_policy:149 - #### Test No. 2 ####
+2025-01-06 01:16:00.975 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999645  -0.99651456]
+2025-01-06 01:16:01.623 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.93626547 -0.7009161 ]
+2025-01-06 01:16:02.088 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9996186  -0.22753592]
+2025-01-06 01:16:02.732 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99969304 -0.2284657 ]
+2025-01-06 01:16:03.176 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:16:03.888 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999952 -1.       ]
+2025-01-06 01:16:04.296 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999991 -1.       ]
+2025-01-06 01:16:04.905 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.99999875 -1.        ]
+2025-01-06 01:16:05.303 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:05.303 | INFO     | __main__:evaluate_policy:149 - #### Test No. 3 ####
+2025-01-06 01:16:05.691 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997735 -0.9977981 ]
+2025-01-06 01:16:06.198 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9961701 -0.2979933]
+2025-01-06 01:16:06.446 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9947136  -0.25100192]
+2025-01-06 01:16:06.722 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:07.002 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9997435 -1.       ]
+2025-01-06 01:16:07.289 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:16:07.565 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999785 -1.        ]
+2025-01-06 01:16:07.810 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:07.810 | INFO     | __main__:evaluate_policy:149 - #### Test No. 4 ####
+2025-01-06 01:16:08.144 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999689  -0.99651337]
+2025-01-06 01:16:08.408 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99193144 -0.3308715 ]
+2025-01-06 01:16:08.840 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.995398   -0.25417376]
+2025-01-06 01:16:09.158 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:09.520 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99995774 -1.        ]
+2025-01-06 01:16:09.823 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:16:10.065 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999985 -1.       ]
+2025-01-06 01:16:10.299 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:10.299 | INFO     | __main__:evaluate_policy:149 - #### Test No. 5 ####
+2025-01-06 01:16:10.549 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999779  -0.99736637]
+2025-01-06 01:16:10.805 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99761313 -0.28315046]
+2025-01-06 01:16:11.058 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.97119343 -0.4900355 ]
+2025-01-06 01:16:11.310 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:11.559 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99998343 -0.99999994]
+2025-01-06 01:16:11.809 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999995 -1.       ]
+2025-01-06 01:16:12.060 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999981 -1.       ]
+2025-01-06 01:16:12.268 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:12.268 | INFO     | __main__:evaluate_policy:149 - #### Test No. 6 ####
+2025-01-06 01:16:12.571 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999629  -0.99734396]
+2025-01-06 01:16:12.851 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9966339  -0.35209697]
+2025-01-06 01:16:13.108 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9981368  -0.25107342]
+2025-01-06 01:16:13.363 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:13.609 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999797 -1.       ]
+2025-01-06 01:16:13.855 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:16:14.101 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999987 -1.       ]
+2025-01-06 01:16:14.345 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:14.346 | INFO     | __main__:evaluate_policy:149 - #### Test No. 7 ####
+2025-01-06 01:16:14.565 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999651 -0.9966772]
+2025-01-06 01:16:14.815 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9978952 -0.3676452]
+2025-01-06 01:16:15.056 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.998954   -0.24975504]
+2025-01-06 01:16:15.296 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:15.535 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999912 -1.       ]
+2025-01-06 01:16:15.769 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:16:16.009 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999887 -1.        ]
+2025-01-06 01:16:16.252 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:16.252 | INFO     | __main__:evaluate_policy:149 - #### Test No. 8 ####
+2025-01-06 01:16:16.445 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999723  -0.99767286]
+2025-01-06 01:16:16.691 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9984537  -0.30945855]
+2025-01-06 01:16:16.934 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9965832  -0.23161094]
+2025-01-06 01:16:17.230 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:17.463 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.567411 -1.      ]
+2025-01-06 01:16:17.619 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999946 -1.        ]
+2025-01-06 01:16:17.852 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999821 -1.       ]
+2025-01-06 01:16:18.095 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:18.096 | INFO     | __main__:evaluate_policy:149 - #### Test No. 9 ####
+2025-01-06 01:16:18.337 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99992985 -0.99897677]
+2025-01-06 01:16:18.698 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9957114  -0.26602495]
+2025-01-06 01:16:18.999 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:19.210 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999705 -1.       ]
+2025-01-06 01:16:19.449 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:16:19.686 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.999998 -1.      ]
+2025-01-06 01:16:19.924 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:19.924 | INFO     | __main__:evaluate_policy:149 - #### Test No. 10 ####
+2025-01-06 01:16:20.129 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999598 -0.9977378]
+2025-01-06 01:16:20.375 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9950999  -0.27589974]
+2025-01-06 01:16:20.618 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:16:20.863 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999222 -1.       ]
+2025-01-06 01:16:21.118 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:16:21.383 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999624 -1.        ]
+2025-01-06 01:16:21.622 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:21.622 | INFO     | __main__:evaluate_policy:149 - #### Test No. 11 ####
+2025-01-06 01:16:21.826 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999731  -0.99610287]
+2025-01-06 01:16:22.067 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.92268175 -0.64703923]
+2025-01-06 01:16:22.302 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:22.616 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.999994 -1.      ]
+2025-01-06 01:16:22.936 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999905 -1.        ]
+2025-01-06 01:16:23.258 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:23.258 | INFO     | __main__:evaluate_policy:149 - #### Test No. 12 ####
+2025-01-06 01:16:23.475 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999847  -0.99434865]
+2025-01-06 01:16:23.718 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.86106634 -0.9017105 ]
+2025-01-06 01:16:23.914 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:24.138 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999884 -1.       ]
+2025-01-06 01:16:24.376 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999952 -1.       ]
+2025-01-06 01:16:24.621 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:24.621 | INFO     | __main__:evaluate_policy:149 - #### Test No. 13 ####
+2025-01-06 01:16:24.898 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999471 -0.9991108]
+2025-01-06 01:16:25.251 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.07714232 -0.994051  ]
+2025-01-06 01:16:25.364 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:25.612 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999948 -1.       ]
+2025-01-06 01:16:25.859 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999682 -0.9994581]
+2025-01-06 01:16:26.104 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:26.104 | INFO     | __main__:evaluate_policy:149 - #### Test No. 14 ####
+2025-01-06 01:16:26.294 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999662  -0.99585557]
+2025-01-06 01:16:26.556 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.8837515 -0.8362233]
+2025-01-06 01:16:26.766 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:27.014 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.9999967 -1.       ]
+2025-01-06 01:16:27.261 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999967 -1.       ]
+2025-01-06 01:16:27.560 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99989045 -1.        ]
+2025-01-06 01:16:27.789 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:27.789 | INFO     | __main__:evaluate_policy:149 - #### Test No. 15 ####
+2025-01-06 01:16:28.095 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997467 -0.9946001 ]
+2025-01-06 01:16:28.342 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.997115   -0.45295206]
+2025-01-06 01:16:28.584 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:28.820 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.999875 -1.      ]
+2025-01-06 01:16:29.135 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999989 -1.       ]
+2025-01-06 01:16:29.377 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999979 -1.       ]
+2025-01-06 01:16:29.613 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:29.613 | INFO     | __main__:evaluate_policy:149 - #### Test No. 16 ####
+2025-01-06 01:16:29.813 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999692 -0.9974357]
+2025-01-06 01:16:30.064 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99646384 -0.27448294]
+2025-01-06 01:16:30.311 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:30.566 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999577 -1.       ]
+2025-01-06 01:16:30.809 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:16:31.057 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999979 -1.       ]
+2025-01-06 01:16:31.304 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:31.304 | INFO     | __main__:evaluate_policy:149 - #### Test No. 17 ####
+2025-01-06 01:16:31.503 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999863 -0.989751 ]
+2025-01-06 01:16:31.758 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9971295  -0.28984693]
+2025-01-06 01:16:32.019 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:32.298 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.999938 -1.      ]
+2025-01-06 01:16:32.586 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:16:32.828 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.999998 -1.      ]
+2025-01-06 01:16:33.072 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:33.072 | INFO     | __main__:evaluate_policy:149 - #### Test No. 18 ####
+2025-01-06 01:16:33.268 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998134 -0.99508816]
+2025-01-06 01:16:33.516 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9914449 -0.2500609]
+2025-01-06 01:16:33.758 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:34.054 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99998224 -0.9999999 ]
+2025-01-06 01:16:34.307 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999997 -1.       ]
+2025-01-06 01:16:34.559 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:34.559 | INFO     | __main__:evaluate_policy:149 - #### Test No. 19 ####
+2025-01-06 01:16:34.761 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99995756 -0.99868685]
+2025-01-06 01:16:35.007 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9965247  -0.26079458]
+2025-01-06 01:16:35.238 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.9999978 -1.       ]
+2025-01-06 01:16:35.486 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999127 -1.       ]
+2025-01-06 01:16:35.740 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:16:36.026 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999987 -1.       ]
+2025-01-06 01:16:36.252 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:36.252 | INFO     | __main__:evaluate_policy:149 - #### Test No. 20 ####
+2025-01-06 01:16:36.545 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999842  -0.99424136]
+2025-01-06 01:16:36.797 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99770314 -0.41250843]
+2025-01-06 01:16:37.076 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.9996134  -0.99999577]
+2025-01-06 01:16:37.320 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99997866 -1.        ]
+2025-01-06 01:16:37.564 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:16:37.808 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999983 -1.       ]
+2025-01-06 01:16:38.051 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:38.051 | INFO     | __main__:evaluate_policy:149 - #### Test No. 21 ####
+2025-01-06 01:16:38.250 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999643  -0.99533343]
+2025-01-06 01:16:38.506 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.994622   -0.27207583]
+2025-01-06 01:16:38.755 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9945786  -0.25733167]
+2025-01-06 01:16:39.004 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9992916  -0.23590036]
+2025-01-06 01:16:39.252 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:16:39.499 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999797 -1.       ]
+2025-01-06 01:16:39.745 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:16:39.991 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.99999887 -1.        ]
+2025-01-06 01:16:40.239 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:40.239 | INFO     | __main__:evaluate_policy:149 - #### Test No. 22 ####
+2025-01-06 01:16:40.436 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99995273 -0.9976956 ]
+2025-01-06 01:16:40.681 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99435323 -0.2906453 ]
+2025-01-06 01:16:41.027 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9858773  -0.28301537]
+2025-01-06 01:16:41.270 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:41.512 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999783 -1.       ]
+2025-01-06 01:16:41.754 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999998 -1.       ]
+2025-01-06 01:16:42.003 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999984 -1.       ]
+2025-01-06 01:16:42.208 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:42.208 | INFO     | __main__:evaluate_policy:149 - #### Test No. 23 ####
+2025-01-06 01:16:42.433 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999643  -0.99520516]
+2025-01-06 01:16:42.670 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9974355  -0.35524353]
+2025-01-06 01:16:42.907 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9967041  -0.24245755]
+2025-01-06 01:16:43.138 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:43.376 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.999989 -1.      ]
+2025-01-06 01:16:43.620 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:16:43.863 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999875 -1.        ]
+2025-01-06 01:16:44.107 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:44.107 | INFO     | __main__:evaluate_policy:149 - #### Test No. 24 ####
+2025-01-06 01:16:44.327 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999781 -0.9938557]
+2025-01-06 01:16:44.563 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99822694 -0.2504955 ]
+2025-01-06 01:16:44.811 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9932745 -0.2670486]
+2025-01-06 01:16:45.072 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9978069  -0.23839833]
+2025-01-06 01:16:45.338 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:16:45.583 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99993455 -1.        ]
+2025-01-06 01:16:45.886 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:16:46.128 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.9999986 -1.       ]
+2025-01-06 01:16:46.361 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:46.361 | INFO     | __main__:evaluate_policy:149 - #### Test No. 25 ####
+2025-01-06 01:16:46.580 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999723  -0.99752253]
+2025-01-06 01:16:46.823 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9942988  -0.27994442]
+2025-01-06 01:16:47.095 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9967478  -0.25398314]
+2025-01-06 01:16:47.420 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:47.660 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99997693 -1.        ]
+2025-01-06 01:16:47.912 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:16:48.162 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:48.162 | INFO     | __main__:evaluate_policy:149 - #### Test No. 26 ####
+2025-01-06 01:16:48.363 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999664 -0.9973115]
+2025-01-06 01:16:48.622 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9920809  -0.27462557]
+2025-01-06 01:16:48.875 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9986537  -0.23816766]
+2025-01-06 01:16:49.129 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:49.385 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999569 -0.9999992]
+2025-01-06 01:16:49.636 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9987772 -1.       ]
+2025-01-06 01:16:49.883 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999887 -1.        ]
+2025-01-06 01:16:50.131 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:50.131 | INFO     | __main__:evaluate_policy:149 - #### Test No. 27 ####
+2025-01-06 01:16:50.357 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997413 -0.99357176]
+2025-01-06 01:16:50.604 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.95399827 -0.607951  ]
+2025-01-06 01:16:50.850 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99933416 -0.24111718]
+2025-01-06 01:16:51.097 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:51.336 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.999995 -1.      ]
+2025-01-06 01:16:51.631 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999995 -1.       ]
+2025-01-06 01:16:51.875 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:51.875 | INFO     | __main__:evaluate_policy:149 - #### Test No. 28 ####
+2025-01-06 01:16:52.153 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999503  -0.99869585]
+2025-01-06 01:16:52.406 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99785465 -0.5002596 ]
+2025-01-06 01:16:52.652 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99912494 -0.24028571]
+2025-01-06 01:16:52.925 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:53.274 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9994712 -1.       ]
+2025-01-06 01:16:53.517 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999996 -1.       ]
+2025-01-06 01:16:53.803 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999987 -1.       ]
+2025-01-06 01:16:54.051 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:54.051 | INFO     | __main__:evaluate_policy:149 - #### Test No. 29 ####
+2025-01-06 01:16:54.244 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999724  -0.99470145]
+2025-01-06 01:16:54.493 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.98863846 -0.2890297 ]
+2025-01-06 01:16:54.742 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9141045 -0.7641939]
+2025-01-06 01:16:55.078 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:55.317 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99999624 -1.        ]
+2025-01-06 01:16:55.551 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99995124 -1.        ]
+2025-01-06 01:16:55.798 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:55.798 | INFO     | __main__:evaluate_policy:149 - #### Test No. 30 ####
+2025-01-06 01:16:56.015 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998623 -0.9950764 ]
+2025-01-06 01:16:56.257 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.994919   -0.28213906]
+2025-01-06 01:16:56.504 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.98133963 -0.2862529 ]
+2025-01-06 01:16:56.781 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:16:57.038 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999892 -1.       ]
+2025-01-06 01:16:57.282 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999998 -1.       ]
+2025-01-06 01:16:57.521 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:57.521 | INFO     | __main__:evaluate_policy:149 - #### Test No. 31 ####
+2025-01-06 01:16:57.780 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999758  -0.99820864]
+2025-01-06 01:16:58.078 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.77536243 -0.9088857 ]
+2025-01-06 01:16:58.357 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:16:58.605 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99999183 -0.9999996 ]
+2025-01-06 01:16:58.857 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99997634 -1.        ]
+2025-01-06 01:16:59.101 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999991 -1.       ]
+2025-01-06 01:16:59.325 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:16:59.325 | INFO     | __main__:evaluate_policy:149 - #### Test No. 32 ####
+2025-01-06 01:16:59.538 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999579  -0.99726796]
+2025-01-06 01:16:59.786 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9941627  -0.27996653]
+2025-01-06 01:17:00.035 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:00.392 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999199 -1.       ]
+2025-01-06 01:17:00.638 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:17:00.881 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999887 -1.        ]
+2025-01-06 01:17:01.114 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:01.114 | INFO     | __main__:evaluate_policy:149 - #### Test No. 33 ####
+2025-01-06 01:17:01.375 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999698 -0.9953754]
+2025-01-06 01:17:01.666 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.9981658  -0.99999684]
+2025-01-06 01:17:01.907 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9998941 -0.9926601]
+2025-01-06 01:17:02.154 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99990904 -0.20814893]
+2025-01-06 01:17:02.530 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:02.764 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.7897961 -1.       ]
+2025-01-06 01:17:02.957 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:02.957 | INFO     | __main__:evaluate_policy:149 - #### Test No. 34 ####
+2025-01-06 01:17:03.147 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998325 -0.996154  ]
+2025-01-06 01:17:03.390 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9906133  -0.26251617]
+2025-01-06 01:17:03.626 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:03.868 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:17:04.164 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999956 -1.       ]
+2025-01-06 01:17:04.407 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99995524 -0.99991953]
+2025-01-06 01:17:04.706 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:04.706 | INFO     | __main__:evaluate_policy:149 - #### Test No. 35 ####
+2025-01-06 01:17:04.909 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999848  -0.99505967]
+2025-01-06 01:17:05.165 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.41359645 -0.9841086 ]
+2025-01-06 01:17:05.270 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:05.482 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999794 -1.       ]
+2025-01-06 01:17:05.724 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99996465 -1.        ]
+2025-01-06 01:17:06.042 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999983 -1.       ]
+2025-01-06 01:17:06.283 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:06.283 | INFO     | __main__:evaluate_policy:149 - #### Test No. 36 ####
+2025-01-06 01:17:06.537 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999724  -0.99773234]
+2025-01-06 01:17:06.964 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9931895  -0.26805338]
+2025-01-06 01:17:07.211 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:07.467 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999788 -0.9996691]
+2025-01-06 01:17:07.702 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999917 -1.        ]
+2025-01-06 01:17:07.941 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:07.941 | INFO     | __main__:evaluate_policy:149 - #### Test No. 37 ####
+2025-01-06 01:17:08.166 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999495  -0.99868256]
+2025-01-06 01:17:08.419 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9967912  -0.39530918]
+2025-01-06 01:17:08.666 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:08.991 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99995184 -1.        ]
+2025-01-06 01:17:09.232 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:17:09.506 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999917 -1.        ]
+2025-01-06 01:17:09.738 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:09.738 | INFO     | __main__:evaluate_policy:149 - #### Test No. 38 ####
+2025-01-06 01:17:09.936 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996436 -0.99458814]
+2025-01-06 01:17:10.201 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9519186 -0.6613617]
+2025-01-06 01:17:10.463 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:10.676 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999788 -1.       ]
+2025-01-06 01:17:10.925 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999696 -1.        ]
+2025-01-06 01:17:11.191 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:11.192 | INFO     | __main__:evaluate_policy:149 - #### Test No. 39 ####
+2025-01-06 01:17:11.386 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997693 -0.99730444]
+2025-01-06 01:17:11.629 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9071227 -0.8231841]
+2025-01-06 01:17:11.877 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:12.119 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999522 -1.       ]
+2025-01-06 01:17:12.391 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999717 -1.       ]
+2025-01-06 01:17:12.641 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:12.641 | INFO     | __main__:evaluate_policy:149 - #### Test No. 40 ####
+2025-01-06 01:17:12.867 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999235  -0.99877244]
+2025-01-06 01:17:13.136 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99882424 -0.30464768]
+2025-01-06 01:17:13.381 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.99955714 -0.99999416]
+2025-01-06 01:17:13.621 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.99996626 -1.        ]
+2025-01-06 01:17:13.866 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.08271278 -1.        ]
+2025-01-06 01:17:14.075 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.96829706 -1.        ]
+2025-01-06 01:17:14.321 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:14.321 | INFO     | __main__:evaluate_policy:149 - #### Test No. 41 ####
+2025-01-06 01:17:14.529 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999661 -0.9980023]
+2025-01-06 01:17:14.787 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9898497 -0.6380899]
+2025-01-06 01:17:15.035 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9990925  -0.19895153]
+2025-01-06 01:17:15.412 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99951017 -0.2148414 ]
+2025-01-06 01:17:15.649 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:15.899 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999853 -1.       ]
+2025-01-06 01:17:16.132 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999997 -1.       ]
+2025-01-06 01:17:16.386 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.99999887 -1.        ]
+2025-01-06 01:17:16.633 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:16.633 | INFO     | __main__:evaluate_policy:149 - #### Test No. 42 ####
+2025-01-06 01:17:16.829 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997985 -0.99381256]
+2025-01-06 01:17:17.076 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.96109045 -0.82748514]
+2025-01-06 01:17:17.319 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99849576 -0.22609831]
+2025-01-06 01:17:17.557 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99961966 -0.22584313]
+2025-01-06 01:17:17.853 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:18.112 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9994485 -1.       ]
+2025-01-06 01:17:18.356 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 1. -1.]
+2025-01-06 01:17:18.638 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.99979234 -1.        ]
+2025-01-06 01:17:18.836 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:18.836 | INFO     | __main__:evaluate_policy:149 - #### Test No. 43 ####
+2025-01-06 01:17:19.032 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9998967  -0.99921805]
+2025-01-06 01:17:19.280 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99562025 -0.51646906]
+2025-01-06 01:17:19.525 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99945533 -0.18145537]
+2025-01-06 01:17:19.772 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.9997962 -0.9999992]
+2025-01-06 01:17:20.063 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999089 -1.       ]
+2025-01-06 01:17:20.315 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:17:20.565 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999988 -1.       ]
+2025-01-06 01:17:20.810 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:20.810 | INFO     | __main__:evaluate_policy:149 - #### Test No. 44 ####
+2025-01-06 01:17:21.009 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999737 -0.9930588]
+2025-01-06 01:17:21.270 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9932062  -0.40378535]
+2025-01-06 01:17:21.515 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9989795 -0.2137503]
+2025-01-06 01:17:21.784 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:17:22.025 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99998385 -1.        ]
+2025-01-06 01:17:22.273 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:17:22.522 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:22.522 | INFO     | __main__:evaluate_policy:149 - #### Test No. 45 ####
+2025-01-06 01:17:22.711 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999663 -0.9968359]
+2025-01-06 01:17:22.982 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9901599  -0.54894674]
+2025-01-06 01:17:23.231 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9989147  -0.22078624]
+2025-01-06 01:17:23.483 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:17:23.748 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.999999 -1.      ]
+2025-01-06 01:17:24.004 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999523 -1.        ]
+2025-01-06 01:17:24.281 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.918341 -1.      ]
+2025-01-06 01:17:24.531 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.999999 -1.      ]
+2025-01-06 01:17:24.781 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:24.781 | INFO     | __main__:evaluate_policy:149 - #### Test No. 46 ####
+2025-01-06 01:17:24.979 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998075 -0.99624413]
+2025-01-06 01:17:25.228 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99388236 -0.38235253]
+2025-01-06 01:17:25.475 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9979938  -0.23231818]
+2025-01-06 01:17:25.701 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:17:25.943 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99996823 -1.        ]
+2025-01-06 01:17:26.172 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 1. -1.]
+2025-01-06 01:17:26.410 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:26.410 | INFO     | __main__:evaluate_policy:149 - #### Test No. 47 ####
+2025-01-06 01:17:26.636 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999828  -0.99378157]
+2025-01-06 01:17:26.880 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99310726 -0.48572147]
+2025-01-06 01:17:27.124 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9995915 -0.2202887]
+2025-01-06 01:17:27.366 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:17:27.603 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999839 -0.9998872]
+2025-01-06 01:17:27.837 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999995 -1.       ]
+2025-01-06 01:17:28.078 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999984 -1.       ]
+2025-01-06 01:17:28.321 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:28.321 | INFO     | __main__:evaluate_policy:149 - #### Test No. 48 ####
+2025-01-06 01:17:28.627 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999611 -0.9972571]
+2025-01-06 01:17:28.865 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9900691  -0.41255337]
+2025-01-06 01:17:29.112 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9990602  -0.23234229]
+2025-01-06 01:17:29.353 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:17:29.588 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999827 -1.       ]
+2025-01-06 01:17:29.835 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:17:30.090 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999989 -1.       ]
+2025-01-06 01:17:30.323 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:30.323 | INFO     | __main__:evaluate_policy:149 - #### Test No. 49 ####
+2025-01-06 01:17:30.555 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996614 -0.99747103]
+2025-01-06 01:17:30.918 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.992787   -0.42144588]
+2025-01-06 01:17:31.175 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:31.408 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99994504 -0.9999978 ]
+2025-01-06 01:17:31.671 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.98753744 -1.        ]
+2025-01-06 01:17:31.935 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999887 -1.        ]
+2025-01-06 01:17:32.184 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:32.184 | INFO     | __main__:evaluate_policy:149 - #### Test No. 50 ####
+2025-01-06 01:17:32.396 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99993515 -0.9979841 ]
+2025-01-06 01:17:32.749 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.97363234 -0.8207439 ]
+2025-01-06 01:17:33.009 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.99805725 -0.9999794 ]
+2025-01-06 01:17:33.255 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999715 -0.9999557]
+2025-01-06 01:17:33.503 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9958432  -0.99920934]
+2025-01-06 01:17:33.785 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999953 -1.       ]
+2025-01-06 01:17:34.035 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:34.035 | INFO     | __main__:evaluate_policy:149 - #### Test No. 51 ####
+2025-01-06 01:17:34.250 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99993545 -0.998039  ]
+2025-01-06 01:17:34.493 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9911069 -0.5298969]
+2025-01-06 01:17:34.850 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:35.106 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99998146 -1.        ]
+2025-01-06 01:17:35.354 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:35.603 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:35.603 | INFO     | __main__:evaluate_policy:149 - #### Test No. 52 ####
+2025-01-06 01:17:35.817 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997    -0.99527174]
+2025-01-06 01:17:36.087 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.98996335 -0.6037131 ]
+2025-01-06 01:17:36.335 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:36.570 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.999981 -1.      ]
+2025-01-06 01:17:36.826 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:37.070 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:37.070 | INFO     | __main__:evaluate_policy:149 - #### Test No. 53 ####
+2025-01-06 01:17:37.333 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999765  -0.99615073]
+2025-01-06 01:17:37.580 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.46415222 -0.9984948 ]
+2025-01-06 01:17:37.688 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9997352  -0.08345561]
+2025-01-06 01:17:38.029 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:17:38.266 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99999607 -1.        ]
+2025-01-06 01:17:38.511 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999993 -1.       ]
+2025-01-06 01:17:38.757 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:38.757 | INFO     | __main__:evaluate_policy:149 - #### Test No. 54 ####
+2025-01-06 01:17:38.963 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996096 -0.9963961 ]
+2025-01-06 01:17:39.207 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9684768 -0.7784133]
+2025-01-06 01:17:39.454 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:39.702 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999841 -1.       ]
+2025-01-06 01:17:39.963 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:17:40.202 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:40.202 | INFO     | __main__:evaluate_policy:149 - #### Test No. 55 ####
+2025-01-06 01:17:40.417 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997777 -0.9938299 ]
+2025-01-06 01:17:40.655 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.98972833 -0.5457566 ]
+2025-01-06 01:17:40.887 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:41.141 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:17:41.498 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999771 -1.       ]
+2025-01-06 01:17:41.738 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:17:41.738 | INFO     | __main__:evaluate_policy:149 - #### Test No. 56 ####
+2025-01-06 01:17:41.928 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997866 -0.994522  ]
+2025-01-06 01:17:42.169 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9965949 -0.5581498]
+2025-01-06 01:17:42.404 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:42.647 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9497767 -1.       ]
+2025-01-06 01:17:42.952 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:43.197 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99998677 -1.        ]
+2025-01-06 01:17:43.438 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:43.438 | INFO     | __main__:evaluate_policy:149 - #### Test No. 57 ####
+2025-01-06 01:17:43.670 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996877 -0.99694407]
+2025-01-06 01:17:43.914 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9920551  -0.49533102]
+2025-01-06 01:17:44.159 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:44.394 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999739  -0.99999994]
+2025-01-06 01:17:44.697 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:44.935 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:44.935 | INFO     | __main__:evaluate_policy:149 - #### Test No. 58 ####
+2025-01-06 01:17:45.143 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999617 -0.9965736]
+2025-01-06 01:17:45.381 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9937746  -0.40767896]
+2025-01-06 01:17:45.623 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:45.871 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99395216 -1.        ]
+2025-01-06 01:17:46.230 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99991894 -1.        ]
+2025-01-06 01:17:46.465 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:46.465 | INFO     | __main__:evaluate_policy:149 - #### Test No. 59 ####
+2025-01-06 01:17:46.706 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999746 -0.9979836]
+2025-01-06 01:17:46.944 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.59067476 -0.99908596]
+2025-01-06 01:17:47.093 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99984735 -0.9999572 ]
+2025-01-06 01:17:47.387 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.9999998 -1.       ]
+2025-01-06 01:17:47.628 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99999696 -1.        ]
+2025-01-06 01:17:47.860 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:47.860 | INFO     | __main__:evaluate_policy:149 - #### Test No. 60 ####
+2025-01-06 01:17:48.142 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99992543 -0.99797595]
+2025-01-06 01:17:48.421 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9917228  -0.47595483]
+2025-01-06 01:17:48.676 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:17:48.921 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99997026 -1.        ]
+2025-01-06 01:17:49.160 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:49.400 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999983 -1.       ]
+2025-01-06 01:17:49.637 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:49.637 | INFO     | __main__:evaluate_policy:149 - #### Test No. 61 ####
+2025-01-06 01:17:49.851 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999449  -0.99904543]
+2025-01-06 01:17:50.095 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9955524 -0.2943829]
+2025-01-06 01:17:50.398 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9977158  -0.23071985]
+2025-01-06 01:17:50.642 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99923456 -0.21888646]
+2025-01-06 01:17:50.877 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:51.145 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99998164 -0.9999997 ]
+2025-01-06 01:17:51.403 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 1. -1.]
+2025-01-06 01:17:51.642 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:51.642 | INFO     | __main__:evaluate_policy:149 - #### Test No. 62 ####
+2025-01-06 01:17:51.846 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999793 -0.9962329]
+2025-01-06 01:17:52.106 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9778456 -0.7688593]
+2025-01-06 01:17:52.395 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9993706  -0.20209071]
+2025-01-06 01:17:52.644 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99961656 -0.20649567]
+2025-01-06 01:17:52.891 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:53.160 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999344 -1.        ]
+2025-01-06 01:17:53.402 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999997 -1.       ]
+2025-01-06 01:17:53.674 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.9999988 -1.       ]
+2025-01-06 01:17:53.919 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:53.919 | INFO     | __main__:evaluate_policy:149 - #### Test No. 63 ####
+2025-01-06 01:17:54.122 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999701  -0.99691945]
+2025-01-06 01:17:54.372 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9962424 -0.4909774]
+2025-01-06 01:17:54.629 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99923897 -0.19404733]
+2025-01-06 01:17:54.914 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.9617072  -0.99976593]
+2025-01-06 01:17:55.161 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99433243 -1.        ]
+2025-01-06 01:17:55.412 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 1. -1.]
+2025-01-06 01:17:55.677 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999981 -1.       ]
+2025-01-06 01:17:55.918 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:55.918 | INFO     | __main__:evaluate_policy:149 - #### Test No. 64 ####
+2025-01-06 01:17:56.130 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99995804 -0.9981574 ]
+2025-01-06 01:17:56.386 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.8886121 -0.9360365]
+2025-01-06 01:17:56.594 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99949986 -0.205086  ]
+2025-01-06 01:17:56.848 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9996205  -0.20982789]
+2025-01-06 01:17:57.174 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:17:57.412 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.999993 -1.      ]
+2025-01-06 01:17:57.662 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:17:57.904 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:57.904 | INFO     | __main__:evaluate_policy:149 - #### Test No. 65 ####
+2025-01-06 01:17:58.189 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999681 -0.9959955]
+2025-01-06 01:17:58.433 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.35345262 -0.99264276]
+2025-01-06 01:17:58.580 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9996557  -0.18833923]
+2025-01-06 01:17:58.899 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9996799  -0.18228008]
+2025-01-06 01:17:59.159 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9997893 -1.       ]
+2025-01-06 01:17:59.425 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99998426 -1.        ]
+2025-01-06 01:17:59.672 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:17:59.918 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:17:59.919 | INFO     | __main__:evaluate_policy:149 - #### Test No. 66 ####
+2025-01-06 01:18:00.149 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999736 -0.9955763]
+2025-01-06 01:18:00.411 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.97337353 -0.8352554 ]
+2025-01-06 01:18:00.655 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9995803  -0.22060102]
+2025-01-06 01:18:00.900 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9992795  -0.24395852]
+2025-01-06 01:18:01.149 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:01.412 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999897 -0.9999993]
+2025-01-06 01:18:01.651 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 1. -1.]
+2025-01-06 01:18:01.896 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:01.896 | INFO     | __main__:evaluate_policy:149 - #### Test No. 67 ####
+2025-01-06 01:18:02.100 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999596  -0.99786276]
+2025-01-06 01:18:02.360 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9950867 -0.4065629]
+2025-01-06 01:18:02.623 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9990551  -0.22199011]
+2025-01-06 01:18:02.970 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:03.214 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99997354 -1.        ]
+2025-01-06 01:18:03.477 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99998176 -1.        ]
+2025-01-06 01:18:03.721 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999887 -1.        ]
+2025-01-06 01:18:03.965 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:03.965 | INFO     | __main__:evaluate_policy:149 - #### Test No. 68 ####
+2025-01-06 01:18:04.273 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999776 -0.9919628]
+2025-01-06 01:18:04.522 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9910138 -0.6711178]
+2025-01-06 01:18:04.848 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9987958  -0.20731981]
+2025-01-06 01:18:05.134 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:05.378 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999855 -0.9999708]
+2025-01-06 01:18:05.631 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 1. -1.]
+2025-01-06 01:18:05.873 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:05.873 | INFO     | __main__:evaluate_policy:149 - #### Test No. 69 ####
+2025-01-06 01:18:06.080 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999473 -0.9975121]
+2025-01-06 01:18:06.331 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9921787 -0.6393718]
+2025-01-06 01:18:06.590 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9973858  -0.24870174]
+2025-01-06 01:18:06.835 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:07.083 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99995786 -1.        ]
+2025-01-06 01:18:07.332 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:18:07.332 | INFO     | __main__:evaluate_policy:149 - #### Test No. 70 ####
+2025-01-06 01:18:07.535 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998057 -0.9956914 ]
+2025-01-06 01:18:07.806 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9914062 -0.5094404]
+2025-01-06 01:18:08.104 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:08.457 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.999974  -0.9999996]
+2025-01-06 01:18:08.703 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:08.966 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999887 -1.        ]
+2025-01-06 01:18:09.210 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:09.210 | INFO     | __main__:evaluate_policy:149 - #### Test No. 71 ####
+2025-01-06 01:18:09.403 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997675 -0.9970426 ]
+2025-01-06 01:18:09.656 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9889615  -0.43576583]
+2025-01-06 01:18:09.913 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:10.175 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999779 -1.       ]
+2025-01-06 01:18:10.391 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999917 -1.        ]
+2025-01-06 01:18:10.628 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:10.628 | INFO     | __main__:evaluate_policy:149 - #### Test No. 72 ####
+2025-01-06 01:18:10.923 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999666 -0.9970164]
+2025-01-06 01:18:11.157 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9898138 -0.5080215]
+2025-01-06 01:18:11.403 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.9999873 -0.9999999]
+2025-01-06 01:18:11.655 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999663 -0.9999971]
+2025-01-06 01:18:11.899 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:18:12.138 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999988 -1.       ]
+2025-01-06 01:18:12.372 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:12.372 | INFO     | __main__:evaluate_policy:149 - #### Test No. 73 ####
+2025-01-06 01:18:12.574 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999381 -0.9982058]
+2025-01-06 01:18:12.822 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9938485 -0.2754893]
+2025-01-06 01:18:13.058 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:13.300 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999847 -1.       ]
+2025-01-06 01:18:13.600 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:13.843 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999857 -1.        ]
+2025-01-06 01:18:14.074 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:14.074 | INFO     | __main__:evaluate_policy:149 - #### Test No. 74 ####
+2025-01-06 01:18:14.331 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999644 -0.9975342]
+2025-01-06 01:18:14.676 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99380356 -0.5498529 ]
+2025-01-06 01:18:14.962 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:15.209 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999567 -1.       ]
+2025-01-06 01:18:15.451 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999994 -1.       ]
+2025-01-06 01:18:15.689 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999989 -1.       ]
+2025-01-06 01:18:15.931 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:15.931 | INFO     | __main__:evaluate_policy:149 - #### Test No. 75 ####
+2025-01-06 01:18:16.134 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999834 -0.9971053]
+2025-01-06 01:18:16.466 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.94234586 -0.8183849 ]
+2025-01-06 01:18:16.721 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:16.989 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99999046 -0.9999999 ]
+2025-01-06 01:18:17.223 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999744 -1.        ]
+2025-01-06 01:18:17.463 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:17.463 | INFO     | __main__:evaluate_policy:149 - #### Test No. 76 ####
+2025-01-06 01:18:17.736 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997145 -0.9944907 ]
+2025-01-06 01:18:17.989 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.98991853 -0.6630935 ]
+2025-01-06 01:18:18.286 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:18.521 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.97999424 -1.        ]
+2025-01-06 01:18:18.754 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:19.010 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999887 -1.        ]
+2025-01-06 01:18:19.245 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:19.245 | INFO     | __main__:evaluate_policy:149 - #### Test No. 77 ####
+2025-01-06 01:18:19.495 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997073 -0.99657166]
+2025-01-06 01:18:19.829 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9852559 -0.6576303]
+2025-01-06 01:18:20.074 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:20.364 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999876  -0.99998564]
+2025-01-06 01:18:20.595 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.98613137 -0.9998972 ]
+2025-01-06 01:18:20.927 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:18:21.168 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:21.168 | INFO     | __main__:evaluate_policy:149 - #### Test No. 78 ####
+2025-01-06 01:18:21.379 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999836 -0.9922069]
+2025-01-06 01:18:21.594 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.95645916 -0.9999538 ]
+2025-01-06 01:18:21.839 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9998045  -0.14953001]
+2025-01-06 01:18:22.092 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:22.333 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:18:22.333 | INFO     | __main__:evaluate_policy:149 - #### Test No. 79 ####
+2025-01-06 01:18:22.676 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999381 -0.9988128]
+2025-01-06 01:18:22.940 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.98510265 -0.46040654]
+2025-01-06 01:18:23.191 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:23.432 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999297 -1.       ]
+2025-01-06 01:18:23.672 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:23.910 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999857 -1.        ]
+2025-01-06 01:18:24.153 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:24.153 | INFO     | __main__:evaluate_policy:149 - #### Test No. 80 ####
+2025-01-06 01:18:24.358 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998003 -0.99464375]
+2025-01-06 01:18:24.613 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9897864 -0.610213 ]
+2025-01-06 01:18:24.873 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.9999997 -1.       ]
+2025-01-06 01:18:25.142 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.91858184 -1.        ]
+2025-01-06 01:18:25.393 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99998355 -1.        ]
+2025-01-06 01:18:25.643 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:25.643 | INFO     | __main__:evaluate_policy:149 - #### Test No. 81 ####
+2025-01-06 01:18:25.848 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997616 -0.99758977]
+2025-01-06 01:18:26.096 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9933729  -0.32533503]
+2025-01-06 01:18:26.377 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9988861  -0.24970955]
+2025-01-06 01:18:26.625 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9990253  -0.22747876]
+2025-01-06 01:18:26.871 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99993193 -0.99999964]
+2025-01-06 01:18:27.127 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99997777 -1.        ]
+2025-01-06 01:18:27.379 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:18:27.677 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.9999989 -1.       ]
+2025-01-06 01:18:27.924 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:27.924 | INFO     | __main__:evaluate_policy:149 - #### Test No. 82 ####
+2025-01-06 01:18:28.099 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997044 -0.99513257]
+2025-01-06 01:18:28.340 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99830985 -0.3273418 ]
+2025-01-06 01:18:28.598 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9989411  -0.24133548]
+2025-01-06 01:18:28.837 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99825335 -0.24846894]
+2025-01-06 01:18:29.084 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.82918894 -0.9976609 ]
+2025-01-06 01:18:29.283 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.999959   -0.48730838]
+2025-01-06 01:18:29.522 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:18:29.522 | INFO     | __main__:evaluate_policy:149 - #### Test No. 83 ####
+2025-01-06 01:18:29.738 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999805  -0.99411535]
+2025-01-06 01:18:29.982 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9972373  -0.36013347]
+2025-01-06 01:18:30.220 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99711525 -0.24744567]
+2025-01-06 01:18:30.462 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9986815  -0.24710788]
+2025-01-06 01:18:30.707 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9933311  -0.25655693]
+2025-01-06 01:18:30.966 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99829984 -0.24713781]
+2025-01-06 01:18:31.212 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 1. -1.]
+2025-01-06 01:18:31.452 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:18:31.452 | INFO     | __main__:evaluate_policy:149 - #### Test No. 84 ####
+2025-01-06 01:18:31.649 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99995226 -0.997545  ]
+2025-01-06 01:18:31.939 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9978979 -0.3098111]
+2025-01-06 01:18:32.193 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9990195  -0.23194377]
+2025-01-06 01:18:32.491 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.999424   -0.23685023]
+2025-01-06 01:18:32.739 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:32.968 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99998385 -0.9998939 ]
+2025-01-06 01:18:33.205 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9879012 -1.       ]
+2025-01-06 01:18:33.476 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.999999 -1.      ]
+2025-01-06 01:18:33.730 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:33.730 | INFO     | __main__:evaluate_policy:149 - #### Test No. 85 ####
+2025-01-06 01:18:34.012 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999806  -0.99457973]
+2025-01-06 01:18:34.254 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99852    -0.51022094]
+2025-01-06 01:18:34.495 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9995772 -0.2396329]
+2025-01-06 01:18:34.733 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9997015  -0.24205898]
+2025-01-06 01:18:34.985 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99998885 -0.9999996 ]
+2025-01-06 01:18:35.228 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999928 -1.       ]
+2025-01-06 01:18:35.470 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:18:35.715 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.9999991 -1.       ]
+2025-01-06 01:18:36.000 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:36.000 | INFO     | __main__:evaluate_policy:149 - #### Test No. 86 ####
+2025-01-06 01:18:36.197 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999357 -0.9985783]
+2025-01-06 01:18:36.464 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9983486  -0.30877087]
+2025-01-06 01:18:36.733 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9990779 -0.2457673]
+2025-01-06 01:18:37.013 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.998951  -0.2500504]
+2025-01-06 01:18:37.262 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:37.509 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.31845564 -1.        ]
+2025-01-06 01:18:37.649 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99411744 -0.99999964]
+2025-01-06 01:18:37.899 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [ 0.9999985 -1.       ]
+2025-01-06 01:18:38.148 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:38.148 | INFO     | __main__:evaluate_policy:149 - #### Test No. 87 ####
+2025-01-06 01:18:38.332 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999757  -0.99652755]
+2025-01-06 01:18:38.648 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9973732  -0.42575485]
+2025-01-06 01:18:38.904 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99912864 -0.23749556]
+2025-01-06 01:18:39.148 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99885917 -0.23925127]
+2025-01-06 01:18:39.392 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:39.645 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999505 -1.        ]
+2025-01-06 01:18:39.887 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:18:40.124 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:40.124 | INFO     | __main__:evaluate_policy:149 - #### Test No. 88 ####
+2025-01-06 01:18:40.363 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999656 -0.9978625]
+2025-01-06 01:18:40.614 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9939619 -0.2957324]
+2025-01-06 01:18:40.859 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9989376  -0.25393105]
+2025-01-06 01:18:41.109 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9993561  -0.24525638]
+2025-01-06 01:18:41.360 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:41.615 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999835 -0.9999987]
+2025-01-06 01:18:41.861 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9951287 -1.       ]
+2025-01-06 01:18:42.124 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.99999785 -1.        ]
+2025-01-06 01:18:42.372 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:42.372 | INFO     | __main__:evaluate_policy:149 - #### Test No. 89 ####
+2025-01-06 01:18:42.683 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998045 -0.99279857]
+2025-01-06 01:18:42.925 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9988397  -0.36581454]
+2025-01-06 01:18:43.160 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9996001  -0.24727893]
+2025-01-06 01:18:43.401 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:43.697 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:18:43.938 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999785 -1.        ]
+2025-01-06 01:18:44.276 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9925139 -1.       ]
+2025-01-06 01:18:44.514 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:44.514 | INFO     | __main__:evaluate_policy:149 - #### Test No. 90 ####
+2025-01-06 01:18:44.879 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999888 -0.9906658]
+2025-01-06 01:18:45.161 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99724114 -0.3395114 ]
+2025-01-06 01:18:45.410 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9979196  -0.25578013]
+2025-01-06 01:18:45.655 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.62244266 -0.9979594 ]
+2025-01-06 01:18:45.856 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999364 -1.       ]
+2025-01-06 01:18:46.097 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999998 -1.       ]
+2025-01-06 01:18:46.341 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999964 -1.       ]
+2025-01-06 01:18:46.578 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:46.578 | INFO     | __main__:evaluate_policy:149 - #### Test No. 91 ####
+2025-01-06 01:18:46.865 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999803  -0.99535847]
+2025-01-06 01:18:47.105 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9991789 -0.5692848]
+2025-01-06 01:18:47.361 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9987676  -0.25099438]
+2025-01-06 01:18:47.676 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:47.928 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999943 -1.       ]
+2025-01-06 01:18:48.183 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:18:48.425 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999982 -1.       ]
+2025-01-06 01:18:48.662 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:48.662 | INFO     | __main__:evaluate_policy:149 - #### Test No. 92 ####
+2025-01-06 01:18:48.863 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996734 -0.99663955]
+2025-01-06 01:18:49.114 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99687564 -0.33009782]
+2025-01-06 01:18:49.400 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99686325 -0.24909998]
+2025-01-06 01:18:49.648 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:49.888 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99998236 -0.99999535]
+2025-01-06 01:18:50.125 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:18:50.366 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:50.366 | INFO     | __main__:evaluate_policy:149 - #### Test No. 93 ####
+2025-01-06 01:18:50.618 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999678 -0.9971045]
+2025-01-06 01:18:50.878 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9984954  -0.43702355]
+2025-01-06 01:18:51.231 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99860203 -0.25104168]
+2025-01-06 01:18:51.511 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:51.746 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:18:51.747 | INFO     | __main__:evaluate_policy:149 - #### Test No. 94 ####
+2025-01-06 01:18:51.968 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999674  -0.99576515]
+2025-01-06 01:18:52.225 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.995912  -0.5371843]
+2025-01-06 01:18:52.480 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9931374  -0.26145524]
+2025-01-06 01:18:52.752 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:18:52.998 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9915094 -1.       ]
+2025-01-06 01:18:53.237 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99869615 -1.        ]
+2025-01-06 01:18:53.495 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999577 -1.        ]
+2025-01-06 01:18:53.746 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:53.746 | INFO     | __main__:evaluate_policy:149 - #### Test No. 95 ####
+2025-01-06 01:18:53.966 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999649 -0.9976395]
+2025-01-06 01:18:54.228 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.993547   -0.33368948]
+2025-01-06 01:18:54.510 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:54.761 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999339 -0.9999991]
+2025-01-06 01:18:55.039 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:18:55.306 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999977 -1.       ]
+2025-01-06 01:18:55.556 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:55.556 | INFO     | __main__:evaluate_policy:149 - #### Test No. 96 ####
+2025-01-06 01:18:55.762 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997544 -0.9953911 ]
+2025-01-06 01:18:56.029 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99391955 -0.32896549]
+2025-01-06 01:18:56.286 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:56.532 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999926 -1.       ]
+2025-01-06 01:18:56.784 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:18:57.034 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999845 -1.        ]
+2025-01-06 01:18:57.275 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:57.276 | INFO     | __main__:evaluate_policy:149 - #### Test No. 97 ####
+2025-01-06 01:18:57.476 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999571 -0.9976753]
+2025-01-06 01:18:57.735 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9937011  -0.31259346]
+2025-01-06 01:18:57.995 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:58.315 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9998969 -1.       ]
+2025-01-06 01:18:58.555 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999964 -1.        ]
+2025-01-06 01:18:58.816 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999985 -1.       ]
+2025-01-06 01:18:59.058 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:18:59.058 | INFO     | __main__:evaluate_policy:149 - #### Test No. 98 ####
+2025-01-06 01:18:59.336 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997   -0.9972891]
+2025-01-06 01:18:59.572 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.6334133 -0.962895 ]
+2025-01-06 01:18:59.721 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:18:59.983 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999898 -1.       ]
+2025-01-06 01:19:00.263 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99998134 -1.        ]
+2025-01-06 01:19:00.503 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:00.503 | INFO     | __main__:evaluate_policy:149 - #### Test No. 99 ####
+2025-01-06 01:19:00.704 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99992687 -0.9983674 ]
+2025-01-06 01:19:00.946 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.20781875 -0.98803645]
+2025-01-06 01:19:01.095 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:19:01.337 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999977  -0.99999994]
+2025-01-06 01:19:01.583 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.7960289 -1.       ]
+2025-01-06 01:19:01.780 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:01.781 | INFO     | __main__:evaluate_policy:149 - #### Test No. 100 ####
+2025-01-06 01:19:02.054 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998486 -0.99361265]
+2025-01-06 01:19:02.340 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9968303 -0.2756682]
+2025-01-06 01:19:02.601 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.91825765 -0.69569224]
+2025-01-06 01:19:02.853 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:19:02.853 | INFO     | __main__:evaluate_policy:149 - #### Test No. 101 ####
+2025-01-06 01:19:03.042 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999656  -0.99526054]
+2025-01-06 01:19:03.307 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99701846 -0.2990945 ]
+2025-01-06 01:19:03.559 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99546295 -0.2559539 ]
+2025-01-06 01:19:03.812 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9986384  -0.25677016]
+2025-01-06 01:19:04.064 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9927758  -0.24960113]
+2025-01-06 01:19:04.359 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 1. -1.]
+2025-01-06 01:19:04.606 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9997417 -1.       ]
+2025-01-06 01:19:04.850 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [ 1. -1.]
+2025-01-06 01:19:05.123 | INFO     | __main__:evaluate_policy:161 - Step 9 Action: [-0.99999654 -1.        ]
+2025-01-06 01:19:05.368 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:05.368 | INFO     | __main__:evaluate_policy:149 - #### Test No. 102 ####
+2025-01-06 01:19:05.671 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996907 -0.9979333 ]
+2025-01-06 01:19:05.970 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99275804 -0.29596025]
+2025-01-06 01:19:06.260 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99824834 -0.24628495]
+2025-01-06 01:19:06.567 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99838233 -0.24466296]
+2025-01-06 01:19:06.922 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:07.145 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99998665 -0.9999998 ]
+2025-01-06 01:19:07.388 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999998 -1.       ]
+2025-01-06 01:19:07.633 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.99999905 -1.        ]
+2025-01-06 01:19:07.877 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:07.877 | INFO     | __main__:evaluate_policy:149 - #### Test No. 103 ####
+2025-01-06 01:19:08.075 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999806 -0.9955848]
+2025-01-06 01:19:08.368 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.97719246 -0.33455878]
+2025-01-06 01:19:08.648 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9994994 -0.2423561]
+2025-01-06 01:19:08.914 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.98001856 -0.31058592]
+2025-01-06 01:19:09.159 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:09.396 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.999986  -0.9999614]
+2025-01-06 01:19:09.641 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999998 -1.       ]
+2025-01-06 01:19:09.890 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.99999857 -1.        ]
+2025-01-06 01:19:10.141 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:10.142 | INFO     | __main__:evaluate_policy:149 - #### Test No. 104 ####
+2025-01-06 01:19:10.336 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998367 -0.99622136]
+2025-01-06 01:19:10.613 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9935542 -0.3122615]
+2025-01-06 01:19:10.892 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9980013  -0.23947625]
+2025-01-06 01:19:11.141 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9981291  -0.25212142]
+2025-01-06 01:19:11.392 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:11.643 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999841 -1.       ]
+2025-01-06 01:19:11.890 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9988729 -1.       ]
+2025-01-06 01:19:12.181 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.999999 -1.      ]
+2025-01-06 01:19:12.430 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:12.430 | INFO     | __main__:evaluate_policy:149 - #### Test No. 105 ####
+2025-01-06 01:19:12.650 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999849  -0.99376833]
+2025-01-06 01:19:12.954 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9937993  -0.28724462]
+2025-01-06 01:19:13.202 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9989081  -0.24485607]
+2025-01-06 01:19:13.453 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9994707  -0.23944299]
+2025-01-06 01:19:13.704 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:13.950 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999843  -0.99996877]
+2025-01-06 01:19:14.167 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999978 -1.       ]
+2025-01-06 01:19:14.407 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.99999857 -1.        ]
+2025-01-06 01:19:14.643 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:14.644 | INFO     | __main__:evaluate_policy:149 - #### Test No. 106 ####
+2025-01-06 01:19:14.895 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99995095 -0.99836266]
+2025-01-06 01:19:15.139 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9985672 -0.2837093]
+2025-01-06 01:19:15.385 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9991689  -0.24434754]
+2025-01-06 01:19:15.629 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:19:15.946 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.999982 -1.      ]
+2025-01-06 01:19:16.184 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:19:16.425 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:16.425 | INFO     | __main__:evaluate_policy:149 - #### Test No. 107 ####
+2025-01-06 01:19:16.631 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999174  -0.99878716]
+2025-01-06 01:19:16.875 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9981917  -0.43317944]
+2025-01-06 01:19:17.135 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9979838  -0.25524756]
+2025-01-06 01:19:17.380 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9990324  -0.25212848]
+2025-01-06 01:19:17.642 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99997026 -0.99999887]
+2025-01-06 01:19:17.884 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9991711 -1.       ]
+2025-01-06 01:19:18.189 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9999702 -1.       ]
+2025-01-06 01:19:18.427 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.9999985 -1.       ]
+2025-01-06 01:19:18.666 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:18.666 | INFO     | __main__:evaluate_policy:149 - #### Test No. 108 ####
+2025-01-06 01:19:18.900 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997276 -0.9958678 ]
+2025-01-06 01:19:19.144 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9948639 -0.2730419]
+2025-01-06 01:19:19.406 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9975951  -0.24732028]
+2025-01-06 01:19:19.661 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:19:19.911 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9987812 -1.       ]
+2025-01-06 01:19:20.255 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 1. -1.]
+2025-01-06 01:19:20.502 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999981 -1.       ]
+2025-01-06 01:19:20.749 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:20.749 | INFO     | __main__:evaluate_policy:149 - #### Test No. 109 ####
+2025-01-06 01:19:20.949 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999727 -0.9981728]
+2025-01-06 01:19:21.206 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99353284 -0.35912162]
+2025-01-06 01:19:21.455 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9966051  -0.25408298]
+2025-01-06 01:19:21.707 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9797118  -0.38488328]
+2025-01-06 01:19:21.958 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:22.218 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:19:22.219 | INFO     | __main__:evaluate_policy:149 - #### Test No. 110 ####
+2025-01-06 01:19:22.428 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999767  -0.99565744]
+2025-01-06 01:19:22.676 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99811053 -0.2832006 ]
+2025-01-06 01:19:22.914 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9993898  -0.24452819]
+2025-01-06 01:19:23.141 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.9999937  -0.99999976]
+2025-01-06 01:19:23.462 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9717081 -1.       ]
+2025-01-06 01:19:23.747 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999975 -1.       ]
+2025-01-06 01:19:23.990 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9990479 -0.9999996]
+2025-01-06 01:19:24.223 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:24.223 | INFO     | __main__:evaluate_policy:149 - #### Test No. 111 ####
+2025-01-06 01:19:24.472 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999714 -0.9973088]
+2025-01-06 01:19:24.719 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9981238 -0.319154 ]
+2025-01-06 01:19:24.970 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99862564 -0.25907296]
+2025-01-06 01:19:25.215 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:19:25.433 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99997866 -0.99996364]
+2025-01-06 01:19:25.674 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999946 -1.        ]
+2025-01-06 01:19:25.969 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:25.969 | INFO     | __main__:evaluate_policy:149 - #### Test No. 112 ####
+2025-01-06 01:19:26.239 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99993545 -0.9983729 ]
+2025-01-06 01:19:26.501 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.999306   -0.29603374]
+2025-01-06 01:19:26.743 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9987404 -0.2723565]
+2025-01-06 01:19:26.986 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:19:27.239 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999569 -0.9999999]
+2025-01-06 01:19:27.487 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999996 -1.       ]
+2025-01-06 01:19:27.734 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999988 -1.       ]
+2025-01-06 01:19:27.980 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:27.980 | INFO     | __main__:evaluate_policy:149 - #### Test No. 113 ####
+2025-01-06 01:19:28.280 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999431 -0.9981202]
+2025-01-06 01:19:28.573 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9990248 -0.3637428]
+2025-01-06 01:19:28.814 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9990122  -0.26862136]
+2025-01-06 01:19:29.059 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.24603572 -0.9912406 ]
+2025-01-06 01:19:29.181 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99620473 -0.6919954 ]
+2025-01-06 01:19:29.426 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:19:29.426 | INFO     | __main__:evaluate_policy:149 - #### Test No. 114 ####
+2025-01-06 01:19:29.630 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996364 -0.9977408 ]
+2025-01-06 01:19:29.937 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.995905   -0.28583762]
+2025-01-06 01:19:30.229 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.99999905 -1.        ]
+2025-01-06 01:19:30.524 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99999475 -1.        ]
+2025-01-06 01:19:30.764 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:19:31.072 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999831 -1.       ]
+2025-01-06 01:19:31.309 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:31.309 | INFO     | __main__:evaluate_policy:149 - #### Test No. 115 ####
+2025-01-06 01:19:31.542 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.999981   -0.99682075]
+2025-01-06 01:19:31.789 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99729526 -0.2888275 ]
+2025-01-06 01:19:32.026 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:19:32.264 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999628 -1.       ]
+2025-01-06 01:19:32.513 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:19:32.746 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999857 -1.        ]
+2025-01-06 01:19:32.984 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:32.984 | INFO     | __main__:evaluate_policy:149 - #### Test No. 116 ####
+2025-01-06 01:19:33.183 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999734  -0.99534005]
+2025-01-06 01:19:33.443 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99851763 -0.5267936 ]
+2025-01-06 01:19:33.688 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:19:33.938 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99998003 -0.99999905]
+2025-01-06 01:19:34.185 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999997 -1.       ]
+2025-01-06 01:19:34.435 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999989 -1.       ]
+2025-01-06 01:19:34.684 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:34.684 | INFO     | __main__:evaluate_policy:149 - #### Test No. 117 ####
+2025-01-06 01:19:34.876 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998266 -0.99258804]
+2025-01-06 01:19:35.130 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99714595 -0.40424284]
+2025-01-06 01:19:35.385 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.99995995 -0.99999917]
+2025-01-06 01:19:35.625 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999841 -1.       ]
+2025-01-06 01:19:35.876 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999998 -1.       ]
+2025-01-06 01:19:36.122 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:36.122 | INFO     | __main__:evaluate_policy:149 - #### Test No. 118 ####
+2025-01-06 01:19:36.383 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996656 -0.99808437]
+2025-01-06 01:19:36.593 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.85034037 -0.9996143 ]
+2025-01-06 01:19:36.803 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99988115 -0.9995244 ]
+2025-01-06 01:19:37.036 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:19:37.316 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999982 -1.       ]
+2025-01-06 01:19:37.552 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:37.552 | INFO     | __main__:evaluate_policy:149 - #### Test No. 119 ####
+2025-01-06 01:19:37.864 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999517 -0.9970946]
+2025-01-06 01:19:38.105 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99427027 -0.30401048]
+2025-01-06 01:19:38.342 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.999836   -0.99999726]
+2025-01-06 01:19:38.576 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9998715 -0.9999942]
+2025-01-06 01:19:38.816 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.42008612 -0.99999964]
+2025-01-06 01:19:38.981 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999958 -1.       ]
+2025-01-06 01:19:39.224 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:19:39.224 | INFO     | __main__:evaluate_policy:149 - #### Test No. 120 ####
+2025-01-06 01:19:39.444 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997973 -0.99315304]
+2025-01-06 01:19:39.724 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.9522228 -0.9999066]
+2025-01-06 01:19:39.973 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9998579  -0.99849683]
+2025-01-06 01:19:40.269 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.999294  -0.8459106]
+2025-01-06 01:19:40.512 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999857 -1.        ]
+2025-01-06 01:19:40.752 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:19:40.752 | INFO     | __main__:evaluate_policy:149 - #### Test No. 121 ####
+2025-01-06 01:19:40.979 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999622 -0.9951986]
+2025-01-06 01:19:41.234 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.98418367 -0.65845776]
+2025-01-06 01:19:41.486 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.999314  -0.1496439]
+2025-01-06 01:19:41.734 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9991374  -0.18581061]
+2025-01-06 01:19:41.994 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:42.224 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.05828404 -1.        ]
+2025-01-06 01:19:42.323 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9437351 -1.       ]
+2025-01-06 01:19:42.579 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [-0.9999973 -1.       ]
+2025-01-06 01:19:42.820 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:19:42.820 | INFO     | __main__:evaluate_policy:149 - #### Test No. 122 ####
+2025-01-06 01:19:43.063 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996746 -0.99833745]
+2025-01-06 01:19:43.311 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99459726 -0.43092766]
+2025-01-06 01:19:43.548 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9990331  -0.17021851]
+2025-01-06 01:19:43.801 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99924004 -0.17445663]
+2025-01-06 01:19:44.043 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:44.284 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9997624 -1.       ]
+2025-01-06 01:19:44.539 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 1. -1.]
+2025-01-06 01:19:44.786 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:44.786 | INFO     | __main__:evaluate_policy:149 - #### Test No. 123 ####
+2025-01-06 01:19:44.978 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997514 -0.9930365 ]
+2025-01-06 01:19:45.228 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.985376  -0.8279327]
+2025-01-06 01:19:45.481 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99913025 -0.1515135 ]
+2025-01-06 01:19:45.727 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9991165  -0.16612697]
+2025-01-06 01:19:45.961 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:46.221 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999975 -1.       ]
+2025-01-06 01:19:46.465 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999547 -1.        ]
+2025-01-06 01:19:46.710 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [ 0.999999 -1.      ]
+2025-01-06 01:19:46.947 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:46.947 | INFO     | __main__:evaluate_policy:149 - #### Test No. 124 ####
+2025-01-06 01:19:47.139 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998677 -0.99735576]
+2025-01-06 01:19:47.487 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99135375 -0.53927815]
+2025-01-06 01:19:47.741 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9993067  -0.18742554]
+2025-01-06 01:19:47.964 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9994304  -0.21193562]
+2025-01-06 01:19:48.219 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:19:48.523 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999803 -1.       ]
+2025-01-06 01:19:48.798 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 1. -1.]
+2025-01-06 01:19:49.041 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:49.041 | INFO     | __main__:evaluate_policy:149 - #### Test No. 125 ####
+2025-01-06 01:19:49.246 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999719  -0.99535894]
+2025-01-06 01:19:49.493 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99409384 -0.40760303]
+2025-01-06 01:19:49.753 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9982752 -0.1615349]
+2025-01-06 01:19:50.001 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1.         -0.99999994]
+2025-01-06 01:19:50.250 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999225 -1.       ]
+2025-01-06 01:19:50.494 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999905 -1.       ]
+2025-01-06 01:19:50.742 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999774 -1.        ]
+2025-01-06 01:19:50.991 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:50.991 | INFO     | __main__:evaluate_policy:149 - #### Test No. 126 ####
+2025-01-06 01:19:51.186 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999752  -0.99559003]
+2025-01-06 01:19:51.474 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9925578 -0.6350572]
+2025-01-06 01:19:51.767 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9979935  -0.18513797]
+2025-01-06 01:19:52.053 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:19:52.323 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99941236 -1.        ]
+2025-01-06 01:19:52.579 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:19:52.833 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999972 -1.       ]
+2025-01-06 01:19:53.086 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:53.087 | INFO     | __main__:evaluate_policy:149 - #### Test No. 127 ####
+2025-01-06 01:19:53.416 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998444 -0.9945347 ]
+2025-01-06 01:19:53.663 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.98806256 -0.7698875 ]
+2025-01-06 01:19:53.907 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99874246 -0.17390507]
+2025-01-06 01:19:54.165 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:19:54.405 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9998816 -1.       ]
+2025-01-06 01:19:54.650 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 1. -1.]
+2025-01-06 01:19:54.901 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.961707 -1.      ]
+2025-01-06 01:19:55.156 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:55.157 | INFO     | __main__:evaluate_policy:149 - #### Test No. 128 ####
+2025-01-06 01:19:55.361 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999744 -0.9959984]
+2025-01-06 01:19:55.619 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.990313  -0.6214861]
+2025-01-06 01:19:55.875 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99642795 -0.20085898]
+2025-01-06 01:19:56.130 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.99999946 -0.999999  ]
+2025-01-06 01:19:56.424 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999372 -1.       ]
+2025-01-06 01:19:56.677 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999997 -1.       ]
+2025-01-06 01:19:56.931 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999982 -1.       ]
+2025-01-06 01:19:57.183 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:19:57.183 | INFO     | __main__:evaluate_policy:149 - #### Test No. 129 ####
+2025-01-06 01:19:57.411 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996424 -0.9966909 ]
+2025-01-06 01:19:57.654 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9819995  -0.82194376]
+2025-01-06 01:19:57.905 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99904656 -0.19999355]
+2025-01-06 01:19:58.202 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:19:58.475 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:19:58.723 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999662 -1.       ]
+2025-01-06 01:19:58.978 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:19:58.978 | INFO     | __main__:evaluate_policy:149 - #### Test No. 130 ####
+2025-01-06 01:19:59.186 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999685 -0.995377 ]
+2025-01-06 01:19:59.437 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9942313 -0.5546107]
+2025-01-06 01:19:59.702 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.9814115 -0.9974494]
+2025-01-06 01:19:59.947 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9998994  -0.99999994]
+2025-01-06 01:20:00.161 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9884078  -0.99999994]
+2025-01-06 01:20:00.458 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999987 -1.       ]
+2025-01-06 01:20:00.749 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:00.749 | INFO     | __main__:evaluate_policy:149 - #### Test No. 131 ####
+2025-01-06 01:20:00.941 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999454 -0.9984402]
+2025-01-06 01:20:01.190 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.91116273 -0.9711405 ]
+2025-01-06 01:20:01.445 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9988911  -0.20477319]
+2025-01-06 01:20:01.705 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:20:01.946 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9989744 -1.       ]
+2025-01-06 01:20:02.192 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999972 -1.       ]
+2025-01-06 01:20:02.447 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:02.447 | INFO     | __main__:evaluate_policy:149 - #### Test No. 132 ####
+2025-01-06 01:20:02.647 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999874 -0.9954784]
+2025-01-06 01:20:02.895 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9764168  -0.80195725]
+2025-01-06 01:20:03.139 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:03.384 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999864 -1.       ]
+2025-01-06 01:20:03.626 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:20:03.860 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:03.860 | INFO     | __main__:evaluate_policy:149 - #### Test No. 133 ####
+2025-01-06 01:20:04.056 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999763 -0.9942253]
+2025-01-06 01:20:04.307 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.98561174 -0.78043073]
+2025-01-06 01:20:04.581 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:04.825 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999806 -1.       ]
+2025-01-06 01:20:05.114 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:20:05.367 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:05.367 | INFO     | __main__:evaluate_policy:149 - #### Test No. 134 ####
+2025-01-06 01:20:05.569 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999699  -0.99209005]
+2025-01-06 01:20:05.829 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.8207381  -0.93412787]
+2025-01-06 01:20:06.032 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:06.258 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9998779 -1.       ]
+2025-01-06 01:20:06.503 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999997 -1.       ]
+2025-01-06 01:20:06.743 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:06.743 | INFO     | __main__:evaluate_policy:149 - #### Test No. 135 ####
+2025-01-06 01:20:06.971 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997056 -0.9970818 ]
+2025-01-06 01:20:07.271 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9950263 -0.3785115]
+2025-01-06 01:20:07.616 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.9999987  -0.99999994]
+2025-01-06 01:20:07.868 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99991804 -1.        ]
+2025-01-06 01:20:08.177 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:08.538 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9998473 -1.       ]
+2025-01-06 01:20:08.784 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:08.784 | INFO     | __main__:evaluate_policy:149 - #### Test No. 136 ####
+2025-01-06 01:20:09.129 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997747 -0.9938445 ]
+2025-01-06 01:20:09.435 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9902322  -0.75421613]
+2025-01-06 01:20:09.687 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:09.953 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.93680423 -1.        ]
+2025-01-06 01:20:10.202 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:20:10.460 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:10.460 | INFO     | __main__:evaluate_policy:149 - #### Test No. 137 ####
+2025-01-06 01:20:10.759 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99998474 -0.9945151 ]
+2025-01-06 01:20:11.056 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99200594 -0.6216403 ]
+2025-01-06 01:20:11.305 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:11.581 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.98866093 -1.        ]
+2025-01-06 01:20:11.832 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9999964 -1.       ]
+2025-01-06 01:20:12.083 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9999999 -1.       ]
+2025-01-06 01:20:12.335 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:12.335 | INFO     | __main__:evaluate_policy:149 - #### Test No. 138 ####
+2025-01-06 01:20:12.530 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996936 -0.99703443]
+2025-01-06 01:20:12.780 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9888338 -0.6206053]
+2025-01-06 01:20:13.067 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:13.337 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999636  -0.99999994]
+2025-01-06 01:20:13.594 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:20:13.840 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:13.840 | INFO     | __main__:evaluate_policy:149 - #### Test No. 139 ####
+2025-01-06 01:20:14.061 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999774 -0.9960143]
+2025-01-06 01:20:14.305 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9940777 -0.4718583]
+2025-01-06 01:20:14.523 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:20:14.875 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9997812 -1.       ]
+2025-01-06 01:20:15.129 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999946 -1.        ]
+2025-01-06 01:20:15.434 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999974 -1.       ]
+2025-01-06 01:20:15.678 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:15.679 | INFO     | __main__:evaluate_policy:149 - #### Test No. 140 ####
+2025-01-06 01:20:15.907 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999636  -0.99616563]
+2025-01-06 01:20:16.157 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9915562  -0.63274366]
+2025-01-06 01:20:16.408 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:20:16.656 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999541 -1.       ]
+2025-01-06 01:20:16.905 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999887 -1.        ]
+2025-01-06 01:20:17.153 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:17.153 | INFO     | __main__:evaluate_policy:149 - #### Test No. 141 ####
+2025-01-06 01:20:17.380 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997014 -0.99733907]
+2025-01-06 01:20:17.620 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.96600205 -0.8088598 ]
+2025-01-06 01:20:17.869 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9994896  -0.15357772]
+2025-01-06 01:20:18.121 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99942666 -0.16944431]
+2025-01-06 01:20:18.416 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.9754573 -0.5591719]
+2025-01-06 01:20:18.665 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 1. -1.]
+2025-01-06 01:20:18.904 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999857 -1.       ]
+2025-01-06 01:20:19.197 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:20:19.434 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:19.434 | INFO     | __main__:evaluate_policy:149 - #### Test No. 142 ####
+2025-01-06 01:20:19.739 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997526 -0.99316037]
+2025-01-06 01:20:19.967 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9874634  -0.59539634]
+2025-01-06 01:20:20.228 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9993897  -0.14888173]
+2025-01-06 01:20:20.502 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9992328  -0.20382199]
+2025-01-06 01:20:20.753 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:21.003 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.76988804 -1.        ]
+2025-01-06 01:20:21.215 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999374 -1.        ]
+2025-01-06 01:20:21.476 | INFO     | __main__:evaluate_policy:161 - Step 8 Action: [ 0.99999964 -1.        ]
+2025-01-06 01:20:21.721 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:21.721 | INFO     | __main__:evaluate_policy:149 - #### Test No. 143 ####
+2025-01-06 01:20:21.926 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999795 -0.9971314]
+2025-01-06 01:20:22.184 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9933122 -0.5094741]
+2025-01-06 01:20:22.442 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9991565  -0.19533117]
+2025-01-06 01:20:22.692 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99913865 -0.20119849]
+2025-01-06 01:20:22.943 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:23.199 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.999982 -1.      ]
+2025-01-06 01:20:23.446 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 1. -1.]
+2025-01-06 01:20:23.702 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:23.702 | INFO     | __main__:evaluate_policy:149 - #### Test No. 144 ####
+2025-01-06 01:20:23.894 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.999922   -0.99896604]
+2025-01-06 01:20:24.146 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9908439 -0.612579 ]
+2025-01-06 01:20:24.399 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.999255   -0.18291248]
+2025-01-06 01:20:24.646 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9991156  -0.20274903]
+2025-01-06 01:20:24.888 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:25.155 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.27826762 -1.        ]
+2025-01-06 01:20:25.264 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.9808861 -1.       ]
+2025-01-06 01:20:25.512 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:25.512 | INFO     | __main__:evaluate_policy:149 - #### Test No. 145 ####
+2025-01-06 01:20:25.712 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999599 -0.9975882]
+2025-01-06 01:20:25.973 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9962317 -0.4312395]
+2025-01-06 01:20:26.227 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99915695 -0.17424077]
+2025-01-06 01:20:26.479 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99491125 -0.21843201]
+2025-01-06 01:20:26.735 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:27.003 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999845 -1.        ]
+2025-01-06 01:20:27.299 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [ 0.99999875 -1.        ]
+2025-01-06 01:20:27.519 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:20:27.520 | INFO     | __main__:evaluate_policy:149 - #### Test No. 146 ####
+2025-01-06 01:20:27.733 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997735 -0.99338   ]
+2025-01-06 01:20:28.003 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9929354 -0.549143 ]
+2025-01-06 01:20:28.270 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9985022  -0.16587095]
+2025-01-06 01:20:28.509 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.9999672 -0.9999981]
+2025-01-06 01:20:28.780 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99991643 -1.        ]
+2025-01-06 01:20:29.036 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 1. -1.]
+2025-01-06 01:20:29.275 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.99999464 -1.        ]
+2025-01-06 01:20:29.519 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:29.519 | INFO     | __main__:evaluate_policy:149 - #### Test No. 147 ####
+2025-01-06 01:20:29.729 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9998959  -0.99887574]
+2025-01-06 01:20:29.974 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9541505  -0.88186383]
+2025-01-06 01:20:30.229 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9992325  -0.14950566]
+2025-01-06 01:20:30.472 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.88860124 -0.9995678 ]
+2025-01-06 01:20:30.742 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99996823 -1.        ]
+2025-01-06 01:20:31.060 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:20:31.300 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:31.301 | INFO     | __main__:evaluate_policy:149 - #### Test No. 148 ####
+2025-01-06 01:20:31.507 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999744 -0.9956709]
+2025-01-06 01:20:31.755 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9944164 -0.53115  ]
+2025-01-06 01:20:31.994 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.99872947 -0.177234  ]
+2025-01-06 01:20:32.263 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:20:32.517 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.98843265 -1.        ]
+2025-01-06 01:20:32.828 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:20:33.072 | INFO     | __main__:evaluate_policy:161 - Step 7 Action: [-0.9999921 -1.       ]
+2025-01-06 01:20:33.322 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:33.322 | INFO     | __main__:evaluate_policy:149 - #### Test No. 149 ####
+2025-01-06 01:20:33.535 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99995464 -0.9980625 ]
+2025-01-06 01:20:33.780 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9950637  -0.49810308]
+2025-01-06 01:20:34.037 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:34.280 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99979436 -0.99995625]
+2025-01-06 01:20:34.532 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:34.773 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.99999833 -1.        ]
+2025-01-06 01:20:35.018 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:35.018 | INFO     | __main__:evaluate_policy:149 - #### Test No. 150 ####
+2025-01-06 01:20:35.218 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.999974   -0.99713826]
+2025-01-06 01:20:35.503 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9854745 -0.7687608]
+2025-01-06 01:20:35.743 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:35.979 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9998432 -0.9999999]
+2025-01-06 01:20:36.226 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:36.469 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999959 -1.       ]
+2025-01-06 01:20:36.713 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:36.713 | INFO     | __main__:evaluate_policy:149 - #### Test No. 151 ####
+2025-01-06 01:20:36.906 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997324 -0.9976051 ]
+2025-01-06 01:20:37.156 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99457264 -0.43697748]
+2025-01-06 01:20:37.404 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:37.701 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.9999688 -1.       ]
+2025-01-06 01:20:37.955 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9999998 -1.       ]
+2025-01-06 01:20:38.203 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999987 -1.       ]
+2025-01-06 01:20:38.443 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:38.443 | INFO     | __main__:evaluate_policy:149 - #### Test No. 152 ####
+2025-01-06 01:20:38.654 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.999979  -0.9947175]
+2025-01-06 01:20:38.929 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99023867 -0.6547619 ]
+2025-01-06 01:20:39.280 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:39.538 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.99990547 -1.        ]
+2025-01-06 01:20:39.815 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99999636 -0.99999994]
+2025-01-06 01:20:40.059 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.9848917 -1.       ]
+2025-01-06 01:20:40.296 | INFO     | __main__:evaluate_policy:170 - RESULT: FAIL
+2025-01-06 01:20:40.296 | INFO     | __main__:evaluate_policy:149 - #### Test No. 153 ####
+2025-01-06 01:20:40.601 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.999969   -0.99459535]
+2025-01-06 01:20:40.876 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.993283   -0.54582024]
+2025-01-06 01:20:41.135 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:41.393 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.34304518 -1.        ]
+2025-01-06 01:20:41.510 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99999523 -1.        ]
+2025-01-06 01:20:41.873 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:20:42.115 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:42.115 | INFO     | __main__:evaluate_policy:149 - #### Test No. 154 ####
+2025-01-06 01:20:42.321 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99996656 -0.99440944]
+2025-01-06 01:20:42.569 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.8965674  -0.86949295]
+2025-01-06 01:20:42.768 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:43.020 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99998605 -1.        ]
+2025-01-06 01:20:43.269 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99999994 -1.        ]
+2025-01-06 01:20:43.518 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:43.518 | INFO     | __main__:evaluate_policy:149 - #### Test No. 155 ####
+2025-01-06 01:20:43.723 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999775 -0.9975314]
+2025-01-06 01:20:43.993 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9909469  -0.54236853]
+2025-01-06 01:20:44.250 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:44.496 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99423945 -1.        ]
+2025-01-06 01:20:44.742 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:44.966 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:44.966 | INFO     | __main__:evaluate_policy:149 - #### Test No. 156 ####
+2025-01-06 01:20:45.178 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999643  -0.99710196]
+2025-01-06 01:20:45.422 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.68729055 -0.99867076]
+2025-01-06 01:20:45.567 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.9994541 -0.9955821]
+2025-01-06 01:20:45.815 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 0.9999984 -1.       ]
+2025-01-06 01:20:46.123 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99999785 -1.        ]
+2025-01-06 01:20:46.370 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:46.370 | INFO     | __main__:evaluate_policy:149 - #### Test No. 157 ####
+2025-01-06 01:20:46.571 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9999689  -0.99376047]
+2025-01-06 01:20:46.829 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.9928498 -0.5622458]
+2025-01-06 01:20:47.082 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 0.99999976 -1.        ]
+2025-01-06 01:20:47.332 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.99925953 -1.        ]
+2025-01-06 01:20:47.582 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.99995285 -1.        ]
+2025-01-06 01:20:47.842 | INFO     | __main__:evaluate_policy:161 - Step 6 Action: [-0.9999892 -1.       ]
+2025-01-06 01:20:48.078 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:48.078 | INFO     | __main__:evaluate_policy:149 - #### Test No. 158 ####
+2025-01-06 01:20:48.276 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997973 -0.99643993]
+2025-01-06 01:20:48.620 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [ 0.8906724 -0.9998197]
+2025-01-06 01:20:48.826 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [-0.98976004 -1.        ]
+2025-01-06 01:20:49.070 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [ 1. -1.]
+2025-01-06 01:20:49.317 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [-0.99998546 -1.        ]
+2025-01-06 01:20:49.565 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:49.565 | INFO     | __main__:evaluate_policy:149 - #### Test No. 159 ####
+2025-01-06 01:20:49.811 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.99997544 -0.99664134]
+2025-01-06 01:20:50.061 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.96617925 -0.8875466 ]
+2025-01-06 01:20:50.393 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:50.706 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.6208205 -1.       ]
+2025-01-06 01:20:50.858 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 0.9981539 -1.       ]
+2025-01-06 01:20:51.102 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:51.102 | INFO     | __main__:evaluate_policy:149 - #### Test No. 160 ####
+2025-01-06 01:20:51.309 | INFO     | __main__:evaluate_policy:161 - Step 1 Action: [-0.9998159  -0.99895823]
+2025-01-06 01:20:51.544 | INFO     | __main__:evaluate_policy:161 - Step 2 Action: [-0.99246633 -0.59996533]
+2025-01-06 01:20:51.781 | INFO     | __main__:evaluate_policy:161 - Step 3 Action: [ 1. -1.]
+2025-01-06 01:20:52.023 | INFO     | __main__:evaluate_policy:161 - Step 4 Action: [-0.999888 -1.      ]
+2025-01-06 01:20:52.265 | INFO     | __main__:evaluate_policy:161 - Step 5 Action: [ 1. -1.]
+2025-01-06 01:20:52.499 | INFO     | __main__:evaluate_policy:167 - RESULT: SUCCESS
+2025-01-06 01:20:52.499 | INFO     | __main__:evaluate_policy:181 - #SUCCESS_RATE: 90.62%
+2025-01-06 01:20:52.499 | INFO     | __main__:evaluate_policy:182 - #AVG_STEP: 6.34

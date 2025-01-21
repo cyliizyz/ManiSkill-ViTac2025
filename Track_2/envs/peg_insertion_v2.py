@@ -584,7 +584,7 @@ class PegInsertionSimEnvV2(gym.Env):
                 self._gen_camera_pose(
                     y=(self.sensor_grasp_center_init_mm_deg[1] + self.y_target_mm)
                     / 1000,
-                    z=(self.sensor_grasp_center_init_mm_deg[2] + self.z_target_mm)
+                    z=(self.sensor_grasp_center_init_mm_deg[3] + self.z_target_mm)
                     / 1000,
                 )
             )
@@ -968,7 +968,7 @@ class PegInsertionSimEnvV2(gym.Env):
             self._gen_camera_pose(
                 y=(self.current_offset_of_current_episode_mm_deg[1] + self.y_target_mm)
                 / 1000,
-                z=(self.current_offset_of_current_episode_mm_deg[2] + self.z_target_mm)
+                z=(self.current_offset_of_current_episode_mm_deg[3] + self.z_target_mm)
                 / 1000,
             )
         )

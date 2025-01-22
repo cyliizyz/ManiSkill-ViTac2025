@@ -139,7 +139,7 @@ def evaluate_policy(model, key):
     env = LongOpenLockRandPointFlowEnv(**specified_env_args)
     set_random_seed(0)
 
-    offset_list = [[i * 1.0 / 2 - 5, 0, 0] for i in range(20)]
+    offset_list = [[i * 0.5 / 2, 0, 0] for i in range(20)]
     test_num = len(offset_list)
     test_result = []
 

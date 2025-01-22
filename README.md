@@ -6,7 +6,7 @@
 [![Discord](https://img.shields.io/badge/Join-Discord-7289DA)](https://discord.gg/CKucPQxQPr)
 
 ## 🚀 Latest Updates
-
+- **2025/01/21**: Update the pretain weight in huggingface [ManiSkill-ViTac2025_ckpt](https://huggingface.co/cyliizyz/ManiSkill-ViTac2025_ckpt).
 - **2025/01/02**: Refactor the entire repository, added render_rgb options, and visualization during the evaluation. For details, please refer to the repository. Stage 1 starts! 🚀
 - **2024/12/08**: Refactor code structure for better readability.
 - **2024/11/16**: Track 2 is online! 
